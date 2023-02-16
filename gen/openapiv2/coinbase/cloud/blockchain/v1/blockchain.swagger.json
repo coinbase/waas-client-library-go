@@ -1,0 +1,339 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Coinbase Cloud - WaaS Blockchain API",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "BlockchainService",
+      "description": "A service providing a set of read-only APIs for information about the blockchain networks that WaaS supports. Users can query BlockchainService to figure out the Networks and Assets that can be transacted with using WaaS APIs."
+    }
+  ],
+  "host": "https://api.coinbasecloud.com/waas/blockchain",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/networks": {
+      "get": {
+        "summary": "ListNetworks",
+        "description": "Lists the Networks available to use on WaaS.",
+        "operationId": "BlockchainService_ListNetworks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListNetworksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "description": "The maximum number of Networks to return. If unspecified, at most 50 Networks will be returned.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token, received from a previous ListNetworks call. Provide this to retrieve the subsequent page.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BlockchainService"
+        ]
+      }
+    },
+    "/v1/{assetName}": {
+      "get": {
+        "summary": "GetAsset",
+        "description": "Gets an Asset.",
+        "operationId": "BlockchainService_GetAsset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Asset"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "assetName",
+            "description": "The resource name of the Asset. Format: networks/{networkID}/assets/{assetID}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+/assets/[^/]+"
+          }
+        ],
+        "tags": [
+          "BlockchainService"
+        ]
+      }
+    },
+    "/v1/{networkName}": {
+      "get": {
+        "summary": "GetNetwork",
+        "description": "Gets a Network.",
+        "operationId": "BlockchainService_GetNetwork",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Network"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the Network to get. Format: networks/{networkID}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          }
+        ],
+        "tags": [
+          "BlockchainService"
+        ]
+      }
+    },
+    "/v1/{networkName}/assets": {
+      "get": {
+        "summary": "Lists the Assets available to use on a given Network.",
+        "operationId": "BlockchainService_ListAssets",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListAssetsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the parent Network. Format: networks/{networkID}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          },
+          {
+            "name": "pageSize",
+            "description": "The maximum number of Assets to return. If unspecified, at most 50 Assets will be returned.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token, received from a previous ListAssets call. Provide this to retrieve the subsequent page.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BlockchainService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AssetDefinition": {
+      "type": "object",
+      "properties": {
+        "assetType": {
+          "type": "string",
+          "description": "The type of Asset the definition describes. Possible values: 'native', 'erc20', 'erc721', 'erc1155'",
+          "title": "assetType"
+        },
+        "assetGroupId": {
+          "type": "string",
+          "description": "The identifier that distinguishes this Asset group. Generally a 0x-prefixed contract address for the Asset. For a native Asset this will not be set.",
+          "title": "assetGroupId"
+        },
+        "subGroupId": {
+          "type": "string",
+          "description": "The identifier that distinguishes the specific Asset within the asset group. Generally a token ID. For a native Asset or ERC-20 this will not be set.",
+          "title": "subGroupId"
+        }
+      },
+      "description": "The defining characteristics that combine to uniquely identify an Asset on-chain. Fungible tokens, such as ERC-20s require an asset_group_id (the contract address). Non-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s require a both an asset_group_id and a sub_group_id (the token ID).",
+      "title": "Asset.Definition"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Asset": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The resource name of the Asset. Format: networks/{networkID}/assets/{assetID}",
+          "title": "name"
+        },
+        "advertisedSymbol": {
+          "type": "string",
+          "description": "The symbol representation of this asset (e.g. ETH) as advertised by the Network. For a native Asset this may be implicit, e.g. the on-chain data may not include any symbol reference. For some protocols there can be Assets with arbitrary symbols that are not globally unique, and it should not be trusted to represent a canonical symbol/ticker.",
+          "title": "advertisedSymbol"
+        },
+        "decimals": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of decimals the Asset utilizes. Note: in some instances this value can change over time.",
+          "title": "decimals"
+        },
+        "definition": {
+          "$ref": "#/definitions/AssetDefinition",
+          "description": "The identifier that distinguishes the specific Asset within the asset group. Generally a token ID. For a native Asset or ERC-20 this will not be set.",
+          "title": "definition"
+        }
+      },
+      "description": "The Asset resource, which represents an on-chain asset. For fungible assets, one resource will exist per Asset. In the case of non-fungible tokens, a unique Asset entry will exist for every token.",
+      "title": "Asset"
+    },
+    "v1ListAssetsResponse": {
+      "type": "object",
+      "properties": {
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Asset"
+          },
+          "description": "The list of Assets."
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+        }
+      },
+      "description": "The response message for ListAssets.",
+      "title": "ListAssetsResponse"
+    },
+    "v1ListNetworksResponse": {
+      "type": "object",
+      "properties": {
+        "networks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Network"
+          },
+          "description": "The list of Networks."
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+        }
+      },
+      "description": "The response message for ListNetworks.",
+      "title": "ListNetworksResponse"
+    },
+    "v1Network": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The resource name of the Network. Format: networks/{networkID}",
+          "title": "name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "A user-readable name for the Network.",
+          "title": "displayName"
+        },
+        "nativeAsset": {
+          "type": "string",
+          "description": "The native Asset for this Network. Format: networks/{networkID}/assets/{assetID}",
+          "title": "nativeAsset"
+        },
+        "protocolFamily": {
+          "type": "string",
+          "description": "The protocol family this Network is a part of. Today, the only supported value is 'protocolFamilies/evm'.",
+          "title": "protocolFamily"
+        },
+        "type": {
+          "$ref": "#/definitions/v1NetworkType",
+          "description": "The type of Network.",
+          "title": "type"
+        }
+      },
+      "description": "The Network resource, which represents a blockchain network.",
+      "title": "Network"
+    },
+    "v1NetworkType": {
+      "type": "string",
+      "enum": [
+        "TYPE_UNSPECIFIED",
+        "MAINNET",
+        "TESTNET"
+      ],
+      "default": "TYPE_UNSPECIFIED",
+      "description": "The type of Network.\n\n - TYPE_UNSPECIFIED: The default unused value.\n - MAINNET: A mainnet Network, storing real funds.\n - TESTNET: A testnet Network, used for testing."
+    }
+  }
+}

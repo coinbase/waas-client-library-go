@@ -143,6 +143,7 @@ message GetPoolRequest {
   // Format: pools/{poolID}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/pools/Pool"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "The resource name of the Pool to get. Format: pools/{poolID}",
       field_configuration: {path_param_name: "poolName"}
@@ -198,5 +199,5 @@ message ListPoolsResponse {
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages.",
     }
-  ];;
+  ];
 }
