@@ -87,7 +87,7 @@ message Pool {
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the Pool. Format: pools/{poolID}",
+      description: "The resource name of the Pool.\nFormat: pools/{poolID}",
     }
   ];
 
@@ -97,55 +97,30 @@ message Pool {
     (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "displayName"
-      description: "A user-readable name for the Pool. Example: 'Acme Co. Retail Trading'",
+      description: "A user-readable name for the Pool.\nExample: 'Acme Co. Retail Trading'",
     }
   ];
 }
 
 // The request message for CreatePool.
 message CreatePoolRequest {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "CreatePoolRequest"
-      description: "The request message for CreatePool."
-    }
-  };
-
   // The Pool to create.
-  Pool pool = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "The Pool to create.",
-    }
-  ];
+  Pool pool = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Optional: the ID to use for the Pool, which will become the final component
   // of the Pool's resource name. If not provided, the server will assign a Pool ID
   // automatically.
-  string pool_id = 2 [
-    (google.api.field_behavior) = OPTIONAL,
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "Optional: the ID to use for the Pool, which will become the final component of the Pool's resource name. If not provided, the server will assign a Pool ID automatically.",
-    }
-  ];
+  string pool_id = 2 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // The request message for GetPool.
 message GetPoolRequest {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "GetPoolRequest"
-      description: "The request message for GetPool."
-    }
-  };
-
   // The resource name of the Pool to get.
   // Format: pools/{poolID}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/pools/Pool"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "The resource name of the Pool to get. Format: pools/{poolID}",
       field_configuration: {path_param_name: "poolName"}
     }
   ];
@@ -153,28 +128,13 @@ message GetPoolRequest {
 
 // The request message for ListPools.
 message ListPoolsRequest {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "ListPoolsRequest"
-      description: "The request message for ListPools."
-    }
-  };
-
   // The maximum number of Pools to return. If unspecified, at most 50 Pools
   // will be returned.
-  int32 page_size = 1 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "The maximum number of Pools to return. If unspecified, at most 50 Pools will be returned.",
-    }
-  ];
+  int32 page_size = 1;
 
   // A page token, received from a previous ListPools call.
   // Provide this to retrieve the subsequent page.
-  string page_token = 2 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "A page token, received from a previous ListPools call. Provide this to retrieve the subsequent page.",
-    }
-  ];
+  string page_token = 2;
 }
 
 // The response message for ListPools.
@@ -187,17 +147,9 @@ message ListPoolsResponse {
   };
 
   // The list of Pools.
-  repeated Pool pools = 1 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "The list of Pools.",
-    }
-  ];
+  repeated Pool pools = 1;
 
   // A token, which can be sent as page_token to retrieve the next page.
   // If this field is omitted, there are no subsequent pages.
-  string next_page_token = 2 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages.",
-    }
-  ];
+  string next_page_token = 2;
 }

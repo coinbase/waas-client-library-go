@@ -410,6 +410,9 @@ func (c *blockchainRESTClient) ListAssets(ctx context.Context, req *blockchainpb
 		baseUrl.Path += fmt.Sprintf("/v1/%v/assets", req.GetParent())
 
 		params := url.Values{}
+		if req.GetFilter() != "" {
+			params.Add("filter", fmt.Sprintf("%v", req.GetFilter()))
+		}
 		if req.GetPageSize() != 0 {
 			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
 		}

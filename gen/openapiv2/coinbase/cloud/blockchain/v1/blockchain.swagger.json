@@ -43,7 +43,7 @@
         "parameters": [
           {
             "name": "pageSize",
-            "description": "The maximum number of Networks to return. If unspecified, at most 50 Networks will be returned.",
+            "description": "The maximum number of Networks to return. If unspecified, at most 50 Networks\nwill be returned.",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -51,7 +51,7 @@
           },
           {
             "name": "pageToken",
-            "description": "A page token, received from a previous ListNetworks call. Provide this to retrieve the subsequent page.",
+            "description": "A page token, received from a previous ListNetworks call.\nProvide this to retrieve the subsequent page.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -84,7 +84,7 @@
         "parameters": [
           {
             "name": "assetName",
-            "description": "The resource name of the Asset. Format: networks/{networkID}/assets/{assetID}",
+            "description": "The resource name of the Asset to get.\nFormat: networks/{networkID}/assets/{assetID}.",
             "in": "path",
             "required": true,
             "type": "string",
@@ -118,7 +118,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the Network to get. Format: networks/{networkID}",
+            "description": "The resource name of the Network to get.\nFormat: networks/{networkID}.",
             "in": "path",
             "required": true,
             "type": "string",
@@ -132,7 +132,8 @@
     },
     "/v1/{networkName}/assets": {
       "get": {
-        "summary": "Lists the Assets available to use on a given Network.",
+        "summary": "ListAssets",
+        "description": "Lists the Assets available to use on a given Network.",
         "operationId": "BlockchainService_ListAssets",
         "responses": {
           "200": {
@@ -151,7 +152,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the parent Network. Format: networks/{networkID}",
+            "description": "The resource name of the parent Network.\nFormat: networks/{networkID}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -159,7 +160,7 @@
           },
           {
             "name": "pageSize",
-            "description": "The maximum number of Assets to return. If unspecified, at most 50 Assets will be returned.",
+            "description": "The maximum number of Assets to return. If unspecified, at most 50 Assets\nwill be returned.",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -167,7 +168,14 @@
           },
           {
             "name": "pageToken",
-            "description": "A page token, received from a previous ListAssets call. Provide this to retrieve the subsequent page.",
+            "description": "A page token, received from a previous ListAssets call.\nProvide this to retrieve the subsequent page.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "description": "A filter string which conforms to https://google.aip.dev/160.\nSupported queries include any conjunction of the following:\n1. definition.asset_type (= | !=) \"{asset_type}\"\n2. definition.asset_group_id (= | !=) \"{asset_group_id}\"\n3. definition.sub_group_id (= | !=) \"{sub_group_id}\"",
             "in": "query",
             "required": false,
             "type": "string"
@@ -185,21 +193,21 @@
       "properties": {
         "assetType": {
           "type": "string",
-          "description": "The type of Asset the definition describes. Possible values: 'native', 'erc20', 'erc721', 'erc1155'",
+          "description": "The type of Asset the definition describes.\nPossible values: 'native', 'erc20', 'erc721', 'erc1155'",
           "title": "assetType"
         },
         "assetGroupId": {
           "type": "string",
-          "description": "The identifier that distinguishes this Asset group. Generally a 0x-prefixed contract address for the Asset. For a native Asset this will not be set.",
+          "description": "The identifier that distinguishes this Asset group.\nGenerally a 0x-prefixed contract address for the Asset. For a native Asset this will not be set.",
           "title": "assetGroupId"
         },
         "subGroupId": {
           "type": "string",
-          "description": "The identifier that distinguishes the specific Asset within the asset group. Generally a token ID. For a native Asset or ERC-20 this will not be set.",
+          "description": "The identifier that distinguishes the specific Asset within the asset group.\nGenerally a token ID. For a native Asset or ERC-20 this will not be set.",
           "title": "subGroupId"
         }
       },
-      "description": "The defining characteristics that combine to uniquely identify an Asset on-chain. Fungible tokens, such as ERC-20s require an asset_group_id (the contract address). Non-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s require a both an asset_group_id and a sub_group_id (the token ID).",
+      "description": "The defining characteristics that combine to uniquely identify an Asset on-chain.\nFungible tokens, such as ERC-20s require an asset_group_id (the contract address).\nNon-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s require a both an asset_group_id and a sub_group_id (the token ID).",
       "title": "Asset.Definition"
     },
     "protobufAny": {
@@ -234,27 +242,27 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Asset. Format: networks/{networkID}/assets/{assetID}",
+          "description": "The resource name of the Asset.\nFormat: networks/{networkID}/assets/{assetID}",
           "title": "name"
         },
         "advertisedSymbol": {
           "type": "string",
-          "description": "The symbol representation of this asset (e.g. ETH) as advertised by the Network. For a native Asset this may be implicit, e.g. the on-chain data may not include any symbol reference. For some protocols there can be Assets with arbitrary symbols that are not globally unique, and it should not be trusted to represent a canonical symbol/ticker.",
+          "description": "The symbol representation of this asset (e.g. ETH) as advertised by the Network.\nFor a native Asset this may be implicit, e.g. the on-chain data may not include any symbol reference.\nFor some protocols there can be Assets with arbitrary symbols that are not globally unique, and it should not be trusted to represent a canonical symbol/ticker.",
           "title": "advertisedSymbol"
         },
         "decimals": {
           "type": "integer",
           "format": "int32",
-          "description": "The number of decimals the Asset utilizes. Note: in some instances this value can change over time.",
+          "description": "The number of decimals the Asset utilizes.\nNote: in some instances this value can change over time.",
           "title": "decimals"
         },
         "definition": {
           "$ref": "#/definitions/AssetDefinition",
-          "description": "The identifier that distinguishes the specific Asset within the asset group. Generally a token ID. For a native Asset or ERC-20 this will not be set.",
+          "description": "The Asset's definition.",
           "title": "definition"
         }
       },
-      "description": "The Asset resource, which represents an on-chain asset. For fungible assets, one resource will exist per Asset. In the case of non-fungible tokens, a unique Asset entry will exist for every token.",
+      "description": "The Asset resource, which represents an on-chain asset.\nFor fungible assets, one resource will exist per Asset.\nIn the case of non-fungible tokens, a unique Asset entry will exist for every token.",
       "title": "Asset"
     },
     "v1ListAssetsResponse": {
@@ -269,7 +277,7 @@
         },
         "nextPageToken": {
           "type": "string",
-          "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+          "description": "A token, which can be sent as page_token to retrieve the next page.\nIf this field is omitted, there are no subsequent pages."
         }
       },
       "description": "The response message for ListAssets.",
@@ -287,7 +295,7 @@
         },
         "nextPageToken": {
           "type": "string",
-          "description": "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages."
+          "description": "A token, which can be sent as page_token to retrieve the next page.\nIf this field is omitted, there are no subsequent pages."
         }
       },
       "description": "The response message for ListNetworks.",
@@ -298,7 +306,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Network. Format: networks/{networkID}",
+          "description": "The resource name of the Network.\nFormat: networks/{networkID}",
           "title": "name"
         },
         "displayName": {
@@ -308,12 +316,12 @@
         },
         "nativeAsset": {
           "type": "string",
-          "description": "The native Asset for this Network. Format: networks/{networkID}/assets/{assetID}",
+          "description": "The native Asset for this Network.\nFormat: networks/{networkID}/assets/{assetID}",
           "title": "nativeAsset"
         },
         "protocolFamily": {
           "type": "string",
-          "description": "The protocol family this Network is a part of. Today, the only supported value is 'protocolFamilies/evm'.",
+          "description": "The protocol family this Network is a part of.\nToday, the only supported value is 'protocolFamilies/evm'.",
           "title": "protocolFamily"
         },
         "type": {
