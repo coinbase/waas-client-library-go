@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package coinbase.cloud.pools.v1;
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Coinbase Cloud - WaaS Pools API";
+        version: "1.0";
+    };
+    host: "https://api.coinbasecloud.com/waas/pools"
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+// A service for managing the Pool resource. A Pool is a top-level container for
+// segregating the resources under it via authorization checks. Pool-scoped resources
+// require a Pool to be created before they themselves can be created.
+service PoolService {
+  option (google.api.default_host) = "api.coinbasecloud.com/waas/pools";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "A service for managing the Pool resource. A Pool is a top-level container for segregating the resources under it via authorization checks. Pool-scoped resources require a Pool to be created before they themselves can be created."
+  };
+
+  // Creates a Pool. Call this method before creating any resources scoped to a Pool.
+  rpc CreatePool(CreatePoolRequest) returns (Pool) {
+    option (google.api.http) = {
+      post: "/v1/pools"
+      body: "pool"
+    };
+    option (google.api.method_signature) = "pool,pool_id";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "CreatePool"
+      description: "Creates a Pool. Call this method before creating any resources scoped to a Pool."
+    };
+  }
+
+  // Gets a Pool.
+  rpc GetPool(GetPoolRequest) returns (Pool) {
+    option (google.api.http) = {
+      get: "/v1/{name=pools/*}"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "GetPool"
+      description: "Gets a Pool."
+    };
+  }
+
+  // Lists Pools.
+  rpc ListPools(ListPoolsRequest) returns (ListPoolsResponse) {
+    option (google.api.http) = {
+      get: "/v1/pools"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListPools"
+      description: "Lists Pools."
+    };
+  }
+}
+
+// The Pool resource, which is a top-level container for segregating the
+// resources under it via authorization checks.
+message Pool {
+  option (google.api.resource) = {
+    type: "api.coinbasecloud.com/waas/pools/Pool"
+    pattern: "pools/{pool}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Pool"
+      description: "The Pool resource, which is a top-level container for segregating the resources under it via authorization checks."
+    }
+  };
+
+  // The resource name of the Pool.
+  // Format: pools/{poolID}
+  string name = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the Pool. Format: pools/{poolID}",
+    }
+  ];
+
+  // A user-readable name for the Pool.
+  // Example: 'Acme Co. Retail Trading'
+  string display_name = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "displayName"
+      description: "A user-readable name for the Pool. Example: 'Acme Co. Retail Trading'",
+    }
+  ];
+}
+
+// The request message for CreatePool.
+message CreatePoolRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "CreatePoolRequest"
+      description: "The request message for CreatePool."
+    }
+  };
+
+  // The Pool to create.
+  Pool pool = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The Pool to create.",
+    }
+  ];
+
+  // Optional: the ID to use for the Pool, which will become the final component
+  // of the Pool's resource name. If not provided, the server will assign a Pool ID
+  // automatically.
+  string pool_id = 2 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Optional: the ID to use for the Pool, which will become the final component of the Pool's resource name. If not provided, the server will assign a Pool ID automatically.",
+    }
+  ];
+}
+
+// The request message for GetPool.
+message GetPoolRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetPoolRequest"
+      description: "The request message for GetPool."
+    }
+  };
+
+  // The resource name of the Pool to get.
+  // Format: pools/{poolID}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The resource name of the Pool to get. Format: pools/{poolID}",
+      field_configuration: {path_param_name: "poolName"}
+    }
+  ];
+}
+
+// The request message for ListPools.
+message ListPoolsRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListPoolsRequest"
+      description: "The request message for ListPools."
+    }
+  };
+
+  // The maximum number of Pools to return. If unspecified, at most 50 Pools
+  // will be returned.
+  int32 page_size = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The maximum number of Pools to return. If unspecified, at most 50 Pools will be returned.",
+    }
+  ];
+
+  // A page token, received from a previous ListPools call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "A page token, received from a previous ListPools call. Provide this to retrieve the subsequent page.",
+    }
+  ];
+}
+
+// The response message for ListPools.
+message ListPoolsResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListPoolsResponse"
+      description: "The response message for ListPools."
+    }
+  };
+
+  // The list of Pools.
+  repeated Pool pools = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "The list of Pools.",
+    }
+  ];
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages.",
+    }
+  ];;
+}
