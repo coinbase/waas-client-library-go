@@ -1,20 +1,21 @@
 version: v1
 plugins:
   - name: go
-    out: ../gen/go
+    out: ../../gen/go
     opt:
       - paths=source_relative
   - name: go-grpc
-    out: ../gen/go
+    out: ../../gen/go
     opt:
       - paths=source_relative
   - name: go_gapic
-    out: ../gen/go
+    out: ../../gen/go
     opt:
       - transport=rest
       - go-gapic-package=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1;v1
       - module=github.cbhq.net/cloud/waas-client-library-go/gen/go
       - Mcoinbase/cloud/pools/v1/pools.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1;poolspb
       - Mcoinbase/cloud/blockchain/v1/blockchain.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1;blockchainpb
+      - Mcoinbase/cloud/protocols/v1/protocols.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1;protocolspb
   - name: openapiv2
-    out: ../gen/openapiv2
+    out: ../../gen/openapiv2

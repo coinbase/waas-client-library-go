@@ -247,13 +247,6 @@ message Asset {
 
 // The request message for GetNetwork.
 message GetNetworkRequest {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "GetNetworkRequest"
-      description: "The request message for GetNetwork."
-    }
-  };
-
   // The resource name of the Network to get.
   // Format: networks/{networkID}.
   string name = 1 [

@@ -1,0 +1,398 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Coinbase Cloud - WaaS Protocols API",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "ProtocolService",
+      "description": "A service providing a set of stateless APIs for constructing and broadcasting Network-specific transactions."
+    }
+  ],
+  "host": "https://api.coinbasecloud.com/waas/protocols",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/{networkName}:broadcastTransaction": {
+      "post": {
+        "summary": "BroadcastTransaction",
+        "description": "Broadcasts a transaction to a node in the Network.",
+        "operationId": "ProtocolService_BroadcastTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/typesTransaction"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the Network.\nFormat: networks/{networkID}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "transaction": {
+                  "$ref": "#/definitions/typesTransaction",
+                  "description": "The transaction to broadcast. For the broadcast to complete successfully,\nthe required_signatures' signature values must be populated (i.e. the transaction must be signed)."
+                }
+              },
+              "description": "The request message for BroadcastTransaction. For the broadcast to complete successfully,\nthe required_signatures' signature values must be populated (i.e. the transaction must be signed)."
+            }
+          }
+        ],
+        "tags": [
+          "ProtocolService"
+        ]
+      }
+    },
+    "/v1/{networkName}:constructTransaction": {
+      "post": {
+        "summary": "ConstructTransaction",
+        "description": "Constructs an unsigned transaction. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast.",
+        "operationId": "ProtocolService_ConstructTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/typesTransaction"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the Network.\nFormat: networks/{networkID}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "$ref": "#/definitions/typesTransactionInput",
+                  "description": "The input indicating the unsigned transaction to construct."
+                }
+              },
+              "description": "The request message for ConstructTransaction."
+            }
+          }
+        ],
+        "tags": [
+          "ProtocolService"
+        ]
+      }
+    },
+    "/v1/{networkName}:constructTransferTransaction": {
+      "post": {
+        "summary": "ConstructTransferTransaction",
+        "description": "Constructs an unsigned transfer transaction. A transfer transaction is a transaction that moves an Asset from one Address to another. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast.",
+        "operationId": "ProtocolService_ConstructTransferTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/typesTransaction"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the Network on which the transfer is happening.\nFormat: networks/{networkID}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "asset": {
+                  "type": "string",
+                  "description": "The resource name of the Asset being transferred.\nFormat: networks/{networkID}/assets/{assetID}."
+                },
+                "sender": {
+                  "type": "string",
+                  "description": "The address of the sender, e.g. as a 0x-prefixed hex string."
+                },
+                "recipient": {
+                  "type": "string",
+                  "description": "The address of the recipient, e.g. as a 0x-prefixed hex string."
+                },
+                "amount": {
+                  "type": "string",
+                  "description": "The amount of the asset to transfer, denominated in atomic units of the asset (e.g. Wei),\neither as a \"0x\"-prefixed hex string or a base-10 number."
+                },
+                "nonce": {
+                  "type": "string",
+                  "format": "int64",
+                  "description": "The nonce of the from address to be used in transaction construction.\nThis is required only for Account-based networks (e.g. EVM)."
+                },
+                "fee": {
+                  "$ref": "#/definitions/typesTransactionFee",
+                  "description": "The fee to be paid for the transfer. If not provided, the API will default to a network-based fee estimate."
+                }
+              },
+              "description": "The request message for ConstructTransferTransaction.",
+              "required": [
+                "asset",
+                "sender",
+                "recipient",
+                "amount"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "ProtocolService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ethereumDynamicFeeInput": {
+      "type": "object",
+      "properties": {
+        "maxPriorityFeePerGas": {
+          "type": "string",
+          "description": "The EIP-1559 maximum priority fee per gas either as a \"0x\"-prefixed hex string or a base-10 number."
+        },
+        "maxFeePerGas": {
+          "type": "string",
+          "description": "The EIP-1559 maximum fee per gas either as a \"0x\"-prefixed hex string or a base-10 number."
+        }
+      },
+      "description": "A message representing fee information on EIP-1559 supported networks."
+    },
+    "ethereumEIP1559TransactionInput": {
+      "type": "object",
+      "properties": {
+        "chainId": {
+          "type": "string",
+          "description": "The chain ID of the transaction either as a \"0x\"-prefixed hex string or a base-10 number."
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64",
+          "description": "The nonce of the transaction.\nNote: This value is considered only if override_nonce is set on the request."
+        },
+        "maxPriorityFeePerGas": {
+          "type": "string",
+          "description": "The EIP-1559 maximum priority fee per gas either as a \"0x\"-prefixed hex string or a base-10 number."
+        },
+        "maxFeePerGas": {
+          "type": "string",
+          "description": "The EIP-1559 maximum fee per gas either as a \"0x\"-prefixed hex string or a base-10 number."
+        },
+        "gas": {
+          "type": "string",
+          "format": "uint64",
+          "description": "The maximum amount of gas to use on the transaction."
+        },
+        "fromAddress": {
+          "type": "string",
+          "description": "The checksummed address from which the transaction will originate, as a \"0x\"-prefixed hex string.\nNote: This is NOT a WaaS Address resource of the form\nnetworks/{networkID}/addresses/{addressID}."
+        },
+        "toAddress": {
+          "type": "string",
+          "description": "The checksummed address to which the transaction is addressed, as a \"0x\"-prefixed hex string.\nNote: This is NOT a WaaS Address resource of the form\nnetworks/{networkID}/addresses/{addressID}."
+        },
+        "value": {
+          "type": "string",
+          "description": "The native value of the transaction as a \"0x\"-prefixed hex string or a base-10 number."
+        },
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "description": "The data for the transaction."
+        }
+      },
+      "description": "A message representing an EIP-1559 transaction input."
+    },
+    "ethereumRLPTransaction": {
+      "type": "object",
+      "properties": {
+        "sender": {
+          "type": "string",
+          "description": "The sender address as a hexadecimal string, prefixed with 0x."
+        },
+        "transactionRlp": {
+          "type": "string",
+          "format": "byte",
+          "description": "The RLP-encoded transaction as a byte array.\nSee https://github.com/ethereum/go-ethereum/blob/master/rlp/encode.go for an implementation."
+        }
+      },
+      "description": "A message representing a transaction encoded using Recursive-Length Prefix (RLP)\nSerialization. See https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/\nfor more details."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "typesECDSASignature": {
+      "type": "object",
+      "properties": {
+        "r": {
+          "type": "string",
+          "format": "byte",
+          "description": "The 32-byte R value of the signature in big-endian order."
+        },
+        "s": {
+          "type": "string",
+          "format": "byte",
+          "description": "The 32-byte S value of the signature in big-endian order."
+        },
+        "v": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The V value of the signature, if it exists."
+        }
+      },
+      "description": "A digital signature produced by the elliptic curve digital signature algorithm (ECDSA)."
+    },
+    "typesRequiredSignature": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "type": "string",
+          "format": "byte",
+          "description": "The payload to be signed. The TransactionInput must be transformed into\nthis payload. For EVM chains, this would be the hash of the type-prefixed\nRLP encoding of the transaction defined in EIP-2718. This is also the\nvalue that should be used in the MPCKeyService's CreateSignature API."
+        },
+        "signature": {
+          "$ref": "#/definitions/typesSignature",
+          "description": "The signature representing the signed payload. This must be set in order\nfor a Transaction to be broadcast."
+        }
+      },
+      "description": "A message representing a payload to be signed and its result."
+    },
+    "typesSignature": {
+      "type": "object",
+      "properties": {
+        "ecdsaSignature": {
+          "$ref": "#/definitions/typesECDSASignature",
+          "description": "An ECDSA signature."
+        }
+      },
+      "description": "A digital signature produced by a signing algorithm."
+    },
+    "typesTransaction": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "$ref": "#/definitions/typesTransactionInput",
+          "description": "A user-specified transaction in one of the supported input types."
+        },
+        "requiredSignatures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/typesRequiredSignature"
+          },
+          "description": "The set of signatures required to broadcast this Transaction.\nFor EVM networks, there will be only one signature."
+        },
+        "rawSignedTransaction": {
+          "type": "string",
+          "format": "byte",
+          "description": "The signed transaction to be broadcast. This value can be directly broadcast on-chain.\nThe Signatures in required_signatures need to be transformed into this value.\nFor EVM chains, this is just the R, S, and V values of the signature concatenated."
+        },
+        "hash": {
+          "type": "string",
+          "description": "The hash of the signed transaction."
+        }
+      },
+      "description": "A message that wraps protocol-specific transactions, and provides additional\npayloads that enable the transaction to be signed and broadcast."
+    },
+    "typesTransactionFee": {
+      "type": "object",
+      "properties": {
+        "ethereumFee": {
+          "$ref": "#/definitions/ethereumDynamicFeeInput",
+          "description": "An EIP-1559 fee on EVM networks."
+        }
+      },
+      "description": "A message representing the fee to be paid for a transaction."
+    },
+    "typesTransactionInput": {
+      "type": "object",
+      "properties": {
+        "ethereumRlpInput": {
+          "$ref": "#/definitions/ethereumRLPTransaction",
+          "description": "An Ethereum RLP transaction."
+        },
+        "ethereum1559Input": {
+          "$ref": "#/definitions/ethereumEIP1559TransactionInput",
+          "description": "An EIP-1559 transaction."
+        }
+      },
+      "description": "A message that contains each of the different transaction types we support."
+    }
+  }
+}
