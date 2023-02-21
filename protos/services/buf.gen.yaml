@@ -12,6 +12,10 @@ plugins:
     out: ../../gen/go
     opt:
       - paths=source_relative
+  - name: go-aip
+    out: ../../gen/go
+    opt:
+      - paths=source_relative
   - name: go_gapic
     out: ../../gen/go
     opt:
