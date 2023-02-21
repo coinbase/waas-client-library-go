@@ -1,0 +1,2 @@
+# This file is overriden each time the gapic plugin runs, so ignore it.
+gen/go/coinbase/cloud/clients/v1/doc.go
