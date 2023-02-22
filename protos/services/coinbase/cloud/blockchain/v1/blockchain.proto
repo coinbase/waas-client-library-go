@@ -321,7 +321,6 @@ message ListAssetsRequest {
   // Provide this to retrieve the subsequent page.
   string page_token = 3;
 
-
   // A filter string which conforms to https://google.aip.dev/160.
   // Supported queries include any conjunction of the following:
   // 1. definition.asset_type (= | !=) "{asset_type}"
