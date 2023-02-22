@@ -9,7 +9,7 @@ import (
 
 	mock "github.com/stretchr/testify/mock"
 
-	types "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types"
+	typesv1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
 
 	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
 )
@@ -20,7 +20,7 @@ type ProtocolServiceClient struct {
 }
 
 // BroadcastTransaction provides a mock function with given fields: ctx, in, opts
-func (_m *ProtocolServiceClient) BroadcastTransaction(ctx context.Context, in *v1.BroadcastTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error) {
+func (_m *ProtocolServiceClient) BroadcastTransaction(ctx context.Context, in *v1.BroadcastTransactionRequest, opts ...grpc.CallOption) (*typesv1.Transaction, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -30,12 +30,12 @@ func (_m *ProtocolServiceClient) BroadcastTransaction(ctx context.Context, in *v
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *types.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest, ...grpc.CallOption) *types.Transaction); ok {
+	var r0 *typesv1.Transaction
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest, ...grpc.CallOption) *typesv1.Transaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Transaction)
+			r0 = ret.Get(0).(*typesv1.Transaction)
 		}
 	}
 
@@ -50,7 +50,7 @@ func (_m *ProtocolServiceClient) BroadcastTransaction(ctx context.Context, in *v
 }
 
 // ConstructTransaction provides a mock function with given fields: ctx, in, opts
-func (_m *ProtocolServiceClient) ConstructTransaction(ctx context.Context, in *v1.ConstructTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error) {
+func (_m *ProtocolServiceClient) ConstructTransaction(ctx context.Context, in *v1.ConstructTransactionRequest, opts ...grpc.CallOption) (*typesv1.Transaction, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -60,12 +60,12 @@ func (_m *ProtocolServiceClient) ConstructTransaction(ctx context.Context, in *v
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *types.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest, ...grpc.CallOption) *types.Transaction); ok {
+	var r0 *typesv1.Transaction
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest, ...grpc.CallOption) *typesv1.Transaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Transaction)
+			r0 = ret.Get(0).(*typesv1.Transaction)
 		}
 	}
 
@@ -80,7 +80,7 @@ func (_m *ProtocolServiceClient) ConstructTransaction(ctx context.Context, in *v
 }
 
 // ConstructTransferTransaction provides a mock function with given fields: ctx, in, opts
-func (_m *ProtocolServiceClient) ConstructTransferTransaction(ctx context.Context, in *v1.ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error) {
+func (_m *ProtocolServiceClient) ConstructTransferTransaction(ctx context.Context, in *v1.ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*typesv1.Transaction, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -90,12 +90,12 @@ func (_m *ProtocolServiceClient) ConstructTransferTransaction(ctx context.Contex
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *types.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest, ...grpc.CallOption) *types.Transaction); ok {
+	var r0 *typesv1.Transaction
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest, ...grpc.CallOption) *typesv1.Transaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Transaction)
+			r0 = ret.Get(0).(*typesv1.Transaction)
 		}
 	}
 

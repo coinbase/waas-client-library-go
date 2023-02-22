@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package coinbase.cloud.protocols.v1;
 
-import "coinbase/cloud/types/transaction.proto";
+import "coinbase/cloud/types/v1/transaction.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
@@ -31,7 +31,7 @@ service ProtocolService {
 
   // Constructs an unsigned transaction. The payloads in the required_signatures of the
   // returned Transaction must be signed before the Transaction is broadcast.
-  rpc ConstructTransaction(ConstructTransactionRequest) returns (coinbase.cloud.types.Transaction) {
+  rpc ConstructTransaction(ConstructTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
     option (google.api.http) = {
       post: "/v1/{network=networks/*}:constructTransaction"
       body: "*"
@@ -46,7 +46,7 @@ service ProtocolService {
   // Constructs an unsigned transfer transaction. A transfer transaction is a transaction that
   // moves an Asset from one Address to another. The payloads in the required_signatures of the
   // returned Transaction must be signed before the Transaction is broadcast.
-  rpc ConstructTransferTransaction(ConstructTransferTransactionRequest) returns (coinbase.cloud.types.Transaction) {
+  rpc ConstructTransferTransaction(ConstructTransferTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
     option (google.api.http) = {
       post: "/v1/{network=networks/*}:constructTransferTransaction"
       body: "*"
@@ -59,7 +59,7 @@ service ProtocolService {
   }
 
   // Broadcasts a transaction to a node in the Network.
-  rpc BroadcastTransaction(BroadcastTransactionRequest) returns (coinbase.cloud.types.Transaction) {
+  rpc BroadcastTransaction(BroadcastTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
     option (google.api.http) = {
       post: "/v1/{network=networks/*}:broadcastTransaction"
       body: "*"
@@ -85,7 +85,7 @@ message ConstructTransactionRequest {
   ];
   
   // The input indicating the unsigned transaction to construct.
-  coinbase.cloud.types.TransactionInput input = 2;
+  coinbase.cloud.types.v1.TransactionInput input = 2;
 }
 
 // The request message for ConstructTransferTransaction.
@@ -122,7 +122,7 @@ message ConstructTransferTransactionRequest {
   int64 nonce = 6 [(google.api.field_behavior) = OPTIONAL];
 
   // The fee to be paid for the transfer. If not provided, the API will default to a network-based fee estimate.
-  coinbase.cloud.types.TransactionFee fee = 7 [(google.api.field_behavior) = OPTIONAL];
+  coinbase.cloud.types.v1.TransactionFee fee = 7 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // The request message for BroadcastTransaction. For the broadcast to complete successfully,
@@ -140,5 +140,5 @@ message BroadcastTransactionRequest {
 
   // The transaction to broadcast. For the broadcast to complete successfully,
   // the required_signatures' signature values must be populated (i.e. the transaction must be signed).
-  coinbase.cloud.types.Transaction transaction = 2;
+  coinbase.cloud.types.v1.Transaction transaction = 2;
 }

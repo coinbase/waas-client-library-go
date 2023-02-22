@@ -4,7 +4,7 @@ package v1
 
 import (
 	context "context"
-	types "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types"
+	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,13 +21,13 @@ const _ = grpc.SupportPackageIsVersion7
 type ProtocolServiceClient interface {
 	// Constructs an unsigned transaction. The payloads in the required_signatures of the
 	// returned Transaction must be signed before the Transaction is broadcast.
-	ConstructTransaction(ctx context.Context, in *ConstructTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error)
+	ConstructTransaction(ctx context.Context, in *ConstructTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
 	// Constructs an unsigned transfer transaction. A transfer transaction is a transaction that
 	// moves an Asset from one Address to another. The payloads in the required_signatures of the
 	// returned Transaction must be signed before the Transaction is broadcast.
-	ConstructTransferTransaction(ctx context.Context, in *ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error)
+	ConstructTransferTransaction(ctx context.Context, in *ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
 	// Broadcasts a transaction to a node in the Network.
-	BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error)
+	BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
 }
 
 type protocolServiceClient struct {
@@ -38,8 +38,8 @@ func NewProtocolServiceClient(cc grpc.ClientConnInterface) ProtocolServiceClient
 	return &protocolServiceClient{cc}
 }
 
-func (c *protocolServiceClient) ConstructTransaction(ctx context.Context, in *ConstructTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error) {
-	out := new(types.Transaction)
+func (c *protocolServiceClient) ConstructTransaction(ctx context.Context, in *ConstructTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error) {
+	out := new(v1.Transaction)
 	err := c.cc.Invoke(ctx, "/coinbase.cloud.protocols.v1.ProtocolService/ConstructTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -47,8 +47,8 @@ func (c *protocolServiceClient) ConstructTransaction(ctx context.Context, in *Co
 	return out, nil
 }
 
-func (c *protocolServiceClient) ConstructTransferTransaction(ctx context.Context, in *ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error) {
-	out := new(types.Transaction)
+func (c *protocolServiceClient) ConstructTransferTransaction(ctx context.Context, in *ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error) {
+	out := new(v1.Transaction)
 	err := c.cc.Invoke(ctx, "/coinbase.cloud.protocols.v1.ProtocolService/ConstructTransferTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (c *protocolServiceClient) ConstructTransferTransaction(ctx context.Context
 	return out, nil
 }
 
-func (c *protocolServiceClient) BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*types.Transaction, error) {
-	out := new(types.Transaction)
+func (c *protocolServiceClient) BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error) {
+	out := new(v1.Transaction)
 	err := c.cc.Invoke(ctx, "/coinbase.cloud.protocols.v1.ProtocolService/BroadcastTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -71,13 +71,13 @@ func (c *protocolServiceClient) BroadcastTransaction(ctx context.Context, in *Br
 type ProtocolServiceServer interface {
 	// Constructs an unsigned transaction. The payloads in the required_signatures of the
 	// returned Transaction must be signed before the Transaction is broadcast.
-	ConstructTransaction(context.Context, *ConstructTransactionRequest) (*types.Transaction, error)
+	ConstructTransaction(context.Context, *ConstructTransactionRequest) (*v1.Transaction, error)
 	// Constructs an unsigned transfer transaction. A transfer transaction is a transaction that
 	// moves an Asset from one Address to another. The payloads in the required_signatures of the
 	// returned Transaction must be signed before the Transaction is broadcast.
-	ConstructTransferTransaction(context.Context, *ConstructTransferTransactionRequest) (*types.Transaction, error)
+	ConstructTransferTransaction(context.Context, *ConstructTransferTransactionRequest) (*v1.Transaction, error)
 	// Broadcasts a transaction to a node in the Network.
-	BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*types.Transaction, error)
+	BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*v1.Transaction, error)
 	mustEmbedUnimplementedProtocolServiceServer()
 }
 
@@ -85,13 +85,13 @@ type ProtocolServiceServer interface {
 type UnimplementedProtocolServiceServer struct {
 }
 
-func (UnimplementedProtocolServiceServer) ConstructTransaction(context.Context, *ConstructTransactionRequest) (*types.Transaction, error) {
+func (UnimplementedProtocolServiceServer) ConstructTransaction(context.Context, *ConstructTransactionRequest) (*v1.Transaction, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConstructTransaction not implemented")
 }
-func (UnimplementedProtocolServiceServer) ConstructTransferTransaction(context.Context, *ConstructTransferTransactionRequest) (*types.Transaction, error) {
+func (UnimplementedProtocolServiceServer) ConstructTransferTransaction(context.Context, *ConstructTransferTransactionRequest) (*v1.Transaction, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConstructTransferTransaction not implemented")
 }
-func (UnimplementedProtocolServiceServer) BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*types.Transaction, error) {
+func (UnimplementedProtocolServiceServer) BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*v1.Transaction, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BroadcastTransaction not implemented")
 }
 func (UnimplementedProtocolServiceServer) mustEmbedUnimplementedProtocolServiceServer() {}

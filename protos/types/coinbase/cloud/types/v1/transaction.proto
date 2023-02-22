@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package coinbase.cloud.types;
+package coinbase.cloud.types.v1;
 
-import "coinbase/cloud/protocols/ethereum/inputs.proto";
-import "coinbase/crypto/types/signatures.proto";
+import "coinbase/cloud/protocols/ethereum/v1/inputs.proto";
+import "coinbase/crypto/types/v1/signatures.proto";
 
-option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types";
+option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1";
 
 // A message that wraps protocol-specific transactions, and provides additional
 // payloads that enable the transaction to be signed and broadcast.
@@ -30,10 +30,10 @@ message Transaction {
 message TransactionInput {
   oneof input {
     // An Ethereum RLP transaction.
-    coinbase.cloud.protocols.ethereum.RLPTransaction ethereum_rlp_input = 1;
+    coinbase.cloud.protocols.ethereum.v1.RLPTransaction ethereum_rlp_input = 1;
 
     // An EIP-1559 transaction.
-    coinbase.cloud.protocols.ethereum.EIP1559TransactionInput ethereum_1559_input = 2;
+    coinbase.cloud.protocols.ethereum.v1.EIP1559TransactionInput ethereum_1559_input = 2;
   }
 }
 
@@ -47,7 +47,7 @@ message RequiredSignature {
 
   // The signature representing the signed payload. This must be set in order
   // for a Transaction to be broadcast.
-  coinbase.crypto.types.Signature signature = 2;
+  coinbase.crypto.types.v1.Signature signature = 2;
 }
 
 // A message representing the fee to be paid for a transaction.
@@ -55,6 +55,6 @@ message TransactionFee {
   // The fee to be paid.
   oneof fee {
     // An EIP-1559 fee on EVM networks.
-    coinbase.cloud.protocols.ethereum.DynamicFeeInput ethereum_fee = 1;
+    coinbase.cloud.protocols.ethereum.v1.DynamicFeeInput ethereum_fee = 1;
   }
 }

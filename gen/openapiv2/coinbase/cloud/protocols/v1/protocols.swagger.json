@@ -30,7 +30,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/typesTransaction"
+              "$ref": "#/definitions/v1Transaction"
             }
           },
           "default": {
@@ -57,7 +57,7 @@
               "type": "object",
               "properties": {
                 "transaction": {
-                  "$ref": "#/definitions/typesTransaction",
+                  "$ref": "#/definitions/v1Transaction",
                   "description": "The transaction to broadcast. For the broadcast to complete successfully,\nthe required_signatures' signature values must be populated (i.e. the transaction must be signed)."
                 }
               },
@@ -79,7 +79,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/typesTransaction"
+              "$ref": "#/definitions/v1Transaction"
             }
           },
           "default": {
@@ -106,7 +106,7 @@
               "type": "object",
               "properties": {
                 "input": {
-                  "$ref": "#/definitions/typesTransactionInput",
+                  "$ref": "#/definitions/v1TransactionInput",
                   "description": "The input indicating the unsigned transaction to construct."
                 }
               },
@@ -128,7 +128,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/typesTransaction"
+              "$ref": "#/definitions/v1Transaction"
             }
           },
           "default": {
@@ -176,7 +176,7 @@
                   "description": "The nonce of the from address to be used in transaction construction.\nThis is required only for Account-based networks (e.g. EVM)."
                 },
                 "fee": {
-                  "$ref": "#/definitions/typesTransactionFee",
+                  "$ref": "#/definitions/v1TransactionFee",
                   "description": "The fee to be paid for the transfer. If not provided, the API will default to a network-based fee estimate."
                 }
               },
@@ -197,7 +197,34 @@
     }
   },
   "definitions": {
-    "ethereumDynamicFeeInput": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1DynamicFeeInput": {
       "type": "object",
       "properties": {
         "maxPriorityFeePerGas": {
@@ -211,7 +238,28 @@
       },
       "description": "A message representing fee information on EIP-1559 supported networks."
     },
-    "ethereumEIP1559TransactionInput": {
+    "v1ECDSASignature": {
+      "type": "object",
+      "properties": {
+        "r": {
+          "type": "string",
+          "format": "byte",
+          "description": "The 32-byte R value of the signature in big-endian order."
+        },
+        "s": {
+          "type": "string",
+          "format": "byte",
+          "description": "The 32-byte S value of the signature in big-endian order."
+        },
+        "v": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The V value of the signature, if it exists."
+        }
+      },
+      "description": "A digital signature produced by the elliptic curve digital signature algorithm (ECDSA)."
+    },
+    "v1EIP1559TransactionInput": {
       "type": "object",
       "properties": {
         "chainId": {
@@ -256,7 +304,7 @@
       },
       "description": "A message representing an EIP-1559 transaction input."
     },
-    "ethereumRLPTransaction": {
+    "v1RLPTransaction": {
       "type": "object",
       "properties": {
         "sender": {
@@ -271,55 +319,7 @@
       },
       "description": "A message representing a transaction encoded using Recursive-Length Prefix (RLP)\nSerialization. See https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/\nfor more details."
     },
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "@type": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {}
-    },
-    "rpcStatus": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protobufAny"
-          }
-        }
-      }
-    },
-    "typesECDSASignature": {
-      "type": "object",
-      "properties": {
-        "r": {
-          "type": "string",
-          "format": "byte",
-          "description": "The 32-byte R value of the signature in big-endian order."
-        },
-        "s": {
-          "type": "string",
-          "format": "byte",
-          "description": "The 32-byte S value of the signature in big-endian order."
-        },
-        "v": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The V value of the signature, if it exists."
-        }
-      },
-      "description": "A digital signature produced by the elliptic curve digital signature algorithm (ECDSA)."
-    },
-    "typesRequiredSignature": {
+    "v1RequiredSignature": {
       "type": "object",
       "properties": {
         "payload": {
@@ -328,33 +328,33 @@
           "description": "The payload to be signed. The TransactionInput must be transformed into\nthis payload. For EVM chains, this would be the hash of the type-prefixed\nRLP encoding of the transaction defined in EIP-2718. This is also the\nvalue that should be used in the MPCKeyService's CreateSignature API."
         },
         "signature": {
-          "$ref": "#/definitions/typesSignature",
+          "$ref": "#/definitions/v1Signature",
           "description": "The signature representing the signed payload. This must be set in order\nfor a Transaction to be broadcast."
         }
       },
       "description": "A message representing a payload to be signed and its result."
     },
-    "typesSignature": {
+    "v1Signature": {
       "type": "object",
       "properties": {
         "ecdsaSignature": {
-          "$ref": "#/definitions/typesECDSASignature",
+          "$ref": "#/definitions/v1ECDSASignature",
           "description": "An ECDSA signature."
         }
       },
       "description": "A digital signature produced by a signing algorithm."
     },
-    "typesTransaction": {
+    "v1Transaction": {
       "type": "object",
       "properties": {
         "input": {
-          "$ref": "#/definitions/typesTransactionInput",
+          "$ref": "#/definitions/v1TransactionInput",
           "description": "A user-specified transaction in one of the supported input types."
         },
         "requiredSignatures": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/typesRequiredSignature"
+            "$ref": "#/definitions/v1RequiredSignature"
           },
           "description": "The set of signatures required to broadcast this Transaction.\nFor EVM networks, there will be only one signature."
         },
@@ -370,25 +370,25 @@
       },
       "description": "A message that wraps protocol-specific transactions, and provides additional\npayloads that enable the transaction to be signed and broadcast."
     },
-    "typesTransactionFee": {
+    "v1TransactionFee": {
       "type": "object",
       "properties": {
         "ethereumFee": {
-          "$ref": "#/definitions/ethereumDynamicFeeInput",
+          "$ref": "#/definitions/v1DynamicFeeInput",
           "description": "An EIP-1559 fee on EVM networks."
         }
       },
       "description": "A message representing the fee to be paid for a transaction."
     },
-    "typesTransactionInput": {
+    "v1TransactionInput": {
       "type": "object",
       "properties": {
         "ethereumRlpInput": {
-          "$ref": "#/definitions/ethereumRLPTransaction",
+          "$ref": "#/definitions/v1RLPTransaction",
           "description": "An Ethereum RLP transaction."
         },
         "ethereum1559Input": {
-          "$ref": "#/definitions/ethereumEIP1559TransactionInput",
+          "$ref": "#/definitions/v1EIP1559TransactionInput",
           "description": "An EIP-1559 transaction."
         }
       },

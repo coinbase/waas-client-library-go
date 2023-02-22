@@ -25,7 +25,7 @@ import (
 	"net/url"
 
 	protocolspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
-	typespb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types"
+	typespb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"

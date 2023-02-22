@@ -6,7 +6,7 @@ import (
 	context "context"
 
 	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
-	types "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types"
+	typesv1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -16,15 +16,15 @@ type ProtocolServiceServer struct {
 }
 
 // BroadcastTransaction provides a mock function with given fields: _a0, _a1
-func (_m *ProtocolServiceServer) BroadcastTransaction(_a0 context.Context, _a1 *v1.BroadcastTransactionRequest) (*types.Transaction, error) {
+func (_m *ProtocolServiceServer) BroadcastTransaction(_a0 context.Context, _a1 *v1.BroadcastTransactionRequest) (*typesv1.Transaction, error) {
 	ret := _m.Called(_a0, _a1)
 
-	var r0 *types.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest) *types.Transaction); ok {
+	var r0 *typesv1.Transaction
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest) *typesv1.Transaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Transaction)
+			r0 = ret.Get(0).(*typesv1.Transaction)
 		}
 	}
 
@@ -39,15 +39,15 @@ func (_m *ProtocolServiceServer) BroadcastTransaction(_a0 context.Context, _a1 *
 }
 
 // ConstructTransaction provides a mock function with given fields: _a0, _a1
-func (_m *ProtocolServiceServer) ConstructTransaction(_a0 context.Context, _a1 *v1.ConstructTransactionRequest) (*types.Transaction, error) {
+func (_m *ProtocolServiceServer) ConstructTransaction(_a0 context.Context, _a1 *v1.ConstructTransactionRequest) (*typesv1.Transaction, error) {
 	ret := _m.Called(_a0, _a1)
 
-	var r0 *types.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest) *types.Transaction); ok {
+	var r0 *typesv1.Transaction
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest) *typesv1.Transaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Transaction)
+			r0 = ret.Get(0).(*typesv1.Transaction)
 		}
 	}
 
@@ -62,15 +62,15 @@ func (_m *ProtocolServiceServer) ConstructTransaction(_a0 context.Context, _a1 *
 }
 
 // ConstructTransferTransaction provides a mock function with given fields: _a0, _a1
-func (_m *ProtocolServiceServer) ConstructTransferTransaction(_a0 context.Context, _a1 *v1.ConstructTransferTransactionRequest) (*types.Transaction, error) {
+func (_m *ProtocolServiceServer) ConstructTransferTransaction(_a0 context.Context, _a1 *v1.ConstructTransferTransactionRequest) (*typesv1.Transaction, error) {
 	ret := _m.Called(_a0, _a1)
 
-	var r0 *types.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest) *types.Transaction); ok {
+	var r0 *typesv1.Transaction
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest) *typesv1.Transaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Transaction)
+			r0 = ret.Get(0).(*typesv1.Transaction)
 		}
 	}
 

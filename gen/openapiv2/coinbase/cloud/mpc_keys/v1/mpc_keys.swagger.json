@@ -244,7 +244,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/mpc_keysv1Signature",
+              "$ref": "#/definitions/cloudmpc_keysv1Signature",
               "required": [
                 "signature"
               ]
@@ -360,11 +360,39 @@
     }
   },
   "definitions": {
-    "cryptotypesSignature": {
+    "cloudmpc_keysv1Signature": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The resource name of the Signature.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}",
+          "title": "name",
+          "readOnly": true
+        },
+        "payload": {
+          "type": "string",
+          "format": "byte",
+          "description": "The payload to sign with the MPCKey.",
+          "title": "name"
+        },
+        "signature": {
+          "$ref": "#/definitions/cryptotypesv1Signature",
+          "description": "The payload which has been signed with the MPCKey.",
+          "title": "signature",
+          "readOnly": true
+        }
+      },
+      "description": "The Signature resource. Signatures can be created with distributed M-of-N signing using MPCKeys via the WaaS SDK.",
+      "title": "Signature",
+      "required": [
+        "payload"
+      ]
+    },
+    "cryptotypesv1Signature": {
       "type": "object",
       "properties": {
         "ecdsaSignature": {
-          "$ref": "#/definitions/typesECDSASignature",
+          "$ref": "#/definitions/v1ECDSASignature",
           "description": "An ECDSA signature."
         }
       },
@@ -395,34 +423,6 @@
         }
       },
       "description": "This resource represents a long-running operation that is the result of a\nnetwork API call."
-    },
-    "mpc_keysv1Signature": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The resource name of the Signature.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}",
-          "title": "name",
-          "readOnly": true
-        },
-        "payload": {
-          "type": "string",
-          "format": "byte",
-          "description": "The payload to sign with the MPCKey.",
-          "title": "name"
-        },
-        "signature": {
-          "$ref": "#/definitions/cryptotypesSignature",
-          "description": "The payload which has been signed with the MPCKey.",
-          "title": "signature",
-          "readOnly": true
-        }
-      },
-      "description": "The Signature resource. Signatures can be created with distributed M-of-N signing using MPCKeys via the WaaS SDK.",
-      "title": "Signature",
-      "required": [
-        "payload"
-      ]
     },
     "protobufAny": {
       "type": "object",
@@ -456,61 +456,6 @@
         }
       },
       "description": "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors)."
-    },
-    "typesECDSASignature": {
-      "type": "object",
-      "properties": {
-        "r": {
-          "type": "string",
-          "format": "byte",
-          "description": "The 32-byte R value of the signature in big-endian order."
-        },
-        "s": {
-          "type": "string",
-          "format": "byte",
-          "description": "The 32-byte S value of the signature in big-endian order."
-        },
-        "v": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The V value of the signature, if it exists."
-        }
-      },
-      "description": "A digital signature produced by the elliptic curve digital signature algorithm (ECDSA)."
-    },
-    "typesEllipticCurve": {
-      "type": "string",
-      "enum": [
-        "ELLIPTIC_CURVE_UNSPECIFIED",
-        "SECP256K1"
-      ],
-      "default": "ELLIPTIC_CURVE_UNSPECIFIED",
-      "description": "An enumeration of supported elliptic curve types.\n\n - ELLIPTIC_CURVE_UNSPECIFIED: The default unspecified value.\n - SECP256K1: The curve used by Bitcoin and Ethereum."
-    },
-    "typesEllipticPublicKey": {
-      "type": "object",
-      "properties": {
-        "ellipticCurve": {
-          "$ref": "#/definitions/typesEllipticCurve",
-          "description": "The elliptic curve used by this public key."
-        },
-        "publicKey": {
-          "type": "string",
-          "format": "byte",
-          "description": "The public key in compressed form as defined in the Standards for Efficient\nCryptography (SEC) 1, Version 2.0, Section 2.3.3."
-        }
-      },
-      "description": "An Elliptic Curve Cryptography (ECC) public key."
-    },
-    "typesPublicKey": {
-      "type": "object",
-      "properties": {
-        "ellipticPublicKey": {
-          "$ref": "#/definitions/typesEllipticPublicKey",
-          "description": "An Elliptic Curve Cryptography (ECC) public key."
-        }
-      },
-      "description": "A message representing a public key."
     },
     "v1CreateDeviceGroupMetadata": {
       "type": "object",
@@ -589,6 +534,51 @@
         "seed"
       ]
     },
+    "v1ECDSASignature": {
+      "type": "object",
+      "properties": {
+        "r": {
+          "type": "string",
+          "format": "byte",
+          "description": "The 32-byte R value of the signature in big-endian order."
+        },
+        "s": {
+          "type": "string",
+          "format": "byte",
+          "description": "The 32-byte S value of the signature in big-endian order."
+        },
+        "v": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The V value of the signature, if it exists."
+        }
+      },
+      "description": "A digital signature produced by the elliptic curve digital signature algorithm (ECDSA)."
+    },
+    "v1EllipticCurve": {
+      "type": "string",
+      "enum": [
+        "ELLIPTIC_CURVE_UNSPECIFIED",
+        "SECP256K1"
+      ],
+      "default": "ELLIPTIC_CURVE_UNSPECIFIED",
+      "description": "An enumeration of supported elliptic curve types.\n\n - ELLIPTIC_CURVE_UNSPECIFIED: The default unspecified value.\n - SECP256K1: The curve used by Bitcoin and Ethereum."
+    },
+    "v1EllipticPublicKey": {
+      "type": "object",
+      "properties": {
+        "ellipticCurve": {
+          "$ref": "#/definitions/v1EllipticCurve",
+          "description": "The elliptic curve used by this public key."
+        },
+        "publicKey": {
+          "type": "string",
+          "format": "byte",
+          "description": "The public key in compressed form as defined in the Standards for Efficient\nCryptography (SEC) 1, Version 2.0, Section 2.3.3."
+        }
+      },
+      "description": "An Elliptic Curve Cryptography (ECC) public key."
+    },
     "v1HardenedChild": {
       "type": "object",
       "properties": {
@@ -641,7 +631,7 @@
           "title": "derivationPath"
         },
         "publicKey": {
-          "$ref": "#/definitions/typesPublicKey",
+          "$ref": "#/definitions/v1PublicKey",
           "description": "The public portion of the MPCKey.",
           "title": "publicKey",
           "readOnly": true
@@ -675,6 +665,16 @@
       },
       "description": "The MPCOperation resource, which represents a pending MPC operation of a DeviceGroup waiting for computation. Poll the ListMPCOperations method for these pending MPCOperations, and use the WaaS SDK's ComputeMPCOperation to complete the operation. The MPCOperation resource ID is guaranteed to be the same as that of the underlying long-running operation.",
       "title": "MPCOperation"
+    },
+    "v1PublicKey": {
+      "type": "object",
+      "properties": {
+        "ellipticPublicKey": {
+          "$ref": "#/definitions/v1EllipticPublicKey",
+          "description": "An Elliptic Curve Cryptography (ECC) public key."
+        }
+      },
+      "description": "A message representing a public key."
     },
     "v1RegisterDeviceRequest": {
       "type": "object",

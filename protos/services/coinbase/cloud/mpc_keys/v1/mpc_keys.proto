@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package coinbase.cloud.mpc_keys.v1;
 
-import "coinbase/crypto/types/keys.proto";
-import "coinbase/crypto/types/signatures.proto";
+import "coinbase/crypto/types/v1/keys.proto";
+import "coinbase/crypto/types/v1/signatures.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
@@ -356,7 +356,7 @@ message MPCKey {
   ];
 
   // The public portion of the MPCKey. 
-  coinbase.crypto.types.PublicKey public_key = 3 [
+  coinbase.crypto.types.v1.PublicKey public_key = 3 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "publicKey"
@@ -399,7 +399,7 @@ message Signature {
   ];
 
   // The payload which has been signed with the MPCKey.
-  coinbase.crypto.types.Signature signature = 3 [
+  coinbase.crypto.types.v1.Signature signature = 3 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "signature"
