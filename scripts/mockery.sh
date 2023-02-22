@@ -5,16 +5,27 @@ set -euo pipefail
 
 COMPONENT=$1
 
-# Strip component of trailing 's', if one exists.
-SINGULAR_COMPONENT=${COMPONENT%s}
+CAMEL_COMPONENT=""
 
-# Convert component to uppercase.
-UPPERCASE_SINGULAR_COMPONENT="$(tr '[:lower:]' '[:upper:]' <<< ${SINGULAR_COMPONENT:0:1})${SINGULAR_COMPONENT:1}"
+if [ "$COMPONENT" = "pools" ]; then
+  CAMEL_COMPONENT="Pool"
+elif [ "$COMPONENT" = "blockchain" ]; then
+  CAMEL_COMPONENT="Blockchain"
+elif [ "$COMPONENT" = "protocols" ]; then
+  CAMEL_COMPONENT="Protocol"
+elif [ "$COMPONENT" = "mpc_keys" ]; then
+  CAMEL_COMPONENT="MPCKey"
+fi
+
+if [ "$CAMEL_COMPONENT" = "" ]; then
+  echo "Invalid component $COMPONENT."
+  exit 1
+fi
 
 # Define inputs to mockery.
 DIR="./gen/go/coinbase/cloud/$COMPONENT/v1"
-CLIENT_IFACE="${UPPERCASE_SINGULAR_COMPONENT}ServiceClient"
-SERVER_IFACE="${UPPERCASE_SINGULAR_COMPONENT}ServiceServer"
+CLIENT_IFACE="${CAMEL_COMPONENT}ServiceClient"
+SERVER_IFACE="${CAMEL_COMPONENT}ServiceServer"
 OUTPUT_DIR="./gen/go/coinbase/cloud/$COMPONENT/v1/mocks"
 
 echo "Generating mocks for $COMPONENT..."

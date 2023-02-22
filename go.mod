@@ -3,6 +3,7 @@ module github.cbhq.net/cloud/waas-client-library-go
 go 1.18
 
 require (
+	cloud.google.com/go/longrunning v0.3.0
 	github.com/golang/protobuf v1.5.2
 	github.com/googleapis/gax-go/v2 v2.7.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
@@ -16,10 +17,12 @@ require (
 )
 
 require (
+	cloud.google.com/go v0.107.0 // indirect
 	cloud.google.com/go/compute v1.18.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

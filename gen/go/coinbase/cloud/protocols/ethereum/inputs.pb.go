@@ -28,8 +28,7 @@ type EIP1559TransactionInput struct {
 
 	// The chain ID of the transaction either as a "0x"-prefixed hex string or a base-10 number.
 	ChainId string `protobuf:"bytes,1,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
-	// The nonce of the transaction.
-	// Note: This value is considered only if override_nonce is set on the request.
+	// The nonce of the transaction. This value may be ignored depending on the API.
 	Nonce uint64 `protobuf:"varint,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	// The EIP-1559 maximum priority fee per gas either as a "0x"-prefixed hex string or a base-10 number.
 	MaxPriorityFeePerGas string `protobuf:"bytes,3,opt,name=max_priority_fee_per_gas,json=maxPriorityFeePerGas,proto3" json:"max_priority_fee_per_gas,omitempty"`

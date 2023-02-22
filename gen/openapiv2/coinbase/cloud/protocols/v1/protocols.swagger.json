@@ -221,7 +221,7 @@
         "nonce": {
           "type": "string",
           "format": "uint64",
-          "description": "The nonce of the transaction.\nNote: This value is considered only if override_nonce is set on the request."
+          "description": "The nonce of the transaction. This value may be ignored depending on the API."
         },
         "maxPriorityFeePerGas": {
           "type": "string",

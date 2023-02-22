@@ -1,7 +1,12 @@
 # All targets
 .PHONY: all
-all: protos mocks
+all: clean protos mocks
 	@go mod tidy
+
+# Remove generated files
+.PHONY: clean
+clean:
+	rm -rf ./gen
 
 # Run all proto plugins
 .PHONY: protos
@@ -19,7 +24,7 @@ protos/services:
 
 # Generate Server and Client mocks
 .PHONY: mocks
-mocks: mocks/pools mocks/protocols mocks/blockchain
+mocks: mocks/pools mocks/protocols mocks/blockchain mocks/mpc_keys
 
 # Run the mockery script for the provided component
 .PHONY: mocks/%

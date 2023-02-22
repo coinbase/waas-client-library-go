@@ -9,8 +9,7 @@ message EIP1559TransactionInput {
   // The chain ID of the transaction either as a "0x"-prefixed hex string or a base-10 number.
   string chain_id = 1;
 
-  // The nonce of the transaction.
-  // Note: This value is considered only if override_nonce is set on the request.
+  // The nonce of the transaction. This value may be ignored depending on the API.
   uint64 nonce = 2; 
 
   // The EIP-1559 maximum priority fee per gas either as a "0x"-prefixed hex string or a base-10 number.
