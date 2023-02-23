@@ -17,6 +17,8 @@ elif [ "$COMPONENT" = "mpc_keys" ]; then
   CAMEL_COMPONENT="MPCKey"
 elif [ "$COMPONENT" = "mpc_wallets" ]; then
   CAMEL_COMPONENT="MPCWallet"
+elif [ "$COMPONENT" = "mpc_transactions" ]; then
+  CAMEL_COMPONENT="MPCTransaction"
 fi
 
 if [ "$CAMEL_COMPONENT" = "" ]; then

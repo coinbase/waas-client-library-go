@@ -27,6 +27,7 @@ plugins:
       - Mcoinbase/cloud/protocols/v1/protocols.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1;protocolspb
       - Mcoinbase/cloud/mpc_keys/v1/mpc_keys.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1;mpc_keyspb
       - Mcoinbase/cloud/mpc_wallets/v1/mpc_wallets.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1;mpc_walletspb
+      - Mcoinbase/cloud/mpc_transactions/v1/mpc_transactions.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1;mpc_transactionspb
       - Mcoinbase/cloud/types/v1/transaction.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1;typespb
   - name: openapiv2
     out: ../../gen/openapiv2

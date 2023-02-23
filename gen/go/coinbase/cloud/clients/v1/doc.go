@@ -24,7 +24,7 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewMPCWalletClient(ctx)
+//  c, err := v1.NewBlockchainClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -44,22 +44,17 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewMPCWalletRESTClient(ctx)
+//  c, err := v1.NewBlockchainRESTClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
 //  defer c.Close()
 //
-//  req := &mpc_walletspb.CreateMPCWalletRequest{
+//  req := &blockchainpb.GetNetworkRequest{
 //  	// TODO: Fill request struct fields.
-//  	// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#CreateMPCWalletRequest.
+//  	// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#GetNetworkRequest.
 //  }
-//  op, err := c.CreateMPCWallet(ctx, req)
-//  if err != nil {
-//  	// TODO: Handle error.
-//  }
-//
-//  resp, err := op.Wait(ctx)
+//  resp, err := c.GetNetwork(ctx, req)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -68,7 +63,7 @@
 //
 // Use of Context
 //
-// The ctx passed to NewMPCWalletClient is used for authentication requests and
+// The ctx passed to NewBlockchainClient is used for authentication requests and
 // for creating the underlying connection, but is not used for subsequent calls.
 // Individual methods on the client use the ctx given to them.
 //

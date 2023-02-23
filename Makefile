@@ -24,7 +24,7 @@ protos/services:
 
 # Generate Server and Client mocks
 .PHONY: mocks
-mocks: mocks/pools mocks/protocols mocks/blockchain mocks/mpc_keys mocks/mpc_wallets
+mocks: mocks/pools mocks/protocols mocks/blockchain mocks/mpc_keys mocks/mpc_wallets mocks/mpc_transactions
 
 # Run the mockery script for the provided component
 .PHONY: mocks/%
