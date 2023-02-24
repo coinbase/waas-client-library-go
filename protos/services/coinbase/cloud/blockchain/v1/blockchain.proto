@@ -37,7 +37,7 @@ service BlockchainService {
     };
     option (google.api.method_signature) = "name";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GetNetwork"
+      summary: "Get Network"
       description: "Gets a Network."
     };
   }
@@ -48,7 +48,7 @@ service BlockchainService {
       get: "/v1/networks"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListNetworks"
+      summary: "List Networks"
       description: "Lists the Networks available to use on WaaS."
     };
   }
@@ -60,7 +60,7 @@ service BlockchainService {
     };
     option (google.api.method_signature) = "name";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GetAsset"
+      summary: "Get Asset"
       description: "Gets an Asset."
     };
   }
@@ -72,7 +72,7 @@ service BlockchainService {
     };
     option (google.api.method_signature) = "parent";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListAssets"
+      summary: "List Assets"
       description: "Lists the Assets available to use on a given Network."
     };
   }

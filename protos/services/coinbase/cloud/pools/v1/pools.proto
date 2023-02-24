@@ -38,7 +38,7 @@ service PoolService {
     };
     option (google.api.method_signature) = "pool,pool_id";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "CreatePool"
+      summary: "Create Pool"
       description: "Creates a Pool. Call this method before creating any resources scoped to a Pool."
     };
   }
@@ -50,7 +50,7 @@ service PoolService {
     };
     option (google.api.method_signature) = "name";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GetPool"
+      summary: "Get Pool"
       description: "Gets a Pool."
     };
   }
@@ -61,7 +61,7 @@ service PoolService {
       get: "/v1/pools"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListPools"
+      summary: "List Pools"
       description: "Lists Pools."
     };
   }

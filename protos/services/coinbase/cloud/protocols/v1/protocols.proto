@@ -38,7 +38,7 @@ service ProtocolService {
     };
     option (google.api.method_signature) = "input";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ConstructTransaction"
+      summary: "Construct Transaction"
       description: "Constructs an unsigned transaction. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast."
     };
   }
@@ -53,7 +53,7 @@ service ProtocolService {
     };
     option (google.api.method_signature) = "network,asset,sender,recipient,amount";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ConstructTransferTransaction"
+      summary: "Construct Transfer Transaction"
       description: "Constructs an unsigned transfer transaction. A transfer transaction is a transaction that moves an Asset from one Address to another. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast."
     };
   }
@@ -66,7 +66,7 @@ service ProtocolService {
     };
     option (google.api.method_signature) = "network,transaction";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "BroadcastTransaction"
+      summary: "Broadcast Transaction"
       description: "Broadcasts a transaction to a node in the Network."
     };
   }

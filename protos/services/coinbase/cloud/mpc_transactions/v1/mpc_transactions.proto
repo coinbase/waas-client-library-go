@@ -47,7 +47,7 @@ service MPCTransactionService {
       metadata_type: "CreateMPCTransactionMetadata"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "CreateMPCTransaction"
+      summary: "Create MPC Transaction"
       description: "Creates an MPCTransaction. The long-running operation returned from this API will contain information about the state of the MPCTransaction that can be used to complete the operation. The LRO will be considered Done once the MPCTransaction reaches a state of CONFIRMING (i.e. broadcast on-chain). See the MPCTransaction documentation for its lifecycle."
     };
   }
@@ -60,7 +60,7 @@ service MPCTransactionService {
     };
     option (google.api.method_signature) = "name";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GetMPCTransaction"
+      summary: "Get MPC Transaction"
       description: "Gets an MPCTransaction. There can be a delay between when CreateMPCTransaction is called and when this API will begin returning an MPCTransaction in the CREATED state."
     };
   }
@@ -72,7 +72,7 @@ service MPCTransactionService {
     };
     option (google.api.method_signature) = "parent";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListMPCTransactions"
+      summary: "List MPC Transactions"
       description: "Lists MPCTransactions."
     };
   }

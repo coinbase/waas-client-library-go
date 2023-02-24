@@ -48,7 +48,7 @@ service MPCWalletService {
       metadata_type: "CreateMPCWalletMetadata"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "CreateMPCWallet"
+      summary: "Create MPC Wallet"
       description: "Creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's RegisterDevice before this method is called. Under the hood, this calls MPCKeyService's CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation."
     };
   }
@@ -60,7 +60,7 @@ service MPCWalletService {
     };
     option (google.api.method_signature) = "name";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GetMPCWallet"
+      summary: "Get MPC Wallet"
       description: "Gets an MPCWallet."
     };
   }
@@ -72,7 +72,7 @@ service MPCWalletService {
     };
     option (google.api.method_signature) = "parent";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListMPCWallets"
+      summary: "List MPC Wallets"
       description: "Lists MPCWallets."
     };
   }
@@ -85,7 +85,7 @@ service MPCWalletService {
     };
     option (google.api.method_signature) = "mpc_wallet,network";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GenerateAddress"
+      summary: "Generate Address"
       description: "Generates an Address within an MPCWallet."
     };
   }
@@ -97,7 +97,7 @@ service MPCWalletService {
     };
     option (google.api.method_signature) = "name";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "GetAddress"
+      summary: "Get Address"
       description: "Gets an Address."
     };
   }
@@ -109,7 +109,7 @@ service MPCWalletService {
     };
     option (google.api.method_signature) = "parent,mpc_wallet";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListAddresses"
+      summary: "List Addresses"
       description: "Lists Addresses."
     };
   }
@@ -121,7 +121,7 @@ service MPCWalletService {
     };
     option (google.api.method_signature) = "parent";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "ListBalances"
+      summary: "List Balances"
       description: "Lists Balances."
     };
   }
