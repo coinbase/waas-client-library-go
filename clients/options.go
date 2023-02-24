@@ -2,9 +2,11 @@ package clients
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.cbhq.net/cloud/waas-client-library-go/auth"
+	"github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 )
 
@@ -107,4 +109,22 @@ func GetHTTPClient(serviceName string, config *WaaSClientConfig) (*http.Client, 
 	}
 
 	return httpClient, nil
+}
+
+// LongRunningOperation is the interface for long-running operations that is
+// used to create the gax call options for interacting with LROs.
+type LongRunningOperation interface {
+	Name() string
+	PathPrefix() string
+}
+
+// LROOptions returns the call options for long-running operations.
+// This overrides the gapic generated client `WithPath` call option that ignores the
+// path prefix, with a call option that includes the path prefix.
+func LROOptions(op LongRunningOperation, version string, opts []gax.CallOption) []gax.CallOption {
+	if op.PathPrefix() == "" {
+		return opts
+	}
+
+	return append(opts, gax.WithPath(fmt.Sprintf("%s/%s/%s", op.PathPrefix(), version, op.Name())))
 }

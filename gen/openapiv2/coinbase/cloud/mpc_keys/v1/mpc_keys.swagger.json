@@ -23,7 +23,7 @@
   "paths": {
     "/v1/{deviceGroupName}": {
       "get": {
-        "summary": "GetDeviceGroup",
+        "summary": "Get Device Group",
         "description": "Gets a DeviceGroup.",
         "operationId": "MPCKeyService_GetDeviceGroup",
         "responses": {
@@ -57,7 +57,7 @@
     },
     "/v1/{deviceGroupName}/mpcKeys": {
       "post": {
-        "summary": "CreateMPCKey",
+        "summary": "Create MPC Key",
         "description": "Creates an MPCKey. There must be a HardenedChild in the Seed of the parent DeviceGroup which is a prefix of the derivation path provided in the MPCKey.",
         "operationId": "MPCKeyService_CreateMPCKey",
         "responses": {
@@ -110,7 +110,7 @@
     },
     "/v1/{deviceGroupName}/mpcOperations": {
       "get": {
-        "summary": "ListMPCOperations",
+        "summary": "List MPC Operations",
         "description": "Lists the pending MPCOperations awaiting computation associated with the given parent DeviceGroup. Use this API in combination with the WaaS SDK's ComputeMPCOperation method to complete the operation.",
         "operationId": "MPCKeyService_ListMPCOperations",
         "responses": {
@@ -144,7 +144,7 @@
     },
     "/v1/{deviceName}": {
       "get": {
-        "summary": "GetDevice",
+        "summary": "Get Device",
         "description": "Gets a Device.",
         "operationId": "MPCKeyService_GetDevice",
         "responses": {
@@ -178,7 +178,7 @@
     },
     "/v1/{mpcKeyName}": {
       "get": {
-        "summary": "GetMPCKey",
+        "summary": "Get MPC Key",
         "description": "Gets an MPCKey.",
         "operationId": "MPCKeyService_GetMPCKey",
         "responses": {
@@ -212,7 +212,7 @@
     },
     "/v1/{mpcKeyName}/signatures": {
       "post": {
-        "summary": "CreateSignature",
+        "summary": "Create Signature",
         "description": "Creates a Signature using an MPCKey. After calling this, use ListMPCOperations to poll for the pending CreateSignature operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.",
         "operationId": "MPCKeyService_CreateSignature",
         "responses": {
@@ -265,7 +265,7 @@
     },
     "/v1/{poolName}/deviceGroups": {
       "post": {
-        "summary": "CreateDeviceGroup",
+        "summary": "Create Device Group",
         "description": "Creates a DeviceGroup. The DeviceGroup must contain exactly one registered Device, and the Seed in the DeviceGroup must have at least one HardenedChild. After calling this, use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.",
         "operationId": "MPCKeyService_CreateDeviceGroup",
         "responses": {
@@ -325,7 +325,7 @@
     },
     "/v1:registerDevice": {
       "post": {
-        "summary": "RegisterDevice",
+        "summary": "Register Device",
         "description": "Registers a new Device. A Device must be registered before it can be added to a DeviceGroup.",
         "operationId": "MPCKeyService_RegisterDevice",
         "responses": {

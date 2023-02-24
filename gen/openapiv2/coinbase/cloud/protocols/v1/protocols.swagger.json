@@ -23,7 +23,7 @@
   "paths": {
     "/v1/{networkName}:broadcastTransaction": {
       "post": {
-        "summary": "BroadcastTransaction",
+        "summary": "Broadcast Transaction",
         "description": "Broadcasts a transaction to a node in the Network.",
         "operationId": "ProtocolService_BroadcastTransaction",
         "responses": {
@@ -72,7 +72,7 @@
     },
     "/v1/{networkName}:constructTransaction": {
       "post": {
-        "summary": "ConstructTransaction",
+        "summary": "Construct Transaction",
         "description": "Constructs an unsigned transaction. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast.",
         "operationId": "ProtocolService_ConstructTransaction",
         "responses": {
@@ -121,7 +121,7 @@
     },
     "/v1/{networkName}:constructTransferTransaction": {
       "post": {
-        "summary": "ConstructTransferTransaction",
+        "summary": "Construct Transfer Transaction",
         "description": "Constructs an unsigned transfer transaction. A transfer transaction is a transaction that moves an Asset from one Address to another. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast.",
         "operationId": "ProtocolService_ConstructTransferTransaction",
         "responses": {

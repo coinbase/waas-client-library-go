@@ -23,7 +23,7 @@
   "paths": {
     "/v1/pools": {
       "get": {
-        "summary": "ListPools",
+        "summary": "List Pools",
         "description": "Lists Pools.",
         "operationId": "PoolService_ListPools",
         "responses": {
@@ -62,7 +62,7 @@
         ]
       },
       "post": {
-        "summary": "CreatePool",
+        "summary": "Create Pool",
         "description": "Creates a Pool. Call this method before creating any resources scoped to a Pool.",
         "operationId": "PoolService_CreatePool",
         "responses": {
@@ -107,7 +107,7 @@
     },
     "/v1/{poolName}": {
       "get": {
-        "summary": "GetPool",
+        "summary": "Get Pool",
         "description": "Gets a Pool.",
         "operationId": "PoolService_GetPool",
         "responses": {

@@ -23,7 +23,7 @@
   "paths": {
     "/v1/{mpcTransactionName}": {
       "get": {
-        "summary": "GetMPCTransaction",
+        "summary": "Get MPC Transaction",
         "description": "Gets an MPCTransaction. There can be a delay between when CreateMPCTransaction is called and when this API will begin returning an MPCTransaction in the CREATED state.",
         "operationId": "MPCTransactionService_GetMPCTransaction",
         "responses": {
@@ -57,7 +57,7 @@
     },
     "/v1/{mpcWalletName}/mpcTransactions": {
       "get": {
-        "summary": "ListMPCTransactions",
+        "summary": "List MPC Transactions",
         "description": "Lists MPCTransactions.",
         "operationId": "MPCTransactionService_ListMPCTransactions",
         "responses": {
@@ -104,7 +104,7 @@
         ]
       },
       "post": {
-        "summary": "CreateMPCTransaction",
+        "summary": "Create MPC Transaction",
         "description": "Creates an MPCTransaction. The long-running operation returned from this API will contain information about the state of the MPCTransaction that can be used to complete the operation. The LRO will be considered Done once the MPCTransaction reaches a state of CONFIRMING (i.e. broadcast on-chain). See the MPCTransaction documentation for its lifecycle.",
         "operationId": "MPCTransactionService_CreateMPCTransaction",
         "responses": {

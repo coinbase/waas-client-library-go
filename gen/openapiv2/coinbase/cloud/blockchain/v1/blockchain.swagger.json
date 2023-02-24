@@ -23,7 +23,7 @@
   "paths": {
     "/v1/networks": {
       "get": {
-        "summary": "ListNetworks",
+        "summary": "List Networks",
         "description": "Lists the Networks available to use on WaaS.",
         "operationId": "BlockchainService_ListNetworks",
         "responses": {
@@ -64,7 +64,7 @@
     },
     "/v1/{assetName}": {
       "get": {
-        "summary": "GetAsset",
+        "summary": "Get Asset",
         "description": "Gets an Asset.",
         "operationId": "BlockchainService_GetAsset",
         "responses": {
@@ -98,7 +98,7 @@
     },
     "/v1/{networkName}": {
       "get": {
-        "summary": "GetNetwork",
+        "summary": "Get Network",
         "description": "Gets a Network.",
         "operationId": "BlockchainService_GetNetwork",
         "responses": {
@@ -132,7 +132,7 @@
     },
     "/v1/{networkName}/assets": {
       "get": {
-        "summary": "ListAssets",
+        "summary": "List Assets",
         "description": "Lists the Assets available to use on a given Network.",
         "operationId": "BlockchainService_ListAssets",
         "responses": {

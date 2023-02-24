@@ -24,7 +24,7 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewBlockchainClient(ctx)
+//  c, err := v1.NewProtocolClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -44,17 +44,17 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewBlockchainRESTClient(ctx)
+//  c, err := v1.NewProtocolRESTClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
 //  defer c.Close()
 //
-//  req := &blockchainpb.GetNetworkRequest{
+//  req := &protocolspb.ConstructTransactionRequest{
 //  	// TODO: Fill request struct fields.
-//  	// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#GetNetworkRequest.
+//  	// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransactionRequest.
 //  }
-//  resp, err := c.GetNetwork(ctx, req)
+//  resp, err := c.ConstructTransaction(ctx, req)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -63,7 +63,7 @@
 //
 // Use of Context
 //
-// The ctx passed to NewBlockchainClient is used for authentication requests and
+// The ctx passed to NewProtocolClient is used for authentication requests and
 // for creating the underlying connection, but is not used for subsequent calls.
 // Individual methods on the client use the ctx given to them.
 //
