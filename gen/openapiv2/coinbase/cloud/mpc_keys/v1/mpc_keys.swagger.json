@@ -43,7 +43,7 @@
         "parameters": [
           {
             "name": "deviceGroupName",
-            "description": "The resource name of the DeviceGroup to get.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}",
+            "description": "The resource name of the DeviceGroup to get.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -77,7 +77,7 @@
         "parameters": [
           {
             "name": "deviceGroupName",
-            "description": "The resource name of the parent DeviceGroup.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}",
+            "description": "The resource name of the parent DeviceGroup.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -130,7 +130,7 @@
         "parameters": [
           {
             "name": "deviceGroupName",
-            "description": "The resource name of the parent DeviceGroup.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}",
+            "description": "The resource name of the parent DeviceGroup.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -164,7 +164,7 @@
         "parameters": [
           {
             "name": "deviceName",
-            "description": "The resource name of the Device to get.\nFormat: devices/{deviceID}",
+            "description": "The resource name of the Device to get.\nFormat: devices/{device_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -198,7 +198,7 @@
         "parameters": [
           {
             "name": "mpcKeyName",
-            "description": "The resource name of the MPCKey to get.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+            "description": "The resource name of the MPCKey to get.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -232,7 +232,7 @@
         "parameters": [
           {
             "name": "mpcKeyName",
-            "description": "The resource name of the parent MPCKey.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+            "description": "The resource name of the parent MPCKey.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -285,7 +285,7 @@
         "parameters": [
           {
             "name": "poolName",
-            "description": "The resource name of the parent Pool.\nFormat: pools/{poolID}",
+            "description": "The resource name of the parent Pool.\nFormat: pools/{pool_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -365,7 +365,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Signature.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}",
+          "description": "The resource name of the Signature.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}/signatures/{signature_id}",
           "title": "name",
           "readOnly": true
         },
@@ -450,6 +450,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           },
           "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
@@ -496,7 +497,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Device.\nFormat: devices/{deviceID}",
+          "description": "The resource name of the Device.\nFormat: devices/{device_id}",
           "title": "name",
           "readOnly": true
         }
@@ -509,7 +510,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the DeviceGroup.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}",
+          "description": "The resource name of the DeviceGroup.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
           "title": "name",
           "readOnly": true
         },
@@ -586,7 +587,7 @@
           "type": "array",
           "items": {
             "type": "integer",
-            "format": "int64"
+            "format": "int32"
           },
           "description": "The derivation path to reach the hardened child from the Seed (i.e. the root of the HD tree).Each integer in the derivation path is interpreted according to BIP-44: m / purpose’ / coin_type’ / account’ / change / address_index",
           "title": "name"
@@ -604,6 +605,7 @@
         "mpcOperations": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1MPCOperation"
           },
           "description": "The list of MPCOperations."
@@ -617,7 +619,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the MPCKey.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+          "description": "The resource name of the MPCKey.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
           "title": "name",
           "readOnly": true
         },
@@ -625,7 +627,7 @@
           "type": "array",
           "items": {
             "type": "integer",
-            "format": "int64"
+            "format": "int32"
           },
           "description": "The derivation path to reach this MPCKey from the Seed (i.e. the root of the HD tree). There must be a HardenedChild in the Seed of the parent DeviceGroup which is a prefix of this derivation path.",
           "title": "derivationPath"
@@ -648,7 +650,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the MPCOperation.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcOperations/{mpcOperationID}",
+          "description": "The resource name of the MPCOperation.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}",
           "title": "name",
           "readOnly": true
         },
@@ -700,6 +702,7 @@
         "hardenedChildren": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1HardenedChild"
           },
           "description": "The hardened children derived from the Seed. To create an MPCKey, at least one hardened child must be derived.",

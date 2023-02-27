@@ -84,7 +84,7 @@
         "parameters": [
           {
             "name": "assetName",
-            "description": "The resource name of the Asset to get.\nFormat: networks/{networkID}/assets/{assetID}.",
+            "description": "The resource name of the Asset to get.\nFormat: networks/{network_id}/assets/{asset_id}.",
             "in": "path",
             "required": true,
             "type": "string",
@@ -118,7 +118,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the Network to get.\nFormat: networks/{networkID}.",
+            "description": "The resource name of the Network to get.\nFormat: networks/{network_id}.",
             "in": "path",
             "required": true,
             "type": "string",
@@ -152,7 +152,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the parent Network.\nFormat: networks/{networkID}",
+            "description": "The resource name of the parent Network.\nFormat: networks/{network_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -232,6 +232,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -242,7 +243,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Asset.\nFormat: networks/{networkID}/assets/{assetID}",
+          "description": "The resource name of the Asset.\nFormat: networks/{network_id}/assets/{asset_id}",
           "title": "name"
         },
         "advertisedSymbol": {
@@ -271,6 +272,7 @@
         "assets": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1Asset"
           },
           "description": "The list of Assets."
@@ -289,6 +291,7 @@
         "networks": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1Network"
           },
           "description": "The list of Networks."
@@ -306,7 +309,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Network.\nFormat: networks/{networkID}",
+          "description": "The resource name of the Network.\nFormat: networks/{network_id}",
           "title": "name"
         },
         "displayName": {
@@ -316,7 +319,7 @@
         },
         "nativeAsset": {
           "type": "string",
-          "description": "The native Asset for this Network.\nFormat: networks/{networkID}/assets/{assetID}",
+          "description": "The native Asset for this Network.\nFormat: networks/{network_id}/assets/{asset_id}",
           "title": "nativeAsset"
         },
         "protocolFamily": {

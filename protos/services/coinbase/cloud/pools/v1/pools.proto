@@ -71,7 +71,7 @@ service PoolService {
 // resources under it via authorization checks.
 message Pool {
   option (google.api.resource) = {
-    type: "api.coinbasecloud.com/waas/pools/Pool"
+    type: "api.coinbasecloud.com/Pool"
     pattern: "pools/{pool}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
@@ -82,12 +82,12 @@ message Pool {
   };
 
   // The resource name of the Pool.
-  // Format: pools/{poolID}
+  // Format: pools/{pool_id}
   string name = 1 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the Pool.\nFormat: pools/{poolID}",
+      description: "The resource name of the Pool.\nFormat: pools/{pool_id}",
     }
   ];
 
@@ -116,10 +116,10 @@ message CreatePoolRequest {
 // The request message for GetPool.
 message GetPoolRequest {
   // The resource name of the Pool to get.
-  // Format: pools/{poolID}
+  // Format: pools/{pool_id}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/pools/Pool"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Pool"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "poolName"}
     }

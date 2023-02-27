@@ -43,7 +43,7 @@
         "parameters": [
           {
             "name": "mpcTransactionName",
-            "description": "The resource name of the MPCTransaction to get.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}/mpcTransactions/{mpcTransactionID}",
+            "description": "The resource name of the MPCTransaction to get.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -77,7 +77,7 @@
         "parameters": [
           {
             "name": "mpcWalletName",
-            "description": "The resource name of the parent MPCWallet.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}",
+            "description": "The resource name of the parent MPCWallet.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -124,7 +124,7 @@
         "parameters": [
           {
             "name": "mpcWalletName",
-            "description": "The resource name of the parent MPCWallet.\nFormat: pools/{poolID}/mpcWallets/{MPCWalletID}",
+            "description": "The resource name of the parent MPCWallet.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -255,10 +255,10 @@
         "CONFIRMING",
         "CONFIRMED",
         "FAILED",
-        "CANCELED"
+        "CANCELLED"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "The state of the MPCTransaction.\n\n - STATE_UNSPECIFIED: The default unspecified state.\n - CREATED: The request to create the MPCTransaction has been received by the service.\n - SIGNING: The MPCTransaction is waiting to be signed by the WaaS SDK.\nOnly one MPCTransaction per Address can be in the SIGNING state.\n - SIGNED: The MPCTransaction has been signed and is waiting to be broadcast on-chain.\n - CONFIRMING: The MPCTransaction has been successfully broadcast on-chain and is awaiting confirmation.\n - CONFIRMED: The MPCTransaction has been confirmed on-chain. It is possible for the MPCTransaction\nto revert to CONFIRMING if there is an on-chain reorganization.\n - FAILED: The MPCTransaction was broadcast, but failed on-chain.\n - CANCELED: The MPCTransaction was canceled by the service."
+      "description": "The state of the MPCTransaction.\n\n - STATE_UNSPECIFIED: The default unspecified state.\n - CREATED: The request to create the MPCTransaction has been received by the service.\n - SIGNING: The MPCTransaction is waiting to be signed by the WaaS SDK.\nOnly one MPCTransaction per Address can be in the SIGNING state.\n - SIGNED: The MPCTransaction has been signed and is waiting to be broadcast on-chain.\n - CONFIRMING: The MPCTransaction has been successfully broadcast on-chain and is awaiting confirmation.\n - CONFIRMED: The MPCTransaction has been confirmed on-chain. It is possible for the MPCTransaction\nto revert to CONFIRMING if there is an on-chain reorganization.\n - FAILED: The MPCTransaction was broadcast, but failed on-chain.\n - CANCELLED: The MPCTransaction was cancelled by the service."
     },
     "googlelongrunningOperation": {
       "type": "object",
@@ -312,6 +312,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           },
           "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
@@ -391,6 +392,7 @@
         "mpcWallets": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1MPCTransaction"
           },
           "description": "The list of MPCTransactions."
@@ -408,13 +410,13 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the MPCTransaction.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}/mpcTransactions/{mpcTransactionID}",
+          "description": "The resource name of the MPCTransaction.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}",
           "title": "name",
           "readOnly": true
         },
         "network": {
           "type": "string",
-          "description": "The resource name of the Network on which to broadcast the MPCTransaction.\n Format: networks/{networkID}",
+          "description": "The resource name of the Network on which to broadcast the MPCTransaction.\n Format: networks/{network_id}",
           "title": "network"
         },
         "fromAddresses": {
@@ -422,7 +424,7 @@
           "items": {
             "type": "string"
           },
-          "description": "The resource name of the Addresses from which to send the MPCTransaction. For account-based Networks, only the first address is used.\n Format: networks/{networkID}/addresses/{addressID}.",
+          "description": "The resource name of the Addresses from which to send the MPCTransaction. For account-based Networks, only the first address is used.\n Format: networks/{network_id}/addresses/{address_id}.",
           "title": "from_addresses"
         },
         "state": {
@@ -495,6 +497,7 @@
         "requiredSignatures": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1RequiredSignature"
           },
           "description": "The set of signatures required to broadcast this Transaction.\nFor EVM networks, there will be only one signature."

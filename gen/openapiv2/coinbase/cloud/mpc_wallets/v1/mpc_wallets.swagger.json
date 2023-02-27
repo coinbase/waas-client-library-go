@@ -43,7 +43,7 @@
         "parameters": [
           {
             "name": "addressName",
-            "description": "The resource name of the parent Address.\nFormat: networks/{networkID}/addresses/{addressID}",
+            "description": "The resource name of the parent Address.\nFormat: networks/{network_id}/addresses/{address_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -92,7 +92,7 @@
         "parameters": [
           {
             "name": "mpcWalletName",
-            "description": "The resource name of the MPCWallet to get.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}",
+            "description": "The resource name of the MPCWallet to get.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -126,7 +126,7 @@
         "parameters": [
           {
             "name": "mpcWalletName",
-            "description": "The resource name of the MPCWallet within which to generate the Address.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}",
+            "description": "The resource name of the MPCWallet within which to generate the Address.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -141,7 +141,7 @@
               "properties": {
                 "network": {
                   "type": "string",
-                  "title": "The resource name of the Network for which to generate the Address.\nFormat: networks/{networkID}"
+                  "title": "The resource name of the Network for which to generate the Address.\nFormat: networks/{network_id}"
                 },
                 "requestId": {
                   "type": "string",
@@ -182,7 +182,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the Address to get.\nFormat: networks/{networkID}/addresses/{addressID}",
+            "description": "The resource name of the Address to get.\nFormat: networks/{network_id}/addresses/{address_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -216,7 +216,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the parent Network.\nFormat: networks/{networkID}",
+            "description": "The resource name of the parent Network.\nFormat: networks/{network_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -224,7 +224,7 @@
           },
           {
             "name": "mpcWallet",
-            "description": "The resource name of the MPCWallet to which the Addresses belong.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}",
+            "description": "The resource name of the MPCWallet to which the Addresses belong.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
             "in": "query",
             "required": false,
             "type": "string"
@@ -272,7 +272,7 @@
         "parameters": [
           {
             "name": "poolName",
-            "description": "The resource name of the parent Pool.\nFormat: pools/{poolID}",
+            "description": "The resource name of the parent Pool.\nFormat: pools/{pool_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -319,7 +319,7 @@
         "parameters": [
           {
             "name": "poolName",
-            "description": "The resource name of the parent Pool.\nFormat: pools/{poolID}",
+            "description": "The resource name of the parent Pool.\nFormat: pools/{pool_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -339,7 +339,7 @@
           },
           {
             "name": "device",
-            "description": "The resource name of the Device that will initially be the sole member of the underlying\nDeviceGroup. This Device should have already been registered using MPCKeyService's\nRegisterDevice.\nFormat: devices/{deviceID}",
+            "description": "The resource name of the Device that will initially be the sole member of the underlying\nDeviceGroup. This Device should have already been registered using MPCKeyService's\nRegisterDevice.\nFormat: devices/{device_id}",
             "in": "query",
             "required": true,
             "type": "string"
@@ -418,6 +418,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           },
           "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
@@ -430,7 +431,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Address.\nFormat: networks/{networkID}/addresses/{addressID}",
+          "description": "The resource name of the Address.\nFormat: networks/{network_id}/addresses/{address_id}",
           "title": "name",
           "readOnly": true
         },
@@ -445,7 +446,7 @@
           "items": {
             "type": "string"
           },
-          "description": "The resource names of the MPCKeys that back this Address. For EVM networks, there will be only one MPCKey.\n Format: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+          "description": "The resource names of the MPCKeys that back this Address. For EVM networks, there will be only one MPCKey.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
           "title": "mpcKeys",
           "readOnly": true
         },
@@ -464,7 +465,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Balance.\nFormat: networks/{networkID}/addresses/{addressID}/balances/{balanceID}",
+          "description": "The resource name of the Balance.\nFormat: networks/{network_id}/addresses/{address_id}/balances/{balance_id}",
           "title": "name",
           "readOnly": true
         },
@@ -495,6 +496,7 @@
         "addresses": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1Address"
           },
           "description": "The list of Addresses."
@@ -513,6 +515,7 @@
         "balances": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1Balance"
           },
           "description": "The list of Balances."
@@ -531,6 +534,7 @@
         "mpcWallets": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1MPCWallet"
           },
           "description": "The list of MPCWallets."
@@ -548,13 +552,13 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the MPCWallet.\nFormat: pools/{poolID}/mpcWallets/{mpcWalletID}",
+          "description": "The resource name of the MPCWallet.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
           "title": "name",
           "readOnly": true
         },
         "deviceGroup": {
           "type": "string",
-          "description": "The resource name of the MPCKeyService DeviceGroup associated with this MPCWallet. The DeviceGroup will perform the underlying MPC operations. Format: pools/{poolID}/deviceGroups/{deviceGroupID}",
+          "description": "The resource name of the MPCKeyService DeviceGroup associated with this MPCWallet. The DeviceGroup will perform the underlying MPC operations. Format: pools/{pool_id}/deviceGroups/{device_group_id}",
           "title": "deviceGroup",
           "readOnly": true
         }

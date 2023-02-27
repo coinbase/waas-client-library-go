@@ -1,5 +1,11 @@
 # See http://go/cmsci and http://go/codeflowyaml for details.
 ---
+build:
+  engines:
+    - BaldurECR:
+        name: presubmit
+        path: ./Dockerfile.presubmit
+        compute_type: BUILD_GENERAL1_SMALL
 secure:
   required_reviews: 1
   requires_mfa: true

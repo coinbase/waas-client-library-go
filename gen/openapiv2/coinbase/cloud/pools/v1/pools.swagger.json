@@ -127,7 +127,7 @@
         "parameters": [
           {
             "name": "poolName",
-            "description": "The resource name of the Pool to get.\nFormat: pools/{poolID}",
+            "description": "The resource name of the Pool to get.\nFormat: pools/{pool_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -163,6 +163,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -174,6 +175,7 @@
         "pools": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1Pool"
           },
           "description": "The list of Pools."
@@ -191,7 +193,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The resource name of the Pool.\nFormat: pools/{poolID}",
+          "description": "The resource name of the Pool.\nFormat: pools/{pool_id}",
           "title": "name",
           "readOnly": true
         },

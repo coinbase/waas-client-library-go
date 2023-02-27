@@ -21,22 +21,22 @@ type MPCTransactionResourceName struct {
 
 func (n MPCTransactionResourceName) Validate() error {
 	if n.PoolId == "" {
-		return fmt.Errorf("poolID: empty")
+		return fmt.Errorf("pool_id: empty")
 	}
 	if strings.IndexByte(n.PoolId, '/') != -1 {
-		return fmt.Errorf("poolID: contains illegal character '/'")
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	if n.MpcWalletId == "" {
-		return fmt.Errorf("mpcWalletID: empty")
+		return fmt.Errorf("mpc_wallet_id: empty")
 	}
 	if strings.IndexByte(n.MpcWalletId, '/') != -1 {
-		return fmt.Errorf("mpcWalletID: contains illegal character '/'")
+		return fmt.Errorf("mpc_wallet_id: contains illegal character '/'")
 	}
 	if n.MpcTransactionId == "" {
-		return fmt.Errorf("mpcTransactionID: empty")
+		return fmt.Errorf("mpc_transaction_id: empty")
 	}
 	if strings.IndexByte(n.MpcTransactionId, '/') != -1 {
-		return fmt.Errorf("mpcTransactionID: contains illegal character '/'")
+		return fmt.Errorf("mpc_transaction_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -47,7 +47,7 @@ func (n MPCTransactionResourceName) ContainsWildcard() bool {
 
 func (n MPCTransactionResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{poolID}/mpcWallets/{mpcWalletID}/mpcTransactions/{mpcTransactionID}",
+		"pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}",
 		n.PoolId,
 		n.MpcWalletId,
 		n.MpcTransactionId,
@@ -64,7 +64,7 @@ func (n MPCTransactionResourceName) MarshalString() (string, error) {
 func (n *MPCTransactionResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{poolID}/mpcWallets/{mpcWalletID}/mpcTransactions/{mpcTransactionID}",
+		"pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}",
 		&n.PoolId,
 		&n.MpcWalletId,
 		&n.MpcTransactionId,

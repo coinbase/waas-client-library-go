@@ -36,7 +36,7 @@ service ProtocolService {
       post: "/v1/{network=networks/*}:constructTransaction"
       body: "*"
     };
-    option (google.api.method_signature) = "input";
+    option (google.api.method_signature) = "network,input";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Construct Transaction"
       description: "Constructs an unsigned transaction. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast."
@@ -75,10 +75,10 @@ service ProtocolService {
 // The request message for ConstructTransaction.
 message ConstructTransactionRequest {
   // The resource name of the Network.
-  // Format: networks/{networkID}
+  // Format: networks/{network_id}
   string network = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Network"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "networkName"}
     }
@@ -91,20 +91,20 @@ message ConstructTransactionRequest {
 // The request message for ConstructTransferTransaction.
 message ConstructTransferTransactionRequest {
   // The resource name of the Network on which the transfer is happening.
-  // Format: networks/{networkID}
+  // Format: networks/{network_id}
   string network = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Network"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "networkName"}
     }
   ];
 
   // The resource name of the Asset being transferred.
-  // Format: networks/{networkID}/assets/{assetID}.
+  // Format: networks/{network_id}/assets/{asset_id}.
   string asset = 2 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Asset"}
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Asset"}
   ];
 
   // The address of the sender, e.g. as a 0x-prefixed hex string.
@@ -129,10 +129,10 @@ message ConstructTransferTransactionRequest {
 // the required_signatures' signature values must be populated (i.e. the transaction must be signed).
 message BroadcastTransactionRequest {
   // The resource name of the Network.
-  // Format: networks/{networkID}
+  // Format: networks/{network_id}
   string network = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Network"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "networkName"}
     }

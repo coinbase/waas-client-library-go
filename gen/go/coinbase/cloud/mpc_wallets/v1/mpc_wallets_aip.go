@@ -20,16 +20,16 @@ type MPCWalletResourceName struct {
 
 func (n MPCWalletResourceName) Validate() error {
 	if n.PoolId == "" {
-		return fmt.Errorf("poolID: empty")
+		return fmt.Errorf("pool_id: empty")
 	}
 	if strings.IndexByte(n.PoolId, '/') != -1 {
-		return fmt.Errorf("poolID: contains illegal character '/'")
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	if n.MpcWalletId == "" {
-		return fmt.Errorf("mpcWalletID: empty")
+		return fmt.Errorf("mpc_wallet_id: empty")
 	}
 	if strings.IndexByte(n.MpcWalletId, '/') != -1 {
-		return fmt.Errorf("mpcWalletID: contains illegal character '/'")
+		return fmt.Errorf("mpc_wallet_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -40,7 +40,7 @@ func (n MPCWalletResourceName) ContainsWildcard() bool {
 
 func (n MPCWalletResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{poolID}/mpcWallets/{mpcWalletID}",
+		"pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
 		n.PoolId,
 		n.MpcWalletId,
 	)
@@ -56,7 +56,7 @@ func (n MPCWalletResourceName) MarshalString() (string, error) {
 func (n *MPCWalletResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{poolID}/mpcWallets/{mpcWalletID}",
+		"pools/{pool_id}/mpcWallets/{mpc_wallet_id}",
 		&n.PoolId,
 		&n.MpcWalletId,
 	)
@@ -69,16 +69,16 @@ type AddressResourceName struct {
 
 func (n AddressResourceName) Validate() error {
 	if n.NetworkId == "" {
-		return fmt.Errorf("networkID: empty")
+		return fmt.Errorf("network_id: empty")
 	}
 	if strings.IndexByte(n.NetworkId, '/') != -1 {
-		return fmt.Errorf("networkID: contains illegal character '/'")
+		return fmt.Errorf("network_id: contains illegal character '/'")
 	}
 	if n.AddressId == "" {
-		return fmt.Errorf("addressID: empty")
+		return fmt.Errorf("address_id: empty")
 	}
 	if strings.IndexByte(n.AddressId, '/') != -1 {
-		return fmt.Errorf("addressID: contains illegal character '/'")
+		return fmt.Errorf("address_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -89,7 +89,7 @@ func (n AddressResourceName) ContainsWildcard() bool {
 
 func (n AddressResourceName) String() string {
 	return resourcename.Sprint(
-		"networks/{networkID}/addresses/{addressID}",
+		"networks/{network_id}/addresses/{address_id}",
 		n.NetworkId,
 		n.AddressId,
 	)
@@ -105,7 +105,7 @@ func (n AddressResourceName) MarshalString() (string, error) {
 func (n *AddressResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"networks/{networkID}/addresses/{addressID}",
+		"networks/{network_id}/addresses/{address_id}",
 		&n.NetworkId,
 		&n.AddressId,
 	)
@@ -129,22 +129,22 @@ func (n AddressResourceName) BalanceResourceName(
 
 func (n BalanceResourceName) Validate() error {
 	if n.NetworkId == "" {
-		return fmt.Errorf("networkID: empty")
+		return fmt.Errorf("network_id: empty")
 	}
 	if strings.IndexByte(n.NetworkId, '/') != -1 {
-		return fmt.Errorf("networkID: contains illegal character '/'")
+		return fmt.Errorf("network_id: contains illegal character '/'")
 	}
 	if n.AddressId == "" {
-		return fmt.Errorf("addressID: empty")
+		return fmt.Errorf("address_id: empty")
 	}
 	if strings.IndexByte(n.AddressId, '/') != -1 {
-		return fmt.Errorf("addressID: contains illegal character '/'")
+		return fmt.Errorf("address_id: contains illegal character '/'")
 	}
 	if n.BalanceId == "" {
-		return fmt.Errorf("balanceID: empty")
+		return fmt.Errorf("balance_id: empty")
 	}
 	if strings.IndexByte(n.BalanceId, '/') != -1 {
-		return fmt.Errorf("balanceID: contains illegal character '/'")
+		return fmt.Errorf("balance_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -155,7 +155,7 @@ func (n BalanceResourceName) ContainsWildcard() bool {
 
 func (n BalanceResourceName) String() string {
 	return resourcename.Sprint(
-		"networks/{networkID}/addresses/{addressID}/balances/{balanceID}",
+		"networks/{network_id}/addresses/{address_id}/balances/{balance_id}",
 		n.NetworkId,
 		n.AddressId,
 		n.BalanceId,
@@ -172,7 +172,7 @@ func (n BalanceResourceName) MarshalString() (string, error) {
 func (n *BalanceResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"networks/{networkID}/addresses/{addressID}/balances/{balanceID}",
+		"networks/{network_id}/addresses/{address_id}/balances/{balance_id}",
 		&n.NetworkId,
 		&n.AddressId,
 		&n.BalanceId,

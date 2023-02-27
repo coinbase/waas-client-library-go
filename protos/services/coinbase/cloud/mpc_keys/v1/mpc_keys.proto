@@ -123,7 +123,7 @@ service MPCKeyService {
       post: "/v1/{parent=pools/*/deviceGroups/*}/mpcKeys"
       body: "mpc_key"
     };
-    option (google.api.method_signature) = "mpc_key";
+    option (google.api.method_signature) = "parent,mpc_key";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Create MPC Key"
       description: "Creates an MPCKey. There must be a HardenedChild in the Seed of the parent DeviceGroup which is a prefix of the derivation path provided in the MPCKey."
@@ -165,8 +165,8 @@ service MPCKeyService {
 // The Device resource, which represents a single participant in the MPC protocol.
 message Device {
   option (google.api.resource) = {
-    type: "api.coinbasecloud.com/waas/mpcKeys/Device"
-    pattern: "devices/{deviceID}"
+    type: "api.coinbasecloud.com/Device"
+    pattern: "devices/{device_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -175,12 +175,12 @@ message Device {
   };
 
   // The resource name of the Device.
-  // Format: devices/{deviceID}
+  // Format: devices/{device_id}
   string name = 1[
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the Device.\nFormat: devices/{deviceID}",
+      description: "The resource name of the Device.\nFormat: devices/{device_id}",
     }
   ];
 }
@@ -198,7 +198,7 @@ message HardenedChild {
   // The derivation path to reach the hardened child from the Seed (i.e. the root
   // of the HD tree). Each integer in the derivation path is interpreted according
   // to BIP-44: m / purpose’ / coin_type’ / account’ / change / address_index
-  repeated uint32 derivation_path = 1 [
+  repeated int32 derivation_path = 1 [
     (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
@@ -232,8 +232,8 @@ message Seed {
 // same set of Seed resources.
 message DeviceGroup {
   option (google.api.resource) = {
-    type: "api.coinbasecloud.com/waas/mpcKeys/DeviceGroup"
-    pattern: "pools/{poolID}/deviceGroups/{deviceGroupID}"
+    type: "api.coinbasecloud.com/DeviceGroup"
+    pattern: "pools/{pool_id}/deviceGroups/{device_group_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -243,18 +243,18 @@ message DeviceGroup {
   };
 
   // The resource name of the DeviceGroup.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string name = 1 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the DeviceGroup.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}",
+      description: "The resource name of the DeviceGroup.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
     }
   ];
 
   // The list of Device resource names associated with this DeviceGroup. On creation,
   // this list must have exactly one Device set.
-  // Format: devices/{deviceID}
+  // Format: devices/{device_id}
   repeated string devices = 2 [
     (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -281,8 +281,8 @@ message DeviceGroup {
 // long-running operation.
 message MPCOperation {
   option (google.api.resource) = {
-    type: "api.coinbasecloud.com/waas/mpcKeys/MPCOperation"
-    pattern: "pools/{poolID}/deviceGroups/{deviceGroupID}/mpcOperations/{mpcOperationID}"
+    type: "api.coinbasecloud.com/MPCOperation"
+    pattern: "pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -292,12 +292,12 @@ message MPCOperation {
   };
 
   // The resource name of the MPCOperation.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcOperations/{mpcOperationID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}
   string name = 1 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the MPCOperation.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcOperations/{mpcOperationID}",
+      description: "The resource name of the MPCOperation.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}",
     }
   ];
 
@@ -324,8 +324,8 @@ message MPCOperation {
 // via the WaaS SDK. An MPC Key is created from a Seed.
 message MPCKey {
   option (google.api.resource) = {
-    type: "api.coinbasecloud.com/waas/mpcKeys/MPCKey"
-    pattern: "pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}"
+    type: "api.coinbasecloud.com/MPCKey"
+    pattern: "pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -335,19 +335,19 @@ message MPCKey {
   };
 
   // The resource name of the MPCKey.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}
   string name = 1 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the MPCKey.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+      description: "The resource name of the MPCKey.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
     }
   ];
 
   // The derivation path to reach this MPCKey from the Seed (i.e. the root
   // of the HD tree). There must be a HardenedChild in the Seed of the parent
   // DeviceGroup which is a prefix of this derivation path.
-  repeated uint32 derivation_path = 2 [
+  repeated int32 derivation_path = 2 [
     (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "derivationPath"
@@ -369,8 +369,8 @@ message MPCKey {
 // using MPCKeys via the WaaS SDK.
 message Signature {
   option (google.api.resource) = {
-    type: "api.coinbasecloud.com/waas/mpcKeys/Signature"
-    pattern: "pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}"
+    type: "api.coinbasecloud.com/Signature"
+    pattern: "pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}/signatures/{signature_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -380,12 +380,12 @@ message Signature {
   };
 
   // The resource name of the Signature.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}/signatures/{signature_id}
   string name = 1 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "name"
-      description: "The resource name of the Signature.\nFormat: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}",
+      description: "The resource name of the Signature.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}/signatures/{signature_id}",
     }
   ];
 
@@ -421,10 +421,10 @@ message RegisterDeviceRequest {
 // The request message for GetDevice.
 message GetDeviceRequest {
   // The resource name of the Device to get.
-  // Format: devices/{deviceID}
+  // Format: devices/{device_id}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/Device"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Device"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "deviceName"}
     }
@@ -434,10 +434,10 @@ message GetDeviceRequest {
 // The request message for CreateDeviceGroup.
 message CreateDeviceGroupRequest {
   // The resource name of the parent Pool.
-  // Format: pools/{poolID}
+  // Format: pools/{pool_id}
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/waas/mpcKeys/DeviceGroup"},
+    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/DeviceGroup"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "poolName"}
     }
@@ -466,10 +466,10 @@ message CreateDeviceGroupMetadata {
 // The request message for GetDeviceGroup.
 message GetDeviceGroupRequest {
   // The resource name of the DeviceGroup to get.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/DeviceGroup"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "deviceGroupName"}
     }
@@ -477,12 +477,20 @@ message GetDeviceGroupRequest {
 }
 
 // The request message for ListMPCOperations.
+// (-- api-linter: core::0158::request-page-size-field=disabled --)
+// (-- api-linter: core::0158::request-page-token-field=disabled --)
 message ListMPCOperationsRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListMPCOperationsResponse"
+      description: "The request message for ListMPCOperations."
+    }
+  };
   // The resource name of the parent DeviceGroup.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/waas/mpcKeys/MPCOperation"},
+    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/MPCOperation"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "deviceGroupName"}
     }
@@ -490,6 +498,7 @@ message ListMPCOperationsRequest {
 }
 
 // The response message for ListMPCOperations.
+// (-- api-linter: core::0158::response-next-page-token-field=disabled --)
 message ListMPCOperationsResponse {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -505,10 +514,10 @@ message ListMPCOperationsResponse {
 // The request message for CreateMPCKey.
 message CreateMPCKeyRequest {
   // The resource name of the parent DeviceGroup.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/waas/mpcKeys/MPCKey"},
+    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/MPCKey"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "deviceGroupName"}
     }
@@ -524,10 +533,10 @@ message CreateMPCKeyRequest {
 // The request message for GetMPCKey.
 message GetMPCKeyRequest {
   // The resource name of the MPCKey to get.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/MPCKey"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/MPCKey"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "mpcKeyName"}
     }
@@ -537,10 +546,10 @@ message GetMPCKeyRequest {
 // The request message for CreateSignature.
 message CreateSignatureRequest {
   // The resource name of the parent MPCKey.
-  // Format: pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/waas/mpcKeys/Signature"},
+    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/Signature"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "mpcKeyName"}
     }

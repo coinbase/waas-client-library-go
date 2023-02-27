@@ -43,7 +43,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the Network.\nFormat: networks/{networkID}",
+            "description": "The resource name of the Network.\nFormat: networks/{network_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -92,7 +92,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the Network.\nFormat: networks/{networkID}",
+            "description": "The resource name of the Network.\nFormat: networks/{network_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -141,7 +141,7 @@
         "parameters": [
           {
             "name": "networkName",
-            "description": "The resource name of the Network on which the transfer is happening.\nFormat: networks/{networkID}",
+            "description": "The resource name of the Network on which the transfer is happening.\nFormat: networks/{network_id}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -156,7 +156,7 @@
               "properties": {
                 "asset": {
                   "type": "string",
-                  "description": "The resource name of the Asset being transferred.\nFormat: networks/{networkID}/assets/{assetID}."
+                  "description": "The resource name of the Asset being transferred.\nFormat: networks/{network_id}/assets/{asset_id}."
                 },
                 "sender": {
                   "type": "string",
@@ -219,6 +219,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -354,6 +355,7 @@
         "requiredSignatures": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1RequiredSignature"
           },
           "description": "The set of signatures required to broadcast this Transaction.\nFor EVM networks, there will be only one signature."

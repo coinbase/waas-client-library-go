@@ -19,10 +19,10 @@ type DeviceResourceName struct {
 
 func (n DeviceResourceName) Validate() error {
 	if n.DeviceId == "" {
-		return fmt.Errorf("deviceID: empty")
+		return fmt.Errorf("device_id: empty")
 	}
 	if strings.IndexByte(n.DeviceId, '/') != -1 {
-		return fmt.Errorf("deviceID: contains illegal character '/'")
+		return fmt.Errorf("device_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -33,7 +33,7 @@ func (n DeviceResourceName) ContainsWildcard() bool {
 
 func (n DeviceResourceName) String() string {
 	return resourcename.Sprint(
-		"devices/{deviceID}",
+		"devices/{device_id}",
 		n.DeviceId,
 	)
 }
@@ -48,7 +48,7 @@ func (n DeviceResourceName) MarshalString() (string, error) {
 func (n *DeviceResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"devices/{deviceID}",
+		"devices/{device_id}",
 		&n.DeviceId,
 	)
 }
@@ -60,16 +60,16 @@ type DeviceGroupResourceName struct {
 
 func (n DeviceGroupResourceName) Validate() error {
 	if n.PoolId == "" {
-		return fmt.Errorf("poolID: empty")
+		return fmt.Errorf("pool_id: empty")
 	}
 	if strings.IndexByte(n.PoolId, '/') != -1 {
-		return fmt.Errorf("poolID: contains illegal character '/'")
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	if n.DeviceGroupId == "" {
-		return fmt.Errorf("deviceGroupID: empty")
+		return fmt.Errorf("device_group_id: empty")
 	}
 	if strings.IndexByte(n.DeviceGroupId, '/') != -1 {
-		return fmt.Errorf("deviceGroupID: contains illegal character '/'")
+		return fmt.Errorf("device_group_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -80,7 +80,7 @@ func (n DeviceGroupResourceName) ContainsWildcard() bool {
 
 func (n DeviceGroupResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{poolID}/deviceGroups/{deviceGroupID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}",
 		n.PoolId,
 		n.DeviceGroupId,
 	)
@@ -96,7 +96,7 @@ func (n DeviceGroupResourceName) MarshalString() (string, error) {
 func (n *DeviceGroupResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{poolID}/deviceGroups/{deviceGroupID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}",
 		&n.PoolId,
 		&n.DeviceGroupId,
 	)
@@ -120,22 +120,22 @@ func (n DeviceGroupResourceName) MPCOperationResourceName(
 
 func (n MPCOperationResourceName) Validate() error {
 	if n.PoolId == "" {
-		return fmt.Errorf("poolID: empty")
+		return fmt.Errorf("pool_id: empty")
 	}
 	if strings.IndexByte(n.PoolId, '/') != -1 {
-		return fmt.Errorf("poolID: contains illegal character '/'")
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	if n.DeviceGroupId == "" {
-		return fmt.Errorf("deviceGroupID: empty")
+		return fmt.Errorf("device_group_id: empty")
 	}
 	if strings.IndexByte(n.DeviceGroupId, '/') != -1 {
-		return fmt.Errorf("deviceGroupID: contains illegal character '/'")
+		return fmt.Errorf("device_group_id: contains illegal character '/'")
 	}
 	if n.MpcOperationId == "" {
-		return fmt.Errorf("mpcOperationID: empty")
+		return fmt.Errorf("mpc_operation_id: empty")
 	}
 	if strings.IndexByte(n.MpcOperationId, '/') != -1 {
-		return fmt.Errorf("mpcOperationID: contains illegal character '/'")
+		return fmt.Errorf("mpc_operation_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -146,7 +146,7 @@ func (n MPCOperationResourceName) ContainsWildcard() bool {
 
 func (n MPCOperationResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{poolID}/deviceGroups/{deviceGroupID}/mpcOperations/{mpcOperationID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}",
 		n.PoolId,
 		n.DeviceGroupId,
 		n.MpcOperationId,
@@ -163,7 +163,7 @@ func (n MPCOperationResourceName) MarshalString() (string, error) {
 func (n *MPCOperationResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{poolID}/deviceGroups/{deviceGroupID}/mpcOperations/{mpcOperationID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}",
 		&n.PoolId,
 		&n.DeviceGroupId,
 		&n.MpcOperationId,
@@ -195,22 +195,22 @@ func (n DeviceGroupResourceName) MPCKeyResourceName(
 
 func (n MPCKeyResourceName) Validate() error {
 	if n.PoolId == "" {
-		return fmt.Errorf("poolID: empty")
+		return fmt.Errorf("pool_id: empty")
 	}
 	if strings.IndexByte(n.PoolId, '/') != -1 {
-		return fmt.Errorf("poolID: contains illegal character '/'")
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	if n.DeviceGroupId == "" {
-		return fmt.Errorf("deviceGroupID: empty")
+		return fmt.Errorf("device_group_id: empty")
 	}
 	if strings.IndexByte(n.DeviceGroupId, '/') != -1 {
-		return fmt.Errorf("deviceGroupID: contains illegal character '/'")
+		return fmt.Errorf("device_group_id: contains illegal character '/'")
 	}
 	if n.MpcKeyId == "" {
-		return fmt.Errorf("mpcKeyID: empty")
+		return fmt.Errorf("mpc_key_id: empty")
 	}
 	if strings.IndexByte(n.MpcKeyId, '/') != -1 {
-		return fmt.Errorf("mpcKeyID: contains illegal character '/'")
+		return fmt.Errorf("mpc_key_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -221,7 +221,7 @@ func (n MPCKeyResourceName) ContainsWildcard() bool {
 
 func (n MPCKeyResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
 		n.PoolId,
 		n.DeviceGroupId,
 		n.MpcKeyId,
@@ -238,7 +238,7 @@ func (n MPCKeyResourceName) MarshalString() (string, error) {
 func (n *MPCKeyResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}",
 		&n.PoolId,
 		&n.DeviceGroupId,
 		&n.MpcKeyId,
@@ -284,28 +284,28 @@ func (n MPCKeyResourceName) SignatureResourceName(
 
 func (n SignatureResourceName) Validate() error {
 	if n.PoolId == "" {
-		return fmt.Errorf("poolID: empty")
+		return fmt.Errorf("pool_id: empty")
 	}
 	if strings.IndexByte(n.PoolId, '/') != -1 {
-		return fmt.Errorf("poolID: contains illegal character '/'")
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	if n.DeviceGroupId == "" {
-		return fmt.Errorf("deviceGroupID: empty")
+		return fmt.Errorf("device_group_id: empty")
 	}
 	if strings.IndexByte(n.DeviceGroupId, '/') != -1 {
-		return fmt.Errorf("deviceGroupID: contains illegal character '/'")
+		return fmt.Errorf("device_group_id: contains illegal character '/'")
 	}
 	if n.MpcKeyId == "" {
-		return fmt.Errorf("mpcKeyID: empty")
+		return fmt.Errorf("mpc_key_id: empty")
 	}
 	if strings.IndexByte(n.MpcKeyId, '/') != -1 {
-		return fmt.Errorf("mpcKeyID: contains illegal character '/'")
+		return fmt.Errorf("mpc_key_id: contains illegal character '/'")
 	}
 	if n.SignatureId == "" {
-		return fmt.Errorf("signatureID: empty")
+		return fmt.Errorf("signature_id: empty")
 	}
 	if strings.IndexByte(n.SignatureId, '/') != -1 {
-		return fmt.Errorf("signatureID: contains illegal character '/'")
+		return fmt.Errorf("signature_id: contains illegal character '/'")
 	}
 	return nil
 }
@@ -316,7 +316,7 @@ func (n SignatureResourceName) ContainsWildcard() bool {
 
 func (n SignatureResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}/signatures/{signature_id}",
 		n.PoolId,
 		n.DeviceGroupId,
 		n.MpcKeyId,
@@ -334,7 +334,7 @@ func (n SignatureResourceName) MarshalString() (string, error) {
 func (n *SignatureResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{poolID}/deviceGroups/{deviceGroupID}/mpcKeys/{mpcKeyID}/signatures/{signatureID}",
+		"pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}/signatures/{signature_id}",
 		&n.PoolId,
 		&n.DeviceGroupId,
 		&n.MpcKeyId,
