@@ -28,12 +28,12 @@ RUN curl -sSL \
   chmod +x "${BIN}/buf"
 
 # Install go tools.
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0
-RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.15.1
-RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.15.1
-RUN go install go.einride.tech/aip/cmd/protoc-gen-go-aip@v0.60.0
-RUN go install github.com/googleapis/gapic-generator-go/cmd/protoc-gen-go_gapic@v0.33.7
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.15.0
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.15.0
+RUN go install go.einride.tech/aip/cmd/protoc-gen-go-aip@v0.57.0
+RUN go install github.com/googleapis/gapic-generator-go/cmd/protoc-gen-go_gapic@v0.33.2
 RUN export PATH="$PATH:$(go env GOPATH)/bin"
 
 # Install mockery.

@@ -23,6 +23,23 @@ import (
 	mpc_keyspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1"
 )
 
+func ExampleNewMPCKeyClient() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1.NewMPCKeyClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	// TODO: Use client.
+	_ = c
+}
+
 func ExampleNewMPCKeyRESTClient() {
 	ctx := context.Background()
 	// This snippet has been automatically generated and should be regarded as a code template only.
@@ -47,7 +64,7 @@ func ExampleMPCKeyClient_RegisterDevice() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -72,7 +89,7 @@ func ExampleMPCKeyClient_GetDevice() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -97,7 +114,7 @@ func ExampleMPCKeyClient_CreateDeviceGroup() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -127,7 +144,7 @@ func ExampleMPCKeyClient_GetDeviceGroup() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -152,7 +169,7 @@ func ExampleMPCKeyClient_ListMPCOperations() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -177,7 +194,7 @@ func ExampleMPCKeyClient_CreateMPCKey() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -202,7 +219,7 @@ func ExampleMPCKeyClient_GetMPCKey() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -227,7 +244,7 @@ func ExampleMPCKeyClient_CreateSignature() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCKeyRESTClient(ctx)
+	c, err := v1.NewMPCKeyClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}

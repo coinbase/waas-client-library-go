@@ -219,7 +219,6 @@
         "details": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -355,7 +354,6 @@
         "requiredSignatures": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1RequiredSignature"
           },
           "description": "The set of signatures required to broadcast this Transaction.\nFor EVM networks, there will be only one signature."

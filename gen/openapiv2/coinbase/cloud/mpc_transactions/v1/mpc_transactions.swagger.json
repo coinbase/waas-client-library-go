@@ -312,7 +312,6 @@
         "details": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/protobufAny"
           },
           "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
@@ -392,7 +391,6 @@
         "mpcWallets": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1MPCTransaction"
           },
           "description": "The list of MPCTransactions."
@@ -497,7 +495,6 @@
         "requiredSignatures": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1RequiredSignature"
           },
           "description": "The set of signatures required to broadcast this Transaction.\nFor EVM networks, there will be only one signature."

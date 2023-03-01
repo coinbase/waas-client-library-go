@@ -163,7 +163,6 @@
         "details": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -175,7 +174,6 @@
         "pools": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1Pool"
           },
           "description": "The list of Pools."

@@ -24,6 +24,23 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+func ExampleNewMPCWalletClient() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1.NewMPCWalletClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	// TODO: Use client.
+	_ = c
+}
+
 func ExampleNewMPCWalletRESTClient() {
 	ctx := context.Background()
 	// This snippet has been automatically generated and should be regarded as a code template only.
@@ -48,7 +65,7 @@ func ExampleMPCWalletClient_CreateMPCWallet() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -78,7 +95,7 @@ func ExampleMPCWalletClient_GetMPCWallet() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -103,7 +120,7 @@ func ExampleMPCWalletClient_ListMPCWallets() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -134,7 +151,7 @@ func ExampleMPCWalletClient_GenerateAddress() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -159,7 +176,7 @@ func ExampleMPCWalletClient_GetAddress() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -184,7 +201,7 @@ func ExampleMPCWalletClient_ListAddresses() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -215,7 +232,7 @@ func ExampleMPCWalletClient_ListBalances() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewMPCWalletRESTClient(ctx)
+	c, err := v1.NewMPCWalletClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}

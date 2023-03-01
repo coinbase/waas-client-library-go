@@ -34,6 +34,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
+	gtransport "google.golang.org/api/transport/grpc"
 	httptransport "google.golang.org/api/transport/http"
 	longrunningpb "google.golang.org/genproto/googleapis/longrunning"
 	"google.golang.org/grpc"
@@ -53,6 +54,37 @@ type MPCWalletCallOptions struct {
 	GetAddress []gax.CallOption
 	ListAddresses []gax.CallOption
 	ListBalances []gax.CallOption
+}
+
+func defaultMPCWalletGRPCClientOptions() []option.ClientOption {
+	return []option.ClientOption{
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/mpcWallets:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/mpcWallets:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpcWallets/"),
+		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
+		internaloption.EnableJwtWithScope(),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(math.MaxInt32))),
+	}
+}
+
+func defaultMPCWalletCallOptions() *MPCWalletCallOptions {
+	return &MPCWalletCallOptions{
+		CreateMPCWallet: []gax.CallOption{
+		},
+		GetMPCWallet: []gax.CallOption{
+		},
+		ListMPCWallets: []gax.CallOption{
+		},
+		GenerateAddress: []gax.CallOption{
+		},
+		GetAddress: []gax.CallOption{
+		},
+		ListAddresses: []gax.CallOption{
+		},
+		ListBalances: []gax.CallOption{
+		},
+	}
 }
 
 func defaultMPCWalletRESTCallOptions() *MPCWalletCallOptions {
@@ -178,6 +210,107 @@ func (c *MPCWalletClient) ListBalances(ctx context.Context, req *mpc_walletspb.L
 	return c.internalClient.ListBalances(ctx, req, opts...)
 }
 
+// mPCWalletGRPCClient is a client for interacting with  over gRPC transport.
+//
+// Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
+type mPCWalletGRPCClient struct {
+	// Connection pool of gRPC connections to the service.
+	connPool gtransport.ConnPool
+
+	// flag to opt out of default deadlines via GOOGLE_API_GO_EXPERIMENTAL_DISABLE_DEFAULT_DEADLINE
+	disableDeadlines bool
+
+	// Points back to the CallOptions field of the containing MPCWalletClient
+	CallOptions **MPCWalletCallOptions
+
+	// The gRPC API client.
+	mPCWalletClient mpc_walletspb.MPCWalletServiceClient
+
+	// LROClient is used internally to handle long-running operations.
+	// It is exposed so that its CallOptions can be modified if required.
+	// Users should not Close this client.
+	LROClient **lroauto.OperationsClient
+
+	// The x-goog-* metadata to be sent with each request.
+	xGoogMetadata metadata.MD
+}
+
+// NewMPCWalletClient creates a new mpc wallet service client based on gRPC.
+// The returned client must be Closed when it is done being used to clean up its underlying connections.
+//
+// A service that manages BIP-32-based Hierarchically Deterministic (HD) collections of on-chain
+// Addresses and their associated Asset balances. The Addresses are backed by the MPCKey resources
+// of KeyService, and information about the Assets can be queried using BlockchainService. Because
+// of the backing by MPC Keys, full functionality of these APIs requires use of the WaaS SDK.
+func NewMPCWalletClient(ctx context.Context, opts ...option.ClientOption) (*MPCWalletClient, error) {
+	clientOpts := defaultMPCWalletGRPCClientOptions()
+	if newMPCWalletClientHook != nil {
+		hookOpts, err := newMPCWalletClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	disableDeadlines, err := checkDisableDeadlines()
+	if err != nil {
+		return nil, err
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
+	if err != nil {
+		return nil, err
+	}
+	client := MPCWalletClient{CallOptions: defaultMPCWalletCallOptions()}
+
+	c := &mPCWalletGRPCClient{
+		connPool:    connPool,
+		disableDeadlines: disableDeadlines,
+		mPCWalletClient: mpc_walletspb.NewMPCWalletServiceClient(connPool),
+		CallOptions: &client.CallOptions,
+
+	}
+	c.setGoogleClientInfo()
+
+	client.internalClient = c
+
+	client.LROClient, err = lroauto.NewOperationsClient(ctx, gtransport.WithConnPool(connPool))
+	if err != nil {
+		// This error "should not happen", since we are just reusing old connection pool
+		// and never actually need to dial.
+		// If this does happen, we could leak connp. However, we cannot close conn:
+		// If the user invoked the constructor with option.WithGRPCConn,
+		// we would close a connection that's still in use.
+		// TODO: investigate error conditions.
+		return nil, err
+	}
+	c.LROClient = &client.LROClient
+	return &client, nil
+}
+
+// Connection returns a connection to the API service.
+//
+// Deprecated: Connections are now pooled so this method does not always
+// return the same resource.
+func (c *mPCWalletGRPCClient) Connection() *grpc.ClientConn {
+	return c.connPool.Conn()
+}
+
+// setGoogleClientInfo sets the name and version of the application in
+// the `x-goog-api-client` header passed on each request. Intended for
+// use by Google-written clients.
+func (c *mPCWalletGRPCClient) setGoogleClientInfo(keyval ...string) {
+	kv := append([]string{"gl-go", versionGo()}, keyval...)
+	kv = append(kv, "gapic", getVersionClient(), "gax", gax.Version, "grpc", grpc.Version)
+	c.xGoogMetadata = metadata.Pairs("x-goog-api-client", gax.XGoogHeader(kv...))
+}
+
+// Close closes the connection to the API service. The user should invoke this when
+// the client is no longer required.
+func (c *mPCWalletGRPCClient) Close() error {
+	return c.connPool.Close()
+}
+
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 type mPCWalletRESTClient struct {
 	// The http endpoint to connect to.
@@ -263,6 +396,211 @@ func (c *mPCWalletRESTClient) Close() error {
 func (c *mPCWalletRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
+func (c *mPCWalletGRPCClient) CreateMPCWallet(ctx context.Context, req *mpc_walletspb.CreateMPCWalletRequest, opts ...gax.CallOption) (*CreateMPCWalletOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).CreateMPCWallet[0:len((*c.CallOptions).CreateMPCWallet):len((*c.CallOptions).CreateMPCWallet)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCWalletClient.CreateMPCWallet(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &CreateMPCWalletOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
+func (c *mPCWalletGRPCClient) GetMPCWallet(ctx context.Context, req *mpc_walletspb.GetMPCWalletRequest, opts ...gax.CallOption) (*mpc_walletspb.MPCWallet, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetMPCWallet[0:len((*c.CallOptions).GetMPCWallet):len((*c.CallOptions).GetMPCWallet)], opts...)
+	var resp *mpc_walletspb.MPCWallet
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCWalletClient.GetMPCWallet(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCWalletGRPCClient) ListMPCWallets(ctx context.Context, req *mpc_walletspb.ListMPCWalletsRequest, opts ...gax.CallOption) *MPCWalletIterator {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListMPCWallets[0:len((*c.CallOptions).ListMPCWallets):len((*c.CallOptions).ListMPCWallets)], opts...)
+	it := &MPCWalletIterator{}
+	req = proto.Clone(req).(*mpc_walletspb.ListMPCWalletsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*mpc_walletspb.MPCWallet, string, error) {
+		resp := &mpc_walletspb.ListMPCWalletsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.mPCWalletClient.ListMPCWallets(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetMpcWallets(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
+func (c *mPCWalletGRPCClient) GenerateAddress(ctx context.Context, req *mpc_walletspb.GenerateAddressRequest, opts ...gax.CallOption) (*mpc_walletspb.Address, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "mpc_wallet", url.QueryEscape(req.GetMpcWallet())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GenerateAddress[0:len((*c.CallOptions).GenerateAddress):len((*c.CallOptions).GenerateAddress)], opts...)
+	var resp *mpc_walletspb.Address
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCWalletClient.GenerateAddress(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCWalletGRPCClient) GetAddress(ctx context.Context, req *mpc_walletspb.GetAddressRequest, opts ...gax.CallOption) (*mpc_walletspb.Address, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetAddress[0:len((*c.CallOptions).GetAddress):len((*c.CallOptions).GetAddress)], opts...)
+	var resp *mpc_walletspb.Address
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCWalletClient.GetAddress(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCWalletGRPCClient) ListAddresses(ctx context.Context, req *mpc_walletspb.ListAddressesRequest, opts ...gax.CallOption) *AddressIterator {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListAddresses[0:len((*c.CallOptions).ListAddresses):len((*c.CallOptions).ListAddresses)], opts...)
+	it := &AddressIterator{}
+	req = proto.Clone(req).(*mpc_walletspb.ListAddressesRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*mpc_walletspb.Address, string, error) {
+		resp := &mpc_walletspb.ListAddressesResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.mPCWalletClient.ListAddresses(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetAddresses(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
+func (c *mPCWalletGRPCClient) ListBalances(ctx context.Context, req *mpc_walletspb.ListBalancesRequest, opts ...gax.CallOption) *BalanceIterator {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListBalances[0:len((*c.CallOptions).ListBalances):len((*c.CallOptions).ListBalances)], opts...)
+	it := &BalanceIterator{}
+	req = proto.Clone(req).(*mpc_walletspb.ListBalancesRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*mpc_walletspb.Balance, string, error) {
+		resp := &mpc_walletspb.ListBalancesResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.mPCWalletClient.ListBalances(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetBalances(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
 // CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered using MPCKeyService’s
 // RegisterDevice before this method is called. Under the hood, this calls MPCKeyService’s
 // CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService’s
@@ -767,6 +1105,14 @@ func (c *mPCWalletRESTClient) ListBalances(ctx context.Context, req *mpc_wallets
 type CreateMPCWalletOperation struct {
 	lro *longrunning.Operation
 	pollPath string
+}
+
+// CreateMPCWalletOperation returns a new CreateMPCWalletOperation from a given name.
+// The name must be that of a previously created CreateMPCWalletOperation, possibly from a different process.
+func (c *mPCWalletGRPCClient) CreateMPCWalletOperation(name string) *CreateMPCWalletOperation {
+	return &CreateMPCWalletOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
 }
 
 // CreateMPCWalletOperation returns a new CreateMPCWalletOperation from a given name.

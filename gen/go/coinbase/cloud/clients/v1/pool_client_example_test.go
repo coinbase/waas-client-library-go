@@ -24,6 +24,23 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+func ExampleNewPoolClient() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1.NewPoolClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	// TODO: Use client.
+	_ = c
+}
+
 func ExampleNewPoolRESTClient() {
 	ctx := context.Background()
 	// This snippet has been automatically generated and should be regarded as a code template only.
@@ -48,7 +65,7 @@ func ExamplePoolClient_CreatePool() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewPoolRESTClient(ctx)
+	c, err := v1.NewPoolClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -73,7 +90,7 @@ func ExamplePoolClient_GetPool() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewPoolRESTClient(ctx)
+	c, err := v1.NewPoolClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -98,7 +115,7 @@ func ExamplePoolClient_ListPools() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewPoolRESTClient(ctx)
+	c, err := v1.NewPoolClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}

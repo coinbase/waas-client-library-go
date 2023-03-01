@@ -450,7 +450,6 @@
         "details": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/protobufAny"
           },
           "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
@@ -605,7 +604,6 @@
         "mpcOperations": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1MPCOperation"
           },
           "description": "The list of MPCOperations."
@@ -702,7 +700,6 @@
         "hardenedChildren": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1HardenedChild"
           },
           "description": "The hardened children derived from the Seed. To create an MPCKey, at least one hardened child must be derived.",

@@ -232,7 +232,6 @@
         "details": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -272,7 +271,6 @@
         "assets": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1Asset"
           },
           "description": "The list of Assets."
@@ -291,7 +289,6 @@
         "networks": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1Network"
           },
           "description": "The list of Networks."

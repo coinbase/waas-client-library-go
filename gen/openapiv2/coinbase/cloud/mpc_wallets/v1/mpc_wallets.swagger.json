@@ -418,7 +418,6 @@
         "details": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/protobufAny"
           },
           "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
@@ -496,7 +495,6 @@
         "addresses": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1Address"
           },
           "description": "The list of Addresses."
@@ -515,7 +513,6 @@
         "balances": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1Balance"
           },
           "description": "The list of Balances."
@@ -534,7 +531,6 @@
         "mpcWallets": {
           "type": "array",
           "items": {
-            "type": "object",
             "$ref": "#/definitions/v1MPCWallet"
           },
           "description": "The list of MPCWallets."

@@ -23,6 +23,23 @@ import (
 	protocolspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
 )
 
+func ExampleNewProtocolClient() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1.NewProtocolClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	// TODO: Use client.
+	_ = c
+}
+
 func ExampleNewProtocolRESTClient() {
 	ctx := context.Background()
 	// This snippet has been automatically generated and should be regarded as a code template only.
@@ -47,7 +64,7 @@ func ExampleProtocolClient_ConstructTransaction() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewProtocolRESTClient(ctx)
+	c, err := v1.NewProtocolClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -72,7 +89,7 @@ func ExampleProtocolClient_ConstructTransferTransaction() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewProtocolRESTClient(ctx)
+	c, err := v1.NewProtocolClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}
@@ -97,7 +114,7 @@ func ExampleProtocolClient_BroadcastTransaction() {
 	// - It may require correct/in-range values for request initialization.
 	// - It may require specifying regional endpoints when creating the service client as shown in:
 	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-	c, err := v1.NewProtocolRESTClient(ctx)
+	c, err := v1.NewProtocolClient(ctx)
 	if err != nil {
 		// TODO: Handle error.
 	}

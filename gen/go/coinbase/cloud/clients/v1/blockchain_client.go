@@ -30,6 +30,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
+	gtransport "google.golang.org/api/transport/grpc"
 	httptransport "google.golang.org/api/transport/http"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -45,6 +46,31 @@ type BlockchainCallOptions struct {
 	ListNetworks []gax.CallOption
 	GetAsset []gax.CallOption
 	ListAssets []gax.CallOption
+}
+
+func defaultBlockchainGRPCClientOptions() []option.ClientOption {
+	return []option.ClientOption{
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/blockchain:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/blockchain:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/blockchain/"),
+		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
+		internaloption.EnableJwtWithScope(),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(math.MaxInt32))),
+	}
+}
+
+func defaultBlockchainCallOptions() *BlockchainCallOptions {
+	return &BlockchainCallOptions{
+		GetNetwork: []gax.CallOption{
+		},
+		ListNetworks: []gax.CallOption{
+		},
+		GetAsset: []gax.CallOption{
+		},
+		ListAssets: []gax.CallOption{
+		},
+	}
 }
 
 func defaultBlockchainRESTCallOptions() *BlockchainCallOptions {
@@ -129,6 +155,90 @@ func (c *BlockchainClient) ListAssets(ctx context.Context, req *blockchainpb.Lis
 	return c.internalClient.ListAssets(ctx, req, opts...)
 }
 
+// blockchainGRPCClient is a client for interacting with  over gRPC transport.
+//
+// Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
+type blockchainGRPCClient struct {
+	// Connection pool of gRPC connections to the service.
+	connPool gtransport.ConnPool
+
+	// flag to opt out of default deadlines via GOOGLE_API_GO_EXPERIMENTAL_DISABLE_DEFAULT_DEADLINE
+	disableDeadlines bool
+
+	// Points back to the CallOptions field of the containing BlockchainClient
+	CallOptions **BlockchainCallOptions
+
+	// The gRPC API client.
+	blockchainClient blockchainpb.BlockchainServiceClient
+
+	// The x-goog-* metadata to be sent with each request.
+	xGoogMetadata metadata.MD
+}
+
+// NewBlockchainClient creates a new blockchain service client based on gRPC.
+// The returned client must be Closed when it is done being used to clean up its underlying connections.
+//
+// A service providing a set of read-only APIs for information about the blockchain
+// networks that WaaS supports. Users can query BlockchainService to figure out the Networks
+// and Assets that can be transacted with using WaaS APIs.
+func NewBlockchainClient(ctx context.Context, opts ...option.ClientOption) (*BlockchainClient, error) {
+	clientOpts := defaultBlockchainGRPCClientOptions()
+	if newBlockchainClientHook != nil {
+		hookOpts, err := newBlockchainClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	disableDeadlines, err := checkDisableDeadlines()
+	if err != nil {
+		return nil, err
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
+	if err != nil {
+		return nil, err
+	}
+	client := BlockchainClient{CallOptions: defaultBlockchainCallOptions()}
+
+	c := &blockchainGRPCClient{
+		connPool:    connPool,
+		disableDeadlines: disableDeadlines,
+		blockchainClient: blockchainpb.NewBlockchainServiceClient(connPool),
+		CallOptions: &client.CallOptions,
+
+	}
+	c.setGoogleClientInfo()
+
+	client.internalClient = c
+
+	return &client, nil
+}
+
+// Connection returns a connection to the API service.
+//
+// Deprecated: Connections are now pooled so this method does not always
+// return the same resource.
+func (c *blockchainGRPCClient) Connection() *grpc.ClientConn {
+	return c.connPool.Conn()
+}
+
+// setGoogleClientInfo sets the name and version of the application in
+// the `x-goog-api-client` header passed on each request. Intended for
+// use by Google-written clients.
+func (c *blockchainGRPCClient) setGoogleClientInfo(keyval ...string) {
+	kv := append([]string{"gl-go", versionGo()}, keyval...)
+	kv = append(kv, "gapic", getVersionClient(), "gax", gax.Version, "grpc", grpc.Version)
+	c.xGoogMetadata = metadata.Pairs("x-goog-api-client", gax.XGoogHeader(kv...))
+}
+
+// Close closes the connection to the API service. The user should invoke this when
+// the client is no longer required.
+func (c *blockchainGRPCClient) Close() error {
+	return c.connPool.Close()
+}
+
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 type blockchainRESTClient struct {
 	// The http endpoint to connect to.
@@ -198,6 +308,128 @@ func (c *blockchainRESTClient) Close() error {
 func (c *blockchainRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
+func (c *blockchainGRPCClient) GetNetwork(ctx context.Context, req *blockchainpb.GetNetworkRequest, opts ...gax.CallOption) (*blockchainpb.Network, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetNetwork[0:len((*c.CallOptions).GetNetwork):len((*c.CallOptions).GetNetwork)], opts...)
+	var resp *blockchainpb.Network
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.blockchainClient.GetNetwork(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *blockchainGRPCClient) ListNetworks(ctx context.Context, req *blockchainpb.ListNetworksRequest, opts ...gax.CallOption) *NetworkIterator {
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
+	opts = append((*c.CallOptions).ListNetworks[0:len((*c.CallOptions).ListNetworks):len((*c.CallOptions).ListNetworks)], opts...)
+	it := &NetworkIterator{}
+	req = proto.Clone(req).(*blockchainpb.ListNetworksRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*blockchainpb.Network, string, error) {
+		resp := &blockchainpb.ListNetworksResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.blockchainClient.ListNetworks(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetNetworks(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
+func (c *blockchainGRPCClient) GetAsset(ctx context.Context, req *blockchainpb.GetAssetRequest, opts ...gax.CallOption) (*blockchainpb.Asset, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetAsset[0:len((*c.CallOptions).GetAsset):len((*c.CallOptions).GetAsset)], opts...)
+	var resp *blockchainpb.Asset
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.blockchainClient.GetAsset(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *blockchainGRPCClient) ListAssets(ctx context.Context, req *blockchainpb.ListAssetsRequest, opts ...gax.CallOption) *AssetIterator {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListAssets[0:len((*c.CallOptions).ListAssets):len((*c.CallOptions).ListAssets)], opts...)
+	it := &AssetIterator{}
+	req = proto.Clone(req).(*blockchainpb.ListAssetsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*blockchainpb.Asset, string, error) {
+		resp := &blockchainpb.ListAssetsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.blockchainClient.ListAssets(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetAssets(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
 // GetNetwork gets an Network.
 func (c *blockchainRESTClient) GetNetwork(ctx context.Context, req *blockchainpb.GetNetworkRequest, opts ...gax.CallOption) (*blockchainpb.Network, error) {
 	baseUrl, err := url.Parse(c.endpoint)

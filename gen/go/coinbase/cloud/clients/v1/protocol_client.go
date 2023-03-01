@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"net/url"
 
@@ -30,6 +31,7 @@ import (
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
+	gtransport "google.golang.org/api/transport/grpc"
 	httptransport "google.golang.org/api/transport/http"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -43,6 +45,29 @@ type ProtocolCallOptions struct {
 	ConstructTransaction []gax.CallOption
 	ConstructTransferTransaction []gax.CallOption
 	BroadcastTransaction []gax.CallOption
+}
+
+func defaultProtocolGRPCClientOptions() []option.ClientOption {
+	return []option.ClientOption{
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/protocols:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/protocols:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/protocols/"),
+		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
+		internaloption.EnableJwtWithScope(),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(math.MaxInt32))),
+	}
+}
+
+func defaultProtocolCallOptions() *ProtocolCallOptions {
+	return &ProtocolCallOptions{
+		ConstructTransaction: []gax.CallOption{
+		},
+		ConstructTransferTransaction: []gax.CallOption{
+		},
+		BroadcastTransaction: []gax.CallOption{
+		},
+	}
 }
 
 func defaultProtocolRESTCallOptions() *ProtocolCallOptions {
@@ -121,6 +146,89 @@ func (c *ProtocolClient) BroadcastTransaction(ctx context.Context, req *protocol
 	return c.internalClient.BroadcastTransaction(ctx, req, opts...)
 }
 
+// protocolGRPCClient is a client for interacting with  over gRPC transport.
+//
+// Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
+type protocolGRPCClient struct {
+	// Connection pool of gRPC connections to the service.
+	connPool gtransport.ConnPool
+
+	// flag to opt out of default deadlines via GOOGLE_API_GO_EXPERIMENTAL_DISABLE_DEFAULT_DEADLINE
+	disableDeadlines bool
+
+	// Points back to the CallOptions field of the containing ProtocolClient
+	CallOptions **ProtocolCallOptions
+
+	// The gRPC API client.
+	protocolClient protocolspb.ProtocolServiceClient
+
+	// The x-goog-* metadata to be sent with each request.
+	xGoogMetadata metadata.MD
+}
+
+// NewProtocolClient creates a new protocol service client based on gRPC.
+// The returned client must be Closed when it is done being used to clean up its underlying connections.
+//
+// A service providing a set of stateless APIs for constructing and broadcasting
+// Network-specific transactions.
+func NewProtocolClient(ctx context.Context, opts ...option.ClientOption) (*ProtocolClient, error) {
+	clientOpts := defaultProtocolGRPCClientOptions()
+	if newProtocolClientHook != nil {
+		hookOpts, err := newProtocolClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	disableDeadlines, err := checkDisableDeadlines()
+	if err != nil {
+		return nil, err
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
+	if err != nil {
+		return nil, err
+	}
+	client := ProtocolClient{CallOptions: defaultProtocolCallOptions()}
+
+	c := &protocolGRPCClient{
+		connPool:    connPool,
+		disableDeadlines: disableDeadlines,
+		protocolClient: protocolspb.NewProtocolServiceClient(connPool),
+		CallOptions: &client.CallOptions,
+
+	}
+	c.setGoogleClientInfo()
+
+	client.internalClient = c
+
+	return &client, nil
+}
+
+// Connection returns a connection to the API service.
+//
+// Deprecated: Connections are now pooled so this method does not always
+// return the same resource.
+func (c *protocolGRPCClient) Connection() *grpc.ClientConn {
+	return c.connPool.Conn()
+}
+
+// setGoogleClientInfo sets the name and version of the application in
+// the `x-goog-api-client` header passed on each request. Intended for
+// use by Google-written clients.
+func (c *protocolGRPCClient) setGoogleClientInfo(keyval ...string) {
+	kv := append([]string{"gl-go", versionGo()}, keyval...)
+	kv = append(kv, "gapic", getVersionClient(), "gax", gax.Version, "grpc", grpc.Version)
+	c.xGoogMetadata = metadata.Pairs("x-goog-api-client", gax.XGoogHeader(kv...))
+}
+
+// Close closes the connection to the API service. The user should invoke this when
+// the client is no longer required.
+func (c *protocolGRPCClient) Close() error {
+	return c.connPool.Close()
+}
+
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 type protocolRESTClient struct {
 	// The http endpoint to connect to.
@@ -189,6 +297,57 @@ func (c *protocolRESTClient) Close() error {
 func (c *protocolRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
+func (c *protocolGRPCClient) ConstructTransaction(ctx context.Context, req *protocolspb.ConstructTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "network", url.QueryEscape(req.GetNetwork())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ConstructTransaction[0:len((*c.CallOptions).ConstructTransaction):len((*c.CallOptions).ConstructTransaction)], opts...)
+	var resp *typespb.Transaction
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.protocolClient.ConstructTransaction(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *protocolGRPCClient) ConstructTransferTransaction(ctx context.Context, req *protocolspb.ConstructTransferTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "network", url.QueryEscape(req.GetNetwork())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ConstructTransferTransaction[0:len((*c.CallOptions).ConstructTransferTransaction):len((*c.CallOptions).ConstructTransferTransaction)], opts...)
+	var resp *typespb.Transaction
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.protocolClient.ConstructTransferTransaction(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *protocolGRPCClient) BroadcastTransaction(ctx context.Context, req *protocolspb.BroadcastTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "network", url.QueryEscape(req.GetNetwork())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).BroadcastTransaction[0:len((*c.CallOptions).BroadcastTransaction):len((*c.CallOptions).BroadcastTransaction)], opts...)
+	var resp *typespb.Transaction
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.protocolClient.BroadcastTransaction(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 // ConstructTransaction constructs an unsigned transaction. The payloads in the required_signatures of the
 // returned Transaction must be signed before the Transaction is broadcast.
 func (c *protocolRESTClient) ConstructTransaction(ctx context.Context, req *protocolspb.ConstructTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {

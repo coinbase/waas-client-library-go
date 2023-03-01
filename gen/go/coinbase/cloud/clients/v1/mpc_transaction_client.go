@@ -34,6 +34,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
+	gtransport "google.golang.org/api/transport/grpc"
 	httptransport "google.golang.org/api/transport/http"
 	longrunningpb "google.golang.org/genproto/googleapis/longrunning"
 	"google.golang.org/grpc"
@@ -49,6 +50,29 @@ type MPCTransactionCallOptions struct {
 	CreateMPCTransaction []gax.CallOption
 	GetMPCTransaction []gax.CallOption
 	ListMPCTransactions []gax.CallOption
+}
+
+func defaultMPCTransactionGRPCClientOptions() []option.ClientOption {
+	return []option.ClientOption{
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/mpcTransactions:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/mpcTransactions:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpcTransactions/"),
+		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
+		internaloption.EnableJwtWithScope(),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(math.MaxInt32))),
+	}
+}
+
+func defaultMPCTransactionCallOptions() *MPCTransactionCallOptions {
+	return &MPCTransactionCallOptions{
+		CreateMPCTransaction: []gax.CallOption{
+		},
+		GetMPCTransaction: []gax.CallOption{
+		},
+		ListMPCTransactions: []gax.CallOption{
+		},
+	}
 }
 
 func defaultMPCTransactionRESTCallOptions() *MPCTransactionCallOptions {
@@ -141,6 +165,106 @@ func (c *MPCTransactionClient) ListMPCTransactions(ctx context.Context, req *mpc
 	return c.internalClient.ListMPCTransactions(ctx, req, opts...)
 }
 
+// mPCTransactionGRPCClient is a client for interacting with  over gRPC transport.
+//
+// Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
+type mPCTransactionGRPCClient struct {
+	// Connection pool of gRPC connections to the service.
+	connPool gtransport.ConnPool
+
+	// flag to opt out of default deadlines via GOOGLE_API_GO_EXPERIMENTAL_DISABLE_DEFAULT_DEADLINE
+	disableDeadlines bool
+
+	// Points back to the CallOptions field of the containing MPCTransactionClient
+	CallOptions **MPCTransactionCallOptions
+
+	// The gRPC API client.
+	mPCTransactionClient mpc_transactionspb.MPCTransactionServiceClient
+
+	// LROClient is used internally to handle long-running operations.
+	// It is exposed so that its CallOptions can be modified if required.
+	// Users should not Close this client.
+	LROClient **lroauto.OperationsClient
+
+	// The x-goog-* metadata to be sent with each request.
+	xGoogMetadata metadata.MD
+}
+
+// NewMPCTransactionClient creates a new mpc transaction service client based on gRPC.
+// The returned client must be Closed when it is done being used to clean up its underlying connections.
+//
+// A service that orchestrates on-chain transactions originating from MPCWallets. The service handles
+// nonce management, transaction construction, signing, broadcasting, and confirmation detection including
+// on-chain re-organizations.
+func NewMPCTransactionClient(ctx context.Context, opts ...option.ClientOption) (*MPCTransactionClient, error) {
+	clientOpts := defaultMPCTransactionGRPCClientOptions()
+	if newMPCTransactionClientHook != nil {
+		hookOpts, err := newMPCTransactionClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	disableDeadlines, err := checkDisableDeadlines()
+	if err != nil {
+		return nil, err
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
+	if err != nil {
+		return nil, err
+	}
+	client := MPCTransactionClient{CallOptions: defaultMPCTransactionCallOptions()}
+
+	c := &mPCTransactionGRPCClient{
+		connPool:    connPool,
+		disableDeadlines: disableDeadlines,
+		mPCTransactionClient: mpc_transactionspb.NewMPCTransactionServiceClient(connPool),
+		CallOptions: &client.CallOptions,
+
+	}
+	c.setGoogleClientInfo()
+
+	client.internalClient = c
+
+	client.LROClient, err = lroauto.NewOperationsClient(ctx, gtransport.WithConnPool(connPool))
+	if err != nil {
+		// This error "should not happen", since we are just reusing old connection pool
+		// and never actually need to dial.
+		// If this does happen, we could leak connp. However, we cannot close conn:
+		// If the user invoked the constructor with option.WithGRPCConn,
+		// we would close a connection that's still in use.
+		// TODO: investigate error conditions.
+		return nil, err
+	}
+	c.LROClient = &client.LROClient
+	return &client, nil
+}
+
+// Connection returns a connection to the API service.
+//
+// Deprecated: Connections are now pooled so this method does not always
+// return the same resource.
+func (c *mPCTransactionGRPCClient) Connection() *grpc.ClientConn {
+	return c.connPool.Conn()
+}
+
+// setGoogleClientInfo sets the name and version of the application in
+// the `x-goog-api-client` header passed on each request. Intended for
+// use by Google-written clients.
+func (c *mPCTransactionGRPCClient) setGoogleClientInfo(keyval ...string) {
+	kv := append([]string{"gl-go", versionGo()}, keyval...)
+	kv = append(kv, "gapic", getVersionClient(), "gax", gax.Version, "grpc", grpc.Version)
+	c.xGoogMetadata = metadata.Pairs("x-goog-api-client", gax.XGoogHeader(kv...))
+}
+
+// Close closes the connection to the API service. The user should invoke this when
+// the client is no longer required.
+func (c *mPCTransactionGRPCClient) Close() error {
+	return c.connPool.Close()
+}
+
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 type mPCTransactionRESTClient struct {
 	// The http endpoint to connect to.
@@ -225,6 +349,87 @@ func (c *mPCTransactionRESTClient) Close() error {
 func (c *mPCTransactionRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
+func (c *mPCTransactionGRPCClient) CreateMPCTransaction(ctx context.Context, req *mpc_transactionspb.CreateMPCTransactionRequest, opts ...gax.CallOption) (*CreateMPCTransactionOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).CreateMPCTransaction[0:len((*c.CallOptions).CreateMPCTransaction):len((*c.CallOptions).CreateMPCTransaction)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCTransactionClient.CreateMPCTransaction(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &CreateMPCTransactionOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
+func (c *mPCTransactionGRPCClient) GetMPCTransaction(ctx context.Context, req *mpc_transactionspb.GetMPCTransactionRequest, opts ...gax.CallOption) (*mpc_transactionspb.MPCTransaction, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetMPCTransaction[0:len((*c.CallOptions).GetMPCTransaction):len((*c.CallOptions).GetMPCTransaction)], opts...)
+	var resp *mpc_transactionspb.MPCTransaction
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCTransactionClient.GetMPCTransaction(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCTransactionGRPCClient) ListMPCTransactions(ctx context.Context, req *mpc_transactionspb.ListMPCTransactionsRequest, opts ...gax.CallOption) *MPCTransactionIterator {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListMPCTransactions[0:len((*c.CallOptions).ListMPCTransactions):len((*c.CallOptions).ListMPCTransactions)], opts...)
+	it := &MPCTransactionIterator{}
+	req = proto.Clone(req).(*mpc_transactionspb.ListMPCTransactionsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*mpc_transactionspb.MPCTransaction, string, error) {
+		resp := &mpc_transactionspb.ListMPCTransactionsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.mPCTransactionClient.ListMPCTransactions(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetMpcWallets(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
 // CreateMPCTransaction creates an MPCTransaction. The long-running operation returned from this API will contain
 // information about the state of the MPCTransaction that can be used to complete the operation.
 // The LRO will be considered Done once the MPCTransaction reaches a state of CONFIRMING (i.e.
@@ -478,6 +683,14 @@ func (c *mPCTransactionRESTClient) ListMPCTransactions(ctx context.Context, req 
 type CreateMPCTransactionOperation struct {
 	lro *longrunning.Operation
 	pollPath string
+}
+
+// CreateMPCTransactionOperation returns a new CreateMPCTransactionOperation from a given name.
+// The name must be that of a previously created CreateMPCTransactionOperation, possibly from a different process.
+func (c *mPCTransactionGRPCClient) CreateMPCTransactionOperation(name string) *CreateMPCTransactionOperation {
+	return &CreateMPCTransactionOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
 }
 
 // CreateMPCTransactionOperation returns a new CreateMPCTransactionOperation from a given name.

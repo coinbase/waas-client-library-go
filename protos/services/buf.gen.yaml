@@ -20,6 +20,7 @@ plugins:
     out: ../../gen/go
     opt:
       - transport=rest
+      - transport=grpc
       - go-gapic-package=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1;v1
       - module=github.cbhq.net/cloud/waas-client-library-go/gen/go
       - Mcoinbase/cloud/pools/v1/pools.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1;poolspb

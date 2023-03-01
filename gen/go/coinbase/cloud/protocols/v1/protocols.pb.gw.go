@@ -322,7 +322,7 @@ func RegisterProtocolServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 // RegisterProtocolServiceHandlerFromEndpoint is same as RegisterProtocolServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterProtocolServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.DialContext(ctx, endpoint, opts...)
+	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
 	}

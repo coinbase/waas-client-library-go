@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"net/url"
 	"time"
@@ -32,6 +33,7 @@ import (
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
+	gtransport "google.golang.org/api/transport/grpc"
 	httptransport "google.golang.org/api/transport/http"
 	longrunningpb "google.golang.org/genproto/googleapis/longrunning"
 	"google.golang.org/grpc"
@@ -51,6 +53,39 @@ type MPCKeyCallOptions struct {
 	CreateMPCKey []gax.CallOption
 	GetMPCKey []gax.CallOption
 	CreateSignature []gax.CallOption
+}
+
+func defaultMPCKeyGRPCClientOptions() []option.ClientOption {
+	return []option.ClientOption{
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/mpcKeys:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/mpcKeys:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpcKeys/"),
+		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
+		internaloption.EnableJwtWithScope(),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(math.MaxInt32))),
+	}
+}
+
+func defaultMPCKeyCallOptions() *MPCKeyCallOptions {
+	return &MPCKeyCallOptions{
+		RegisterDevice: []gax.CallOption{
+		},
+		GetDevice: []gax.CallOption{
+		},
+		CreateDeviceGroup: []gax.CallOption{
+		},
+		GetDeviceGroup: []gax.CallOption{
+		},
+		ListMPCOperations: []gax.CallOption{
+		},
+		CreateMPCKey: []gax.CallOption{
+		},
+		GetMPCKey: []gax.CallOption{
+		},
+		CreateSignature: []gax.CallOption{
+		},
+	}
 }
 
 func defaultMPCKeyRESTCallOptions() *MPCKeyCallOptions {
@@ -212,6 +247,124 @@ func (c *MPCKeyClient) CreateSignatureOperation(name string) *CreateSignatureOpe
 	return c.internalClient.CreateSignatureOperation(name)
 }
 
+// mPCKeyGRPCClient is a client for interacting with  over gRPC transport.
+//
+// Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
+type mPCKeyGRPCClient struct {
+	// Connection pool of gRPC connections to the service.
+	connPool gtransport.ConnPool
+
+	// flag to opt out of default deadlines via GOOGLE_API_GO_EXPERIMENTAL_DISABLE_DEFAULT_DEADLINE
+	disableDeadlines bool
+
+	// Points back to the CallOptions field of the containing MPCKeyClient
+	CallOptions **MPCKeyCallOptions
+
+	// The gRPC API client.
+	mPCKeyClient mpc_keyspb.MPCKeyServiceClient
+
+	// LROClient is used internally to handle long-running operations.
+	// It is exposed so that its CallOptions can be modified if required.
+	// Users should not Close this client.
+	LROClient **lroauto.OperationsClient
+
+	// The x-goog-* metadata to be sent with each request.
+	xGoogMetadata metadata.MD
+}
+
+// NewMPCKeyClient creates a new mpc key service client based on gRPC.
+// The returned client must be Closed when it is done being used to clean up its underlying connections.
+//
+// MPCKeyService provides APIs for participating in cryptographic operations through
+// multi-party computation (MPC). It should be be used in conjunction with the client-side
+// WaaS SDK. The cryptographic Keys are created using an underlying Hierarchically Deterministic
+// (HD) Tree, following the conventions of BIP-32 and BIP-44.
+//
+// The general flow is as follows:
+//
+// Call RegisterDevice to enroll the mobile Device.
+//
+// Call CreateDeviceGroup with the registered Device as its sole member and at least
+// one HardenedChild set on the Seed.
+//
+// Poll for the pending DeviceGroup with ListMPCOperations and compute the MPCOperation
+// using the WaaS SDK.
+//
+// Call CreateMPCKey, specifying the created DeviceGroup and desired derivation path.
+//
+// Call CreateSignature, specifying the created MPCKey and payload.
+//
+// Poll for the pending Signature with ListMPCOperations and compute the MPCOperation
+// using the SDK.
+func NewMPCKeyClient(ctx context.Context, opts ...option.ClientOption) (*MPCKeyClient, error) {
+	clientOpts := defaultMPCKeyGRPCClientOptions()
+	if newMPCKeyClientHook != nil {
+		hookOpts, err := newMPCKeyClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	disableDeadlines, err := checkDisableDeadlines()
+	if err != nil {
+		return nil, err
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
+	if err != nil {
+		return nil, err
+	}
+	client := MPCKeyClient{CallOptions: defaultMPCKeyCallOptions()}
+
+	c := &mPCKeyGRPCClient{
+		connPool:    connPool,
+		disableDeadlines: disableDeadlines,
+		mPCKeyClient: mpc_keyspb.NewMPCKeyServiceClient(connPool),
+		CallOptions: &client.CallOptions,
+
+	}
+	c.setGoogleClientInfo()
+
+	client.internalClient = c
+
+	client.LROClient, err = lroauto.NewOperationsClient(ctx, gtransport.WithConnPool(connPool))
+	if err != nil {
+		// This error "should not happen", since we are just reusing old connection pool
+		// and never actually need to dial.
+		// If this does happen, we could leak connp. However, we cannot close conn:
+		// If the user invoked the constructor with option.WithGRPCConn,
+		// we would close a connection that's still in use.
+		// TODO: investigate error conditions.
+		return nil, err
+	}
+	c.LROClient = &client.LROClient
+	return &client, nil
+}
+
+// Connection returns a connection to the API service.
+//
+// Deprecated: Connections are now pooled so this method does not always
+// return the same resource.
+func (c *mPCKeyGRPCClient) Connection() *grpc.ClientConn {
+	return c.connPool.Conn()
+}
+
+// setGoogleClientInfo sets the name and version of the application in
+// the `x-goog-api-client` header passed on each request. Intended for
+// use by Google-written clients.
+func (c *mPCKeyGRPCClient) setGoogleClientInfo(keyval ...string) {
+	kv := append([]string{"gl-go", versionGo()}, keyval...)
+	kv = append(kv, "gapic", getVersionClient(), "gax", gax.Version, "grpc", grpc.Version)
+	c.xGoogMetadata = metadata.Pairs("x-goog-api-client", gax.XGoogHeader(kv...))
+}
+
+// Close closes the connection to the API service. The user should invoke this when
+// the client is no longer required.
+func (c *mPCKeyGRPCClient) Close() error {
+	return c.connPool.Close()
+}
+
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 type mPCKeyRESTClient struct {
 	// The http endpoint to connect to.
@@ -314,6 +467,144 @@ func (c *mPCKeyRESTClient) Close() error {
 func (c *mPCKeyRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
+func (c *mPCKeyGRPCClient) RegisterDevice(ctx context.Context, req *mpc_keyspb.RegisterDeviceRequest, opts ...gax.CallOption) (*mpc_keyspb.Device, error) {
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
+	opts = append((*c.CallOptions).RegisterDevice[0:len((*c.CallOptions).RegisterDevice):len((*c.CallOptions).RegisterDevice)], opts...)
+	var resp *mpc_keyspb.Device
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.RegisterDevice(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCKeyGRPCClient) GetDevice(ctx context.Context, req *mpc_keyspb.GetDeviceRequest, opts ...gax.CallOption) (*mpc_keyspb.Device, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetDevice[0:len((*c.CallOptions).GetDevice):len((*c.CallOptions).GetDevice)], opts...)
+	var resp *mpc_keyspb.Device
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.GetDevice(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCKeyGRPCClient) CreateDeviceGroup(ctx context.Context, req *mpc_keyspb.CreateDeviceGroupRequest, opts ...gax.CallOption) (*CreateDeviceGroupOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).CreateDeviceGroup[0:len((*c.CallOptions).CreateDeviceGroup):len((*c.CallOptions).CreateDeviceGroup)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.CreateDeviceGroup(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &CreateDeviceGroupOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
+func (c *mPCKeyGRPCClient) GetDeviceGroup(ctx context.Context, req *mpc_keyspb.GetDeviceGroupRequest, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetDeviceGroup[0:len((*c.CallOptions).GetDeviceGroup):len((*c.CallOptions).GetDeviceGroup)], opts...)
+	var resp *mpc_keyspb.DeviceGroup
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.GetDeviceGroup(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCKeyGRPCClient) ListMPCOperations(ctx context.Context, req *mpc_keyspb.ListMPCOperationsRequest, opts ...gax.CallOption) (*mpc_keyspb.ListMPCOperationsResponse, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListMPCOperations[0:len((*c.CallOptions).ListMPCOperations):len((*c.CallOptions).ListMPCOperations)], opts...)
+	var resp *mpc_keyspb.ListMPCOperationsResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.ListMPCOperations(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCKeyGRPCClient) CreateMPCKey(ctx context.Context, req *mpc_keyspb.CreateMPCKeyRequest, opts ...gax.CallOption) (*mpc_keyspb.MPCKey, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).CreateMPCKey[0:len((*c.CallOptions).CreateMPCKey):len((*c.CallOptions).CreateMPCKey)], opts...)
+	var resp *mpc_keyspb.MPCKey
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.CreateMPCKey(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCKeyGRPCClient) GetMPCKey(ctx context.Context, req *mpc_keyspb.GetMPCKeyRequest, opts ...gax.CallOption) (*mpc_keyspb.MPCKey, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetMPCKey[0:len((*c.CallOptions).GetMPCKey):len((*c.CallOptions).GetMPCKey)], opts...)
+	var resp *mpc_keyspb.MPCKey
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.GetMPCKey(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *mPCKeyGRPCClient) CreateSignature(ctx context.Context, req *mpc_keyspb.CreateSignatureRequest, opts ...gax.CallOption) (*CreateSignatureOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).CreateSignature[0:len((*c.CallOptions).CreateSignature):len((*c.CallOptions).CreateSignature)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.CreateSignature(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &CreateSignatureOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
 // RegisterDevice registers a new Device. A Device must be registered before it can be added to a DeviceGroup.
 func (c *mPCKeyRESTClient) RegisterDevice(ctx context.Context, req *mpc_keyspb.RegisterDeviceRequest, opts ...gax.CallOption) (*mpc_keyspb.Device, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
@@ -805,6 +1096,14 @@ type CreateDeviceGroupOperation struct {
 
 // CreateDeviceGroupOperation returns a new CreateDeviceGroupOperation from a given name.
 // The name must be that of a previously created CreateDeviceGroupOperation, possibly from a different process.
+func (c *mPCKeyGRPCClient) CreateDeviceGroupOperation(name string) *CreateDeviceGroupOperation {
+	return &CreateDeviceGroupOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
+}
+
+// CreateDeviceGroupOperation returns a new CreateDeviceGroupOperation from a given name.
+// The name must be that of a previously created CreateDeviceGroupOperation, possibly from a different process.
 func (c *mPCKeyRESTClient) CreateDeviceGroupOperation(name string) *CreateDeviceGroupOperation {
 	override := fmt.Sprintf("/v1/%s", name)
 	return &CreateDeviceGroupOperation{
@@ -875,6 +1174,14 @@ func (op *CreateDeviceGroupOperation) Name() string {
 type CreateSignatureOperation struct {
 	lro *longrunning.Operation
 	pollPath string
+}
+
+// CreateSignatureOperation returns a new CreateSignatureOperation from a given name.
+// The name must be that of a previously created CreateSignatureOperation, possibly from a different process.
+func (c *mPCKeyGRPCClient) CreateSignatureOperation(name string) *CreateSignatureOperation {
+	return &CreateSignatureOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
 }
 
 // CreateSignatureOperation returns a new CreateSignatureOperation from a given name.

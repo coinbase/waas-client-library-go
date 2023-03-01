@@ -31,6 +31,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
+	gtransport "google.golang.org/api/transport/grpc"
 	httptransport "google.golang.org/api/transport/http"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -45,6 +46,29 @@ type PoolCallOptions struct {
 	CreatePool []gax.CallOption
 	GetPool []gax.CallOption
 	ListPools []gax.CallOption
+}
+
+func defaultPoolGRPCClientOptions() []option.ClientOption {
+	return []option.ClientOption{
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/pools:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/pools:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/pools/"),
+		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
+		internaloption.EnableJwtWithScope(),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(math.MaxInt32))),
+	}
+}
+
+func defaultPoolCallOptions() *PoolCallOptions {
+	return &PoolCallOptions{
+		CreatePool: []gax.CallOption{
+		},
+		GetPool: []gax.CallOption{
+		},
+		ListPools: []gax.CallOption{
+		},
+	}
 }
 
 func defaultPoolRESTCallOptions() *PoolCallOptions {
@@ -121,6 +145,90 @@ func (c *PoolClient) ListPools(ctx context.Context, req *poolspb.ListPoolsReques
 	return c.internalClient.ListPools(ctx, req, opts...)
 }
 
+// poolGRPCClient is a client for interacting with  over gRPC transport.
+//
+// Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
+type poolGRPCClient struct {
+	// Connection pool of gRPC connections to the service.
+	connPool gtransport.ConnPool
+
+	// flag to opt out of default deadlines via GOOGLE_API_GO_EXPERIMENTAL_DISABLE_DEFAULT_DEADLINE
+	disableDeadlines bool
+
+	// Points back to the CallOptions field of the containing PoolClient
+	CallOptions **PoolCallOptions
+
+	// The gRPC API client.
+	poolClient poolspb.PoolServiceClient
+
+	// The x-goog-* metadata to be sent with each request.
+	xGoogMetadata metadata.MD
+}
+
+// NewPoolClient creates a new pool service client based on gRPC.
+// The returned client must be Closed when it is done being used to clean up its underlying connections.
+//
+// A service for managing the Pool resource. A Pool is a top-level container for
+// segregating the resources under it via authorization checks. Pool-scoped resources
+// require a Pool to be created before they themselves can be created.
+func NewPoolClient(ctx context.Context, opts ...option.ClientOption) (*PoolClient, error) {
+	clientOpts := defaultPoolGRPCClientOptions()
+	if newPoolClientHook != nil {
+		hookOpts, err := newPoolClientHook(ctx, clientHookParams{})
+		if err != nil {
+			return nil, err
+		}
+		clientOpts = append(clientOpts, hookOpts...)
+	}
+
+	disableDeadlines, err := checkDisableDeadlines()
+	if err != nil {
+		return nil, err
+	}
+
+	connPool, err := gtransport.DialPool(ctx, append(clientOpts, opts...)...)
+	if err != nil {
+		return nil, err
+	}
+	client := PoolClient{CallOptions: defaultPoolCallOptions()}
+
+	c := &poolGRPCClient{
+		connPool:    connPool,
+		disableDeadlines: disableDeadlines,
+		poolClient: poolspb.NewPoolServiceClient(connPool),
+		CallOptions: &client.CallOptions,
+
+	}
+	c.setGoogleClientInfo()
+
+	client.internalClient = c
+
+	return &client, nil
+}
+
+// Connection returns a connection to the API service.
+//
+// Deprecated: Connections are now pooled so this method does not always
+// return the same resource.
+func (c *poolGRPCClient) Connection() *grpc.ClientConn {
+	return c.connPool.Conn()
+}
+
+// setGoogleClientInfo sets the name and version of the application in
+// the `x-goog-api-client` header passed on each request. Intended for
+// use by Google-written clients.
+func (c *poolGRPCClient) setGoogleClientInfo(keyval ...string) {
+	kv := append([]string{"gl-go", versionGo()}, keyval...)
+	kv = append(kv, "gapic", getVersionClient(), "gax", gax.Version, "grpc", grpc.Version)
+	c.xGoogMetadata = metadata.Pairs("x-goog-api-client", gax.XGoogHeader(kv...))
+}
+
+// Close closes the connection to the API service. The user should invoke this when
+// the client is no longer required.
+func (c *poolGRPCClient) Close() error {
+	return c.connPool.Close()
+}
+
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 type poolRESTClient struct {
 	// The http endpoint to connect to.
@@ -190,6 +298,81 @@ func (c *poolRESTClient) Close() error {
 func (c *poolRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
+func (c *poolGRPCClient) CreatePool(ctx context.Context, req *poolspb.CreatePoolRequest, opts ...gax.CallOption) (*poolspb.Pool, error) {
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
+	opts = append((*c.CallOptions).CreatePool[0:len((*c.CallOptions).CreatePool):len((*c.CallOptions).CreatePool)], opts...)
+	var resp *poolspb.Pool
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.poolClient.CreatePool(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *poolGRPCClient) GetPool(ctx context.Context, req *poolspb.GetPoolRequest, opts ...gax.CallOption) (*poolspb.Pool, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).GetPool[0:len((*c.CallOptions).GetPool):len((*c.CallOptions).GetPool)], opts...)
+	var resp *poolspb.Pool
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.poolClient.GetPool(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *poolGRPCClient) ListPools(ctx context.Context, req *poolspb.ListPoolsRequest, opts ...gax.CallOption) *PoolIterator {
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
+	opts = append((*c.CallOptions).ListPools[0:len((*c.CallOptions).ListPools):len((*c.CallOptions).ListPools)], opts...)
+	it := &PoolIterator{}
+	req = proto.Clone(req).(*poolspb.ListPoolsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*poolspb.Pool, string, error) {
+		resp := &poolspb.ListPoolsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.poolClient.ListPools(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetPools(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
 // CreatePool creates a Pool. Call this method before creating any resources scoped to a Pool.
 func (c *poolRESTClient) CreatePool(ctx context.Context, req *poolspb.CreatePoolRequest, opts ...gax.CallOption) (*poolspb.Pool, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
