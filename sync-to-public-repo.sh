@@ -31,7 +31,7 @@ if ! git checkout --quiet -b $BRANCH_TO_SYNC-"$EPOCH_TIME" right/$BRANCH_TO_SYNC
 fi
 
 echo "Merge $BRANCH_TO_SYNC from $INTERNAL_REPO_URL"
-	if ! git merge -m "Merge to sync between $INTERNAL_REPO_URL and $PUBLIC_REPO_URL" --log left/$BRANCH_TO_SYNC; then
+	if ! git merge -m "Merge to sync between $INTERNAL_REPO_URL and $PUBLIC_REPO_URL" --log left/$BRANCH_TO_SYNC --allow-unrelated-histories; then
 	>&2 echo "Fatal: unable to fetch from $PUBLIC_REPO_URL, rerun the script as soon as connection restored."
 	exit 1
 fi
