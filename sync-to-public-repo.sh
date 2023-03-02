@@ -25,7 +25,7 @@ if ! git fetch -u $PUBLIC_REPO_URL $BRANCH_TO_SYNC:right/$BRANCH_TO_SYNC; then
 fi
 
 echo "Checkout to the HEAD of the public repo"
-if git checkout --quiet -b $BRANCH_TO_SYNC-"$EPOCH_TIME" right/$BRANCH_TO_SYNC; then
+if ! git checkout --quiet -b $BRANCH_TO_SYNC-"$EPOCH_TIME" right/$BRANCH_TO_SYNC; then
 	>&2 echo "Fatal: unable checkout to the HEAD of the public repo from $PUBLIC_REPO_URL, rerun the script as soon as connection restored."
 	exit 1
 fi
