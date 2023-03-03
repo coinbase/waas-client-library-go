@@ -30,6 +30,7 @@ if ! git checkout --quiet -b $BRANCH_TO_SYNC-"$EPOCH_TIME" right/$BRANCH_TO_SYNC
 fi
 
 echo "Merge $BRANCH_TO_SYNC from $INTERNAL_REPO_URL"
+echo "Touch your Yubikey to sign the commit"
 if ! git merge -m "Merge to sync between $INTERNAL_REPO_URL and $PUBLIC_REPO_URL" --log left/$BRANCH_TO_SYNC --allow-unrelated-histories; then
   echo >&2 "Fatal: unable to merge from $INTERNAL_REPO_URL, rerun the script after resolving the conflicts manually."
   exit 1
