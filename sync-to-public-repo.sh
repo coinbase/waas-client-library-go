@@ -56,12 +56,12 @@ if ! git add --all && git commit -m "release $RELEASE_VERSION"; then
   exit 1
 fi
 
-echo "Remove files before publishing to public repo"
-#Add sync-to-public-repo.sh once it's merged to internal repo
-#if ! git rm -r .buildkite protos scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile sync-to-public-repo.sh; then
-if ! git rm -r .buildkite protos scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile; then
-  echo >&2 "Fatal: unable to remove files before publishing to public repo"
-  exit 1
-fi
+#echo "Remove files before publishing to public repo"
+##Add sync-to-public-repo.sh once it's merged to internal repo
+##if ! git rm -r .buildkite protos scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile sync-to-public-repo.sh; then
+#if ! git rm -r .buildkite protos scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile; then
+#  echo >&2 "Fatal: unable to remove files before publishing to public repo"
+#  exit 1
+#fi
 
 echo "Done."
