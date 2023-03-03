@@ -28,7 +28,7 @@ import (
 
 	"cloud.google.com/go/longrunning"
 	lroauto "cloud.google.com/go/longrunning/autogen"
-	mpc_transactionspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1"
+	mpc_transactionspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/iterator"

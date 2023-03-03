@@ -19,8 +19,8 @@ package v1_test
 import (
 	"context"
 
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	mpc_keyspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	mpc_keyspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1"
 )
 
 func ExampleNewMPCKeyClient() {
@@ -72,7 +72,7 @@ func ExampleMPCKeyClient_RegisterDevice() {
 
 	req := &mpc_keyspb.RegisterDeviceRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#RegisterDeviceRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#RegisterDeviceRequest.
 	}
 	resp, err := c.RegisterDevice(ctx, req)
 	if err != nil {
@@ -97,7 +97,7 @@ func ExampleMPCKeyClient_GetDevice() {
 
 	req := &mpc_keyspb.GetDeviceRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#GetDeviceRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#GetDeviceRequest.
 	}
 	resp, err := c.GetDevice(ctx, req)
 	if err != nil {
@@ -122,7 +122,7 @@ func ExampleMPCKeyClient_CreateDeviceGroup() {
 
 	req := &mpc_keyspb.CreateDeviceGroupRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#CreateDeviceGroupRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#CreateDeviceGroupRequest.
 	}
 	op, err := c.CreateDeviceGroup(ctx, req)
 	if err != nil {
@@ -152,7 +152,7 @@ func ExampleMPCKeyClient_GetDeviceGroup() {
 
 	req := &mpc_keyspb.GetDeviceGroupRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#GetDeviceGroupRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#GetDeviceGroupRequest.
 	}
 	resp, err := c.GetDeviceGroup(ctx, req)
 	if err != nil {
@@ -177,7 +177,7 @@ func ExampleMPCKeyClient_ListMPCOperations() {
 
 	req := &mpc_keyspb.ListMPCOperationsRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#ListMPCOperationsRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#ListMPCOperationsRequest.
 	}
 	resp, err := c.ListMPCOperations(ctx, req)
 	if err != nil {
@@ -202,7 +202,7 @@ func ExampleMPCKeyClient_CreateMPCKey() {
 
 	req := &mpc_keyspb.CreateMPCKeyRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#CreateMPCKeyRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#CreateMPCKeyRequest.
 	}
 	resp, err := c.CreateMPCKey(ctx, req)
 	if err != nil {
@@ -227,7 +227,7 @@ func ExampleMPCKeyClient_GetMPCKey() {
 
 	req := &mpc_keyspb.GetMPCKeyRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#GetMPCKeyRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#GetMPCKeyRequest.
 	}
 	resp, err := c.GetMPCKey(ctx, req)
 	if err != nil {
@@ -252,7 +252,7 @@ func ExampleMPCKeyClient_CreateSignature() {
 
 	req := &mpc_keyspb.CreateSignatureRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#CreateSignatureRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#CreateSignatureRequest.
 	}
 	op, err := c.CreateSignature(ctx, req)
 	if err != nil {
