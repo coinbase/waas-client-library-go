@@ -51,8 +51,8 @@ fi
 
 echo "Remove files before publishing to public repo"
 #Add sync-to-public-repo.sh once it's merged to internal repo
-#if ! (rm -r .buildkite protos scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile sync-to-public-repo.sh); then
-if ! (rm -r .buildkite protos scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile); then
+#if ! (rm -r .buildkite protos gen/openapiv2 scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile sync-to-public-repo.sh); then
+if ! (rm -r .buildkite protos gen/openapiv2 scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile); then
   echo >&2 "Fatal: unable to remove files before publishing to public repo"
   exit 1
 fi
