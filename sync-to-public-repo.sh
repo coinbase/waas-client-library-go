@@ -44,7 +44,7 @@ if ! grep -rl 'github.cbhq.net/cloud' ./protos | xargs sed -i "" -e 's/github\.c
 fi
 
 echo "Generate protos"
-if ! make clean && make protos; then
+if ! make protos; then
   echo >&2 "Fatal: unable to generate protos"
   exit 1
 fi
