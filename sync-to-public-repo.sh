@@ -65,7 +65,7 @@ if ! (git add --all && git commit -m "release $RELEASE_VERSION"); then
 fi
 
 echo "Create PR for public repo"
-if ! (git remote add public $PUBLIC_REPO_URL && git push public $BRANCH_TO_SYNC-"$EPOCH_TIME"); then
+if ! (git remote add public-"$EPOCH_TIME" $PUBLIC_REPO_URL && git push public-"$EPOCH_TIME" $BRANCH_TO_SYNC-"$EPOCH_TIME"); then
   echo >&2 "Fatal: unable to create PR for public repo"
   exit 1
 fi
