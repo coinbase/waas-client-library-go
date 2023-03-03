@@ -51,7 +51,7 @@ fi
 
 echo "Commit changes"
 echo "Touch your Yubikey to sign the commit..."
-if ! git add --all && git commit -m "release $RELEASE_VERSION"; then
+if ! (git add --all && git commit -m "release $RELEASE_VERSION"); then
   echo >&2 "Fatal: unable to commit changes"
   exit 1
 fi
