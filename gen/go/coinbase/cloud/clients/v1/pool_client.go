@@ -25,7 +25,7 @@ import (
 	"net/http"
 	"net/url"
 
-	poolspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1"
+	poolspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/pools/v1"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/iterator"

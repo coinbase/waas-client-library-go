@@ -19,8 +19,8 @@ package v1_test
 import (
 	"context"
 
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	mpc_walletspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	mpc_walletspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1"
 	"google.golang.org/api/iterator"
 )
 
@@ -73,7 +73,7 @@ func ExampleMPCWalletClient_CreateMPCWallet() {
 
 	req := &mpc_walletspb.CreateMPCWalletRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#CreateMPCWalletRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#CreateMPCWalletRequest.
 	}
 	op, err := c.CreateMPCWallet(ctx, req)
 	if err != nil {
@@ -103,7 +103,7 @@ func ExampleMPCWalletClient_GetMPCWallet() {
 
 	req := &mpc_walletspb.GetMPCWalletRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#GetMPCWalletRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#GetMPCWalletRequest.
 	}
 	resp, err := c.GetMPCWallet(ctx, req)
 	if err != nil {
@@ -128,7 +128,7 @@ func ExampleMPCWalletClient_ListMPCWallets() {
 
 	req := &mpc_walletspb.ListMPCWalletsRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListMPCWalletsRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListMPCWalletsRequest.
 	}
 	it := c.ListMPCWallets(ctx, req)
 	for {
@@ -159,7 +159,7 @@ func ExampleMPCWalletClient_GenerateAddress() {
 
 	req := &mpc_walletspb.GenerateAddressRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#GenerateAddressRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#GenerateAddressRequest.
 	}
 	resp, err := c.GenerateAddress(ctx, req)
 	if err != nil {
@@ -184,7 +184,7 @@ func ExampleMPCWalletClient_GetAddress() {
 
 	req := &mpc_walletspb.GetAddressRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#GetAddressRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#GetAddressRequest.
 	}
 	resp, err := c.GetAddress(ctx, req)
 	if err != nil {
@@ -209,7 +209,7 @@ func ExampleMPCWalletClient_ListAddresses() {
 
 	req := &mpc_walletspb.ListAddressesRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListAddressesRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListAddressesRequest.
 	}
 	it := c.ListAddresses(ctx, req)
 	for {
@@ -240,7 +240,7 @@ func ExampleMPCWalletClient_ListBalances() {
 
 	req := &mpc_walletspb.ListBalancesRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListBalancesRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListBalancesRequest.
 	}
 	it := c.ListBalances(ctx, req)
 	for {
