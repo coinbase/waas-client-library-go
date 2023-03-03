@@ -6,6 +6,7 @@
 INTERNAL_REPO_URL=git@github.cbhq.net:cloud/waas-client-library-go.git
 PUBLIC_REPO_URL=git@github.com:coinbase/waas-client-library-go.git
 BRANCH_TO_SYNC=master
+RELEASE_VERSION=0.0.1
 EPOCH_TIME=$(date +%s)
 
 echo "Left: $INTERNAL_REPO_URL"
@@ -30,7 +31,7 @@ if ! git checkout --quiet -b $BRANCH_TO_SYNC-"$EPOCH_TIME" right/$BRANCH_TO_SYNC
 fi
 
 echo "Merge $BRANCH_TO_SYNC from $INTERNAL_REPO_URL"
-echo "Touch your Yubikey to sign the commit"
+echo "Touch your Yubikey to sign the commit..."
 if ! git merge -m "Merge to sync between $INTERNAL_REPO_URL and $PUBLIC_REPO_URL" --log left/$BRANCH_TO_SYNC --allow-unrelated-histories; then
   echo >&2 "Fatal: unable to merge from $INTERNAL_REPO_URL, rerun the script after resolving the conflicts manually."
   exit 1
@@ -45,6 +46,13 @@ fi
 echo "Generate protos"
 if ! make clean && make protos; then
   echo >&2 "Fatal: unable to generate protos"
+  exit 1
+fi
+
+echo "Commit changes"
+echo "Touch your Yubikey to sign the commit..."
+if ! git commit -m "release $RELEASE_VERSION"; then
+  echo >&2 "Fatal: unable to commit changes"
   exit 1
 fi
 
