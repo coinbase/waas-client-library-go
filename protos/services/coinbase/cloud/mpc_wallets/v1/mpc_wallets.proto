@@ -16,7 +16,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         title: "Coinbase Cloud - WaaS MPC Wallets API";
         version: "1.0";
     };
-    host: "https://api.coinbasecloud.com/waas/mpcWallets"
+    host: "https://api.coinbasecloud.com/waas/mpc_wallets"
     schemes: HTTPS;
     consumes: "application/json";
     produces: "application/json";
@@ -27,7 +27,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 // of KeyService, and information about the Assets can be queried using BlockchainService. Because
 // of the backing by MPC Keys, full functionality of these APIs requires use of the WaaS SDK.
 service MPCWalletService {
-  option (google.api.default_host) = "api.coinbasecloud.com/waas/mpcWallets";
+  option (google.api.default_host) = "api.coinbasecloud.com/waas/mpc_wallets";
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
     description: "A service that manages BIP-32-based Hierarchically Deterministic (HD) collections of on-chain Addresses and their associated Asset balances. The Addresses are backed by the MPCKey resources of KeyService, and information about the Assets can be queried using BlockchainService. Because of the backing by MPC Keys, full functionality of these APIs requires use of the WaaS SDK."
   };

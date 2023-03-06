@@ -10,7 +10,7 @@
       "description": "A service that orchestrates on-chain transactions originating from MPCWallets. The service handles nonce management, transaction construction, signing, broadcasting, and confirmation detection including on-chain re-organizations."
     }
   ],
-  "host": "https://api.coinbasecloud.com/waas/mpcTransactions",
+  "host": "https://api.coinbasecloud.com/waas/mpc_transactions",
   "schemes": [
     "https"
   ],

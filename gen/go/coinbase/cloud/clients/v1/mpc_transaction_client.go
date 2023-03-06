@@ -54,9 +54,9 @@ type MPCTransactionCallOptions struct {
 
 func defaultMPCTransactionGRPCClientOptions() []option.ClientOption {
 	return []option.ClientOption{
-		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/mpcTransactions:443"),
-		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/mpcTransactions:443"),
-		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpcTransactions/"),
+		internaloption.WithDefaultEndpoint("api.coinbasecloud.com/waas/mpc_transactions:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.coinbasecloud.com/waas/mpc_transactions:443"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpc_transactions/"),
 		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
 		internaloption.EnableJwtWithScope(),
 		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
@@ -320,9 +320,9 @@ func NewMPCTransactionRESTClient(ctx context.Context, opts ...option.ClientOptio
 
 func defaultMPCTransactionRESTClientOptions() []option.ClientOption {
 	return []option.ClientOption{
-		internaloption.WithDefaultEndpoint("https://api.coinbasecloud.com/waas/mpcTransactions"),
-		internaloption.WithDefaultMTLSEndpoint("https://api.coinbasecloud.com/waas/mpcTransactions"),
-		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpcTransactions/"),
+		internaloption.WithDefaultEndpoint("https://api.coinbasecloud.com/waas/mpc_transactions"),
+		internaloption.WithDefaultMTLSEndpoint("https://api.coinbasecloud.com/waas/mpc_transactions"),
+		internaloption.WithDefaultAudience("https://api.coinbasecloud.com/waas/mpc_transactions/"),
 		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
 	}
 }

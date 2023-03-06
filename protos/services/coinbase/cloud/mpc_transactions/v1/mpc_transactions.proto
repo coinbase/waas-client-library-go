@@ -17,7 +17,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         title: "Coinbase Cloud - WaaS MPC Transactions API";
         version: "1.0";
     };
-    host: "https://api.coinbasecloud.com/waas/mpcTransactions"
+    host: "https://api.coinbasecloud.com/waas/mpc_transactions"
     schemes: HTTPS;
     consumes: "application/json";
     produces: "application/json";
@@ -27,7 +27,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 // nonce management, transaction construction, signing, broadcasting, and confirmation detection including
 // on-chain re-organizations.
 service MPCTransactionService {
-  option (google.api.default_host) = "api.coinbasecloud.com/waas/mpcTransactions";
+  option (google.api.default_host) = "api.coinbasecloud.com/waas/mpc_transactions";
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
     description: "A service that orchestrates on-chain transactions originating from MPCWallets. The service handles nonce management, transaction construction, signing, broadcasting, and confirmation detection including on-chain re-organizations."
   };
