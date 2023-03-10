@@ -21,7 +21,7 @@ type Authenticator struct {
 // APIKeyClaims holds public claim values for a JWT, as well as a URI.
 type APIKeyClaims struct {
 	*jwt.Claims
-	URI string
+	URI string `json:"uri"`
 }
 
 // NewAuthenticator returns a new Authenticator.
