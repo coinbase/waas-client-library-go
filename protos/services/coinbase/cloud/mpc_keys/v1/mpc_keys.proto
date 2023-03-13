@@ -48,7 +48,7 @@ service MPCKeyService {
   // Registers a new Device. A Device must be registered before it can be added to a DeviceGroup.
   rpc RegisterDevice(RegisterDeviceRequest) returns (Device){
     option (google.api.http) = {
-      post: "/v1:registerDevice"
+      post: "/v1/device:register"
       body: "*"
     };
     option (google.api.method_signature) = "registration_data";
@@ -301,17 +301,27 @@ message MPCOperation {
     }
   ];
 
+  // Data that should be passed to the WaaS SDK's ComputeMPCOperation function
+  // to complete the operation.
+  bytes mpc_data = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "mpcData"
+      description: "Data that should be passed to the WaaS SDK's ComputeMPCOperation function to complete the operation."
+    }
+  ];
+
   // Metadata related to the MPC operation.
   oneof metadata {
     // Metadata associated with the CreateDeviceGroup long-running operation.
-    CreateDeviceGroupMetadata create_device_group_metadata = 2 [
+    CreateDeviceGroupMetadata create_device_group_metadata = 3 [
       (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title: "createDeviceGroupMetadata"
         description: "Metadata associated with the CreateDeviceGroup long-running operation."
       }
     ];
     // Metadata associated with the CreateSignature long-running operation.
-    CreateSignatureMetadata create_signature_metadata = 3 [
+    CreateSignatureMetadata create_signature_metadata = 4 [
       (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title: "createSignatureMetadata"
         description: "Metadata associated with the CreateSignature long-running operation."
@@ -458,9 +468,12 @@ message CreateDeviceGroupRequest {
 
 // Metadata associated with the CreateDeviceGroup long-running operation.
 message CreateDeviceGroupMetadata {
-  // Data that should be passed to the WaaS SDK's ComputeMPCOperation function
-  // to complete the operation.
-  bytes mpc_data = 1 [(google.api.field_behavior) = REQUIRED];
+  // The resource name of the DeviceGroup to poll using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"}
+  ];
 }
 
 // The request message for GetDeviceGroup.
@@ -564,9 +577,12 @@ message CreateSignatureRequest {
 
 // Metadata associated with the CreateSignature long-running operation.
 message CreateSignatureMetadata {
-  // Data that should be passed to the WaaS SDK's ComputeMPCOperation function
-  // to complete the operation.
-  bytes mpc_data = 1 [(google.api.field_behavior) = REQUIRED];
+  // The resource name of the DeviceGroup to poll using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"}
+  ];
 
   // The payload that is about to be signed. Check this value to ensure that the
   // correct payload is being signed.

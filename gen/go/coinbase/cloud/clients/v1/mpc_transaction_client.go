@@ -412,7 +412,7 @@ func (c *mPCTransactionGRPCClient) ListMPCTransactions(ctx context.Context, req 
 		}
 
 		it.Response = resp
-		return resp.GetMpcWallets(), resp.GetNextPageToken(), nil
+		return resp.GetMpcTransactions(), resp.GetNextPageToken(), nil
 	}
 	fetch := func(pageSize int, pageToken string) (string, error) {
 		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
@@ -661,7 +661,7 @@ func (c *mPCTransactionRESTClient) ListMPCTransactions(ctx context.Context, req 
 			return nil, "", e
 		}
 		it.Response = resp
-		return resp.GetMpcWallets(), resp.GetNextPageToken(), nil
+		return resp.GetMpcTransactions(), resp.GetNextPageToken(), nil
 	}
 
 	fetch := func(pageSize int, pageToken string) (string, error) {

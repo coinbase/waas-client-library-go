@@ -388,7 +388,7 @@
     "v1ListMPCTransactionsResponse": {
       "type": "object",
       "properties": {
-        "mpcWallets": {
+        "mpcTransactions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1MPCTransaction"

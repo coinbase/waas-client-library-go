@@ -617,7 +617,7 @@ func (c *mPCKeyRESTClient) RegisterDevice(ctx context.Context, req *mpc_keyspb.R
 	if err != nil {
 		return nil, err
 	}
-	baseUrl.Path += fmt.Sprintf("/v1:registerDevice")
+	baseUrl.Path += fmt.Sprintf("/v1/device:register")
 
 	// Build HTTP headers from client and context metadata.
 	headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))

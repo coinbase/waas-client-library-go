@@ -622,7 +622,6 @@ func (c *mPCWalletRESTClient) CreateMPCWallet(ctx context.Context, req *mpc_wall
 
 	params := url.Values{}
 	params.Add("device", fmt.Sprintf("%v", req.GetDevice()))
-	params.Add("deviceGroupId", fmt.Sprintf("%v", req.GetDeviceGroupId()))
 	if req.GetRequestId() != "" {
 		params.Add("requestId", fmt.Sprintf("%v", req.GetRequestId()))
 	}

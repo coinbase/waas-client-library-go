@@ -345,13 +345,6 @@
             "type": "string"
           },
           {
-            "name": "deviceGroupId",
-            "description": "The resource ID to use for the underlying DeviceGroup, which will become the final component\nof the underlying DeviceGroup's resource name. This is required, as the DeviceGroup name must\nbe used to poll ListMPCOperations to complete the CreateDeviceGroup operation.\nThis should be a UUID.",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "requestId",
             "description": "A user-provided request ID to allow for idempotency. This should be a UUID.",
             "in": "query",

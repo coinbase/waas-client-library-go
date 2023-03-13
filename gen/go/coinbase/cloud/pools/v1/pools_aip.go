@@ -14,27 +14,27 @@ import (
 )
 
 type PoolResourceName struct {
-	Pool string
+	PoolId string
 }
 
 func (n PoolResourceName) Validate() error {
-	if n.Pool == "" {
-		return fmt.Errorf("pool: empty")
+	if n.PoolId == "" {
+		return fmt.Errorf("pool_id: empty")
 	}
-	if strings.IndexByte(n.Pool, '/') != -1 {
-		return fmt.Errorf("pool: contains illegal character '/'")
+	if strings.IndexByte(n.PoolId, '/') != -1 {
+		return fmt.Errorf("pool_id: contains illegal character '/'")
 	}
 	return nil
 }
 
 func (n PoolResourceName) ContainsWildcard() bool {
-	return false || n.Pool == "-"
+	return false || n.PoolId == "-"
 }
 
 func (n PoolResourceName) String() string {
 	return resourcename.Sprint(
-		"pools/{pool}",
-		n.Pool,
+		"pools/{pool_id}",
+		n.PoolId,
 	)
 }
 
@@ -48,7 +48,7 @@ func (n PoolResourceName) MarshalString() (string, error) {
 func (n *PoolResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"pools/{pool}",
-		&n.Pool,
+		"pools/{pool_id}",
+		&n.PoolId,
 	)
 }

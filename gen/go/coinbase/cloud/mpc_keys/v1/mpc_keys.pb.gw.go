@@ -545,7 +545,7 @@ func RegisterMPCKeyServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/RegisterDevice", runtime.WithHTTPPathPattern("/v1:registerDevice"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/RegisterDevice", runtime.WithHTTPPathPattern("/v1/device:register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -784,7 +784,7 @@ func RegisterMPCKeyServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/RegisterDevice", runtime.WithHTTPPathPattern("/v1:registerDevice"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/RegisterDevice", runtime.WithHTTPPathPattern("/v1/device:register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -958,7 +958,7 @@ func RegisterMPCKeyServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 }
 
 var (
-	pattern_MPCKeyService_RegisterDevice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"v1"}, "registerDevice"))
+	pattern_MPCKeyService_RegisterDevice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "device"}, "register"))
 
 	pattern_MPCKeyService_GetDevice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 2, 5, 2}, []string{"v1", "devices", "name"}, ""))
 

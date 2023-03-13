@@ -82,7 +82,7 @@ service BlockchainService {
 message Network {
   option (google.api.resource) = {
     type: "api.coinbasecloud.com/Network"
-    pattern: "networks/{network}"
+    pattern: "networks/{network_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -154,7 +154,7 @@ message Network {
 message Asset {
   option (google.api.resource) = {
     type: "api.coinbasecloud.com/Asset"
-    pattern: "networks/{network}/assets/{asset}"
+    pattern: "networks/{network_id}/assets/{asset_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {

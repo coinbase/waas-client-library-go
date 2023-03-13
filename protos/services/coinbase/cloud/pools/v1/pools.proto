@@ -72,7 +72,7 @@ service PoolService {
 message Pool {
   option (google.api.resource) = {
     type: "api.coinbasecloud.com/Pool"
-    pattern: "pools/{pool}"
+    pattern: "pools/{pool_id}"
   };
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {

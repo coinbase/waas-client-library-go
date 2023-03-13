@@ -156,7 +156,7 @@ message MPCWallet {
   // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string device_group = 3 [
     (google.api.field_behavior) = OUTPUT_ONLY,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/DeviceGroup"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "deviceGroup"
       description: "The resource name of the MPCKeyService DeviceGroup associated with this MPCWallet. The DeviceGroup will perform the underlying MPC operations. Format: pools/{pool_id}/deviceGroups/{device_group_id}",
@@ -204,7 +204,7 @@ message Address {
   // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}
   repeated string mpc_keys = 3 [
     (google.api.field_behavior) = OUTPUT_ONLY,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/MPCKey"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/MPCKey"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "mpcKeys"
       description: "The resource names of the MPCKeys that back this Address. For EVM networks, there will be only one MPCKey.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}"
@@ -250,7 +250,7 @@ message Balance {
   // Format: networks/{network}/assets/{asset}
   string asset = 2 [
     (google.api.field_behavior) = OUTPUT_ONLY,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Asset"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Asset"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "asset"
       description: "The resource name of the Asset to which this Balance corresponds. Format: networks/{network}/assets/{asset}"
@@ -294,17 +294,11 @@ message CreateMPCWalletRequest {
   // Format: devices/{device_id}
   string device = 3 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/Device"}
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Device"}
   ];
 
-  // The resource ID to use for the underlying DeviceGroup, which will become the final component
-  // of the underlying DeviceGroup's resource name. This is required, as the DeviceGroup name must
-  // be used to poll ListMPCOperations to complete the CreateDeviceGroup operation.
-  // This should be a UUID.
-  string device_group_id = 4 [(google.api.field_behavior) = REQUIRED];
-
   // A user-provided request ID to allow for idempotency. This should be a UUID.
-  string request_id = 5 [(google.api.field_behavior) = OPTIONAL];
+  string request_id = 4 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // Metadata associated with the CreateMPCWallet long-running operation.
@@ -312,8 +306,8 @@ message CreateMPCWalletMetadata {
   // The resource name of the DeviceGroup to poll for using ListMPCOperations.
   // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string device_group = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/DeviceGroup"}
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"}
   ];
 }
 
@@ -384,7 +378,7 @@ message GenerateAddressRequest {
   // Format: networks/{network_id}
   string network = 2 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Network"}
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"}
   ];
 
   // A user-provided request ID to allow for idempotency. This should be a UUID.
@@ -397,7 +391,7 @@ message GetAddressRequest {
   // Format: networks/{network_id}/addresses/{address_id}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Network"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "networkName"}
     }

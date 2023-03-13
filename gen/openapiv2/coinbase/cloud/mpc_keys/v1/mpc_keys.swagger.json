@@ -21,6 +21,41 @@
     "application/json"
   ],
   "paths": {
+    "/v1/device:register": {
+      "post": {
+        "summary": "Register Device",
+        "description": "Registers a new Device. A Device must be registered before it can be added to a DeviceGroup.",
+        "operationId": "MPCKeyService_RegisterDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Device"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message for RegisterDevice.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RegisterDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MPCKeyService"
+        ]
+      }
+    },
     "/v1/{deviceGroupName}": {
       "get": {
         "summary": "Get Device Group",
@@ -322,41 +357,6 @@
           "MPCKeyService"
         ]
       }
-    },
-    "/v1:registerDevice": {
-      "post": {
-        "summary": "Register Device",
-        "description": "Registers a new Device. A Device must be registered before it can be added to a DeviceGroup.",
-        "operationId": "MPCKeyService_RegisterDevice",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Device"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "The request message for RegisterDevice.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1RegisterDeviceRequest"
-            }
-          }
-        ],
-        "tags": [
-          "MPCKeyService"
-        ]
-      }
     }
   },
   "definitions": {
@@ -460,24 +460,21 @@
     "v1CreateDeviceGroupMetadata": {
       "type": "object",
       "properties": {
-        "mpcData": {
+        "deviceGroup": {
           "type": "string",
-          "format": "byte",
-          "description": "Data that should be passed to the WaaS SDK's ComputeMPCOperation function\nto complete the operation."
+          "title": "The resource name of the DeviceGroup to poll using ListMPCOperations.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
+          "readOnly": true
         }
       },
-      "description": "Metadata associated with the CreateDeviceGroup long-running operation.",
-      "required": [
-        "mpcData"
-      ]
+      "description": "Metadata associated with the CreateDeviceGroup long-running operation."
     },
     "v1CreateSignatureMetadata": {
       "type": "object",
       "properties": {
-        "mpcData": {
+        "deviceGroup": {
           "type": "string",
-          "format": "byte",
-          "description": "Data that should be passed to the WaaS SDK's ComputeMPCOperation function\nto complete the operation."
+          "title": "The resource name of the DeviceGroup to poll using ListMPCOperations.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
+          "readOnly": true
         },
         "payload": {
           "type": "string",
@@ -487,7 +484,6 @@
       },
       "description": "Metadata associated with the CreateSignature long-running operation.",
       "required": [
-        "mpcData",
         "payload"
       ]
     },
@@ -650,6 +646,13 @@
           "type": "string",
           "description": "The resource name of the MPCOperation.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}/mpcOperations/{mpc_operation_id}",
           "title": "name",
+          "readOnly": true
+        },
+        "mpcData": {
+          "type": "string",
+          "format": "byte",
+          "description": "Data that should be passed to the WaaS SDK's ComputeMPCOperation function to complete the operation.",
+          "title": "mpcData",
           "readOnly": true
         },
         "createDeviceGroupMetadata": {

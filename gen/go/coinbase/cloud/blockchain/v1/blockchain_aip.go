@@ -14,27 +14,27 @@ import (
 )
 
 type NetworkResourceName struct {
-	Network string
+	NetworkId string
 }
 
 func (n NetworkResourceName) Validate() error {
-	if n.Network == "" {
-		return fmt.Errorf("network: empty")
+	if n.NetworkId == "" {
+		return fmt.Errorf("network_id: empty")
 	}
-	if strings.IndexByte(n.Network, '/') != -1 {
-		return fmt.Errorf("network: contains illegal character '/'")
+	if strings.IndexByte(n.NetworkId, '/') != -1 {
+		return fmt.Errorf("network_id: contains illegal character '/'")
 	}
 	return nil
 }
 
 func (n NetworkResourceName) ContainsWildcard() bool {
-	return false || n.Network == "-"
+	return false || n.NetworkId == "-"
 }
 
 func (n NetworkResourceName) String() string {
 	return resourcename.Sprint(
-		"networks/{network}",
-		n.Network,
+		"networks/{network_id}",
+		n.NetworkId,
 	)
 }
 
@@ -48,50 +48,50 @@ func (n NetworkResourceName) MarshalString() (string, error) {
 func (n *NetworkResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"networks/{network}",
-		&n.Network,
+		"networks/{network_id}",
+		&n.NetworkId,
 	)
 }
 
 type AssetResourceName struct {
-	Network string
-	Asset   string
+	NetworkId string
+	AssetId   string
 }
 
 func (n NetworkResourceName) AssetResourceName(
-	asset string,
+	assetId string,
 ) AssetResourceName {
 	return AssetResourceName{
-		Network: n.Network,
-		Asset:   asset,
+		NetworkId: n.NetworkId,
+		AssetId:   assetId,
 	}
 }
 
 func (n AssetResourceName) Validate() error {
-	if n.Network == "" {
-		return fmt.Errorf("network: empty")
+	if n.NetworkId == "" {
+		return fmt.Errorf("network_id: empty")
 	}
-	if strings.IndexByte(n.Network, '/') != -1 {
-		return fmt.Errorf("network: contains illegal character '/'")
+	if strings.IndexByte(n.NetworkId, '/') != -1 {
+		return fmt.Errorf("network_id: contains illegal character '/'")
 	}
-	if n.Asset == "" {
-		return fmt.Errorf("asset: empty")
+	if n.AssetId == "" {
+		return fmt.Errorf("asset_id: empty")
 	}
-	if strings.IndexByte(n.Asset, '/') != -1 {
-		return fmt.Errorf("asset: contains illegal character '/'")
+	if strings.IndexByte(n.AssetId, '/') != -1 {
+		return fmt.Errorf("asset_id: contains illegal character '/'")
 	}
 	return nil
 }
 
 func (n AssetResourceName) ContainsWildcard() bool {
-	return false || n.Network == "-" || n.Asset == "-"
+	return false || n.NetworkId == "-" || n.AssetId == "-"
 }
 
 func (n AssetResourceName) String() string {
 	return resourcename.Sprint(
-		"networks/{network}/assets/{asset}",
-		n.Network,
-		n.Asset,
+		"networks/{network_id}/assets/{asset_id}",
+		n.NetworkId,
+		n.AssetId,
 	)
 }
 
@@ -105,14 +105,14 @@ func (n AssetResourceName) MarshalString() (string, error) {
 func (n *AssetResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"networks/{network}/assets/{asset}",
-		&n.Network,
-		&n.Asset,
+		"networks/{network_id}/assets/{asset_id}",
+		&n.NetworkId,
+		&n.AssetId,
 	)
 }
 
 func (n AssetResourceName) NetworkResourceName() NetworkResourceName {
 	return NetworkResourceName{
-		Network: n.Network,
+		NetworkId: n.NetworkId,
 	}
 }

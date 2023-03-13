@@ -121,7 +121,7 @@ message MPCTransaction {
   // Format: networks/{network_id}
   string network = 2 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/blockchain/Network"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "network"
       description: "The resource name of the Network on which to broadcast the MPCTransaction.\n Format: networks/{network_id}"
@@ -134,7 +134,7 @@ message MPCTransaction {
   // (-- api-linter: core::0140::prepositions=disabled --)
   repeated string from_addresses = 3 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcWallets/MPCWallet"},
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/MPCWallet"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "from_addresses"
       description: "The resource name of the Addresses from which to send the MPCTransaction. For account-based Networks, only the first address is used.\n Format: networks/{network_id}/addresses/{address_id}."
@@ -232,7 +232,7 @@ message CreateMPCTransactionMetadata {
   // Format: pools/{pool_id}/deviceGroups/{device_group_id}
   string device_group = 1 [
     (google.api.field_behavior) = OUTPUT_ONLY,
-    (google.api.resource_reference) = {type: "api.coinbasecloud.com/waas/mpcKeys/DeviceGroup"}
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"}
   ];
 
   // The current state of the MPCTransaction. Once this field is populated, 
@@ -299,7 +299,7 @@ message ListMPCTransactionsResponse {
   };
 
   // The list of MPCTransactions.
-  repeated MPCTransaction mpc_wallets = 1;
+  repeated MPCTransaction mpc_transactions = 1;
 
   // A token, which can be sent as page_token to retrieve the next page.
   // If this field is omitted, there are no subsequent pages.
