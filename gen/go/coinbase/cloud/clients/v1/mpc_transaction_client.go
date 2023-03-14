@@ -436,8 +436,7 @@ func (c *mPCTransactionGRPCClient) ListMPCTransactions(ctx context.Context, req 
 // broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
 func (c *mPCTransactionRESTClient) CreateMPCTransaction(ctx context.Context, req *mpc_transactionspb.CreateMPCTransactionRequest, opts ...gax.CallOption) (*CreateMPCTransactionOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
-	body := req.GetMpcTransaction()
-	jsonReq, err := m.Marshal(body)
+	jsonReq, err := m.Marshal(req)
 	if err != nil {
 		return nil, err
 	}
@@ -447,49 +446,6 @@ func (c *mPCTransactionRESTClient) CreateMPCTransaction(ctx context.Context, req
 		return nil, err
 	}
 	baseUrl.Path += fmt.Sprintf("/v1/%v/mpcTransactions", req.GetParent())
-
-	params := url.Values{}
-	if req.GetInput().GetEthereum_1559Input().GetChainId() != "" {
-		params.Add("input.ethereum_1559Input.chainId", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetChainId()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetData() != nil {
-		params.Add("input.ethereum_1559Input.data", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetData()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetFromAddress() != "" {
-		params.Add("input.ethereum_1559Input.fromAddress", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetFromAddress()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetGas() != 0 {
-		params.Add("input.ethereum_1559Input.gas", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetGas()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetMaxFeePerGas() != "" {
-		params.Add("input.ethereum_1559Input.maxFeePerGas", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetMaxFeePerGas()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetMaxPriorityFeePerGas() != "" {
-		params.Add("input.ethereum_1559Input.maxPriorityFeePerGas", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetMaxPriorityFeePerGas()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetNonce() != 0 {
-		params.Add("input.ethereum_1559Input.nonce", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetNonce()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetToAddress() != "" {
-		params.Add("input.ethereum_1559Input.toAddress", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetToAddress()))
-	}
-	if req.GetInput().GetEthereum_1559Input().GetValue() != "" {
-		params.Add("input.ethereum_1559Input.value", fmt.Sprintf("%v", req.GetInput().GetEthereum_1559Input().GetValue()))
-	}
-	if req.GetInput().GetEthereumRlpInput().GetSender() != "" {
-		params.Add("input.ethereumRlpInput.sender", fmt.Sprintf("%v", req.GetInput().GetEthereumRlpInput().GetSender()))
-	}
-	if req.GetInput().GetEthereumRlpInput().GetTransactionRlp() != nil {
-		params.Add("input.ethereumRlpInput.transactionRlp", fmt.Sprintf("%v", req.GetInput().GetEthereumRlpInput().GetTransactionRlp()))
-	}
-	if req.GetOverrideNonce() {
-		params.Add("overrideNonce", fmt.Sprintf("%v", req.GetOverrideNonce()))
-	}
-	if req.GetRequestId() != "" {
-		params.Add("requestId", fmt.Sprintf("%v", req.GetRequestId()))
-	}
-
-	baseUrl.RawQuery = params.Encode()
 
 	// Build HTTP headers from client and context metadata.
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))

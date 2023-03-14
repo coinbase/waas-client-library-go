@@ -39,7 +39,7 @@ service MPCTransactionService {
   rpc CreateMPCTransaction(CreateMPCTransactionRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{parent=pools/*/mpcWallets/*}/mpcTransactions"
-      body: "mpc_transaction"
+      body: "*"
     };
     option (google.api.method_signature) = "parent,mpc_transaction,input";
     option (google.longrunning.operation_info) = {

@@ -131,111 +131,36 @@
             "pattern": "pools/[^/]+/mpcWallets/[^/]+"
           },
           {
-            "name": "mpcTransaction",
-            "description": "The MPCTransaction to be created.",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1MPCTransaction",
+              "type": "object",
+              "properties": {
+                "mpcTransaction": {
+                  "$ref": "#/definitions/v1MPCTransaction",
+                  "description": "The MPCTransaction to be created."
+                },
+                "input": {
+                  "$ref": "#/definitions/v1TransactionInput",
+                  "description": "The transaction input."
+                },
+                "overrideNonce": {
+                  "type": "boolean",
+                  "description": "Whether the nonce specified in the transaction input should be respected, as opposed to assigned by the service. This is intended for the use case of replacing transactions that fail to confirm on-chain due to too low of a transaction fee. Setting this to true has the side effect of canceling any pending transactions from the same address with nonce greater than or equal to the one provided. Use this with caution.",
+                  "title": "input"
+                },
+                "requestId": {
+                  "type": "string",
+                  "description": "A user-provided request ID to allow for idempotency. This should be a UUID."
+                }
+              },
+              "description": "The request message for CreateMPCTransaction.",
               "required": [
-                "mpcTransaction"
+                "mpcTransaction",
+                "input"
               ]
             }
-          },
-          {
-            "name": "input.ethereumRlpInput.sender",
-            "description": "The sender address as a hexadecimal string, prefixed with 0x.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereumRlpInput.transactionRlp",
-            "description": "The RLP-encoded transaction as a byte array.\nSee https://github.com/ethereum/go-ethereum/blob/master/rlp/encode.go for an implementation.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "byte"
-          },
-          {
-            "name": "input.ethereum1559Input.chainId",
-            "description": "The chain ID of the transaction either as a \"0x\"-prefixed hex string or a base-10 number.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereum1559Input.nonce",
-            "description": "The nonce of the transaction. This value may be ignored depending on the API.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "input.ethereum1559Input.maxPriorityFeePerGas",
-            "description": "The EIP-1559 maximum priority fee per gas either as a \"0x\"-prefixed hex string or a base-10 number.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereum1559Input.maxFeePerGas",
-            "description": "The EIP-1559 maximum fee per gas either as a \"0x\"-prefixed hex string or a base-10 number.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereum1559Input.gas",
-            "description": "The maximum amount of gas to use on the transaction.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "input.ethereum1559Input.fromAddress",
-            "description": "The checksummed address from which the transaction will originate, as a \"0x\"-prefixed hex string.\nNote: This is NOT a WaaS Address resource of the form\nnetworks/{networkID}/addresses/{addressID}.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereum1559Input.toAddress",
-            "description": "The checksummed address to which the transaction is addressed, as a \"0x\"-prefixed hex string.\nNote: This is NOT a WaaS Address resource of the form\nnetworks/{networkID}/addresses/{addressID}.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereum1559Input.value",
-            "description": "The native value of the transaction as a \"0x\"-prefixed hex string or a base-10 number.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "input.ethereum1559Input.data",
-            "description": "The data for the transaction.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "byte"
-          },
-          {
-            "name": "overrideNonce",
-            "description": "input\n\nWhether the nonce specified in the transaction input should be respected, as opposed to assigned by the service. This is intended for the use case of replacing transactions that fail to confirm on-chain due to too low of a transaction fee. Setting this to true has the side effect of canceling any pending transactions from the same address with nonce greater than or equal to the one provided. Use this with caution.",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "requestId",
-            "description": "A user-provided request ID to allow for idempotency. This should be a UUID.",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "tags": [
