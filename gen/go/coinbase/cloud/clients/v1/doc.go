@@ -44,7 +44,7 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewProtocolRESTClient(ctx)
+//  c, err := v1.NewProtocolClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -52,7 +52,7 @@
 //
 //  req := &protocolspb.ConstructTransactionRequest{
 //  	// TODO: Fill request struct fields.
-//  	// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransactionRequest.
+//  	// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransactionRequest.
 //  }
 //  resp, err := c.ConstructTransaction(ctx, req)
 //  if err != nil {
@@ -71,7 +71,7 @@
 //
 // For information about setting deadlines, reusing contexts, and more
 // please visit https://pkg.go.dev/cloud.google.com/go.
-package v1 // import "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+package v1 // import "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
 
 import (
 	"context"

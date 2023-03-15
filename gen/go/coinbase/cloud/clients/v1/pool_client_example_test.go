@@ -19,8 +19,8 @@ package v1_test
 import (
 	"context"
 
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	poolspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	poolspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/pools/v1"
 	"google.golang.org/api/iterator"
 )
 
@@ -73,7 +73,7 @@ func ExamplePoolClient_CreatePool() {
 
 	req := &poolspb.CreatePoolRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1#CreatePoolRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/pools/v1#CreatePoolRequest.
 	}
 	resp, err := c.CreatePool(ctx, req)
 	if err != nil {
@@ -98,7 +98,7 @@ func ExamplePoolClient_GetPool() {
 
 	req := &poolspb.GetPoolRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1#GetPoolRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/pools/v1#GetPoolRequest.
 	}
 	resp, err := c.GetPool(ctx, req)
 	if err != nil {
@@ -123,7 +123,7 @@ func ExamplePoolClient_ListPools() {
 
 	req := &poolspb.ListPoolsRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1#ListPoolsRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/pools/v1#ListPoolsRequest.
 	}
 	it := c.ListPools(ctx, req)
 	for {

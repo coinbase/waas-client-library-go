@@ -21,14 +21,14 @@ plugins:
     opt:
       - transport=rest
       - transport=grpc
-      - go-gapic-package=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1;v1
-      - module=github.cbhq.net/cloud/waas-client-library-go/gen/go
-      - Mcoinbase/cloud/pools/v1/pools.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/pools/v1;poolspb
-      - Mcoinbase/cloud/blockchain/v1/blockchain.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1;blockchainpb
-      - Mcoinbase/cloud/protocols/v1/protocols.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1;protocolspb
-      - Mcoinbase/cloud/mpc_keys/v1/mpc_keys.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1;mpc_keyspb
-      - Mcoinbase/cloud/mpc_wallets/v1/mpc_wallets.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1;mpc_walletspb
-      - Mcoinbase/cloud/mpc_transactions/v1/mpc_transactions.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1;mpc_transactionspb
-      - Mcoinbase/cloud/types/v1/transaction.proto=github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1;typespb
+      - go-gapic-package=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1;v1
+      - module=github.com/coinbase/waas-client-library-go/gen/go
+      - Mcoinbase/cloud/pools/v1/pools.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/pools/v1;poolspb
+      - Mcoinbase/cloud/blockchain/v1/blockchain.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1;blockchainpb
+      - Mcoinbase/cloud/protocols/v1/protocols.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1;protocolspb
+      - Mcoinbase/cloud/mpc_keys/v1/mpc_keys.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1;mpc_keyspb
+      - Mcoinbase/cloud/mpc_wallets/v1/mpc_wallets.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1;mpc_walletspb
+      - Mcoinbase/cloud/mpc_transactions/v1/mpc_transactions.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1;mpc_transactionspb
+      - Mcoinbase/cloud/types/v1/transaction.proto=github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/types/v1;typespb
   - name: openapiv2
     out: ../../gen/openapiv2
