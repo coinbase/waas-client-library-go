@@ -127,6 +127,14 @@ func (m *MPCTransactionServiceClient) CreateMPCTransaction(
 	}, nil
 }
 
+// CreateMPCTransactionOperation returns the CreateMPCTransactionOperation indicated by the given name.
+func (m *MPCTransactionServiceClient) CreateMPCTransactionOperation(name string) *WrappedCreateMPCTransactionOperation {
+	return &WrappedCreateMPCTransactionOperation{
+		CreateMPCTransactionOperation: m.client.CreateMPCTransactionOperation(name),
+		pathPrefix:                    m.pathPrefix,
+	}
+}
+
 // GetMPCTransaction gets an MPCTransaction. There can be a delay between when
 // CreateMPCTransaction is called and when this API will begin returning an
 // MPCTransaction in the CREATED state.

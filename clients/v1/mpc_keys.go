@@ -148,6 +148,14 @@ func (m *MPCKeyServiceClient) CreateDeviceGroup(
 	}, nil
 }
 
+// CreateDeviceGroupOperation returns the CreateDeviceGroupOperation indicated by the given name.
+func (m *MPCKeyServiceClient) CreateDeviceGroupOperation(name string) *WrappedCreateDeviceGroupOperation {
+	return &WrappedCreateDeviceGroupOperation{
+		CreateDeviceGroupOperation: m.client.CreateDeviceGroupOperation(name),
+		pathPrefix:                 m.pathPrefix,
+	}
+}
+
 // GetDeviceGroup gets a DeviceGroup.
 func (m *MPCKeyServiceClient) GetDeviceGroup(
 	ctx context.Context,
@@ -243,4 +251,12 @@ func (m *MPCKeyServiceClient) CreateSignature(
 		CreateSignatureOperation: op,
 		pathPrefix:               m.pathPrefix,
 	}, nil
+}
+
+// CreateSignatureOperation returns the CreateSignatureOperation indicated by the given name.
+func (m *MPCKeyServiceClient) CreateSignatureOperation(name string) *WrappedCreateSignatureOperation {
+	return &WrappedCreateSignatureOperation{
+		CreateSignatureOperation: m.client.CreateSignatureOperation(name),
+		pathPrefix:               m.pathPrefix,
+	}
 }

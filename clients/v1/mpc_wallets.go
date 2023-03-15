@@ -128,6 +128,14 @@ func (m *MPCWalletServiceClient) CreateMPCWallet(
 	}, nil
 }
 
+// CreateMPCWalletOperation returns the CreateMPCWalletOperation indicated by the given name.
+func (m *MPCWalletServiceClient) CreateMPCWalletOperation(name string) *WrappedCreateMPCWalletOperation {
+	return &WrappedCreateMPCWalletOperation{
+		CreateMPCWalletOperation: m.client.CreateMPCWalletOperation(name),
+		pathPrefix:               m.pathPrefix,
+	}
+}
+
 // GetMPCWallet gets an MPCWallet.
 func (m *MPCWalletServiceClient) GetMPCWallet(
 	ctx context.Context,

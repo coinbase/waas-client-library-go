@@ -154,7 +154,7 @@ message MPCWallet {
   // The resource name of the MPCKeyService DeviceGroup associated with this MPCWallet. 
   // The DeviceGroup will perform the underlying MPC operations.
   // Format: pools/{pool_id}/deviceGroups/{device_group_id}
-  string device_group = 3 [
+  string device_group = 2 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
