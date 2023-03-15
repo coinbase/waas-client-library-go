@@ -39,7 +39,7 @@ if ! git merge -m "Merge to sync between $INTERNAL_REPO_URL and $PUBLIC_REPO_URL
 fi
 
 echo "Replace the proto package name"
-if ! (grep -rl 'github.cbhq.net/cloud' ./protos ./gen ./clients ./auth ./go.mod | xargs sed -i "" -e 's/github\.cbhq\.net\/cloud/github.com\/coinbase/g'); then
+if ! (grep -rl 'github.cbhq.net/cloud' ./protos ./gen ./clients ./auth ./go.mod ./example.go | xargs sed -i "" -e 's/github\.cbhq\.net\/cloud/github.com\/coinbase/g'); then
   echo >&2 "Fatal: unable to replace the package from github.cbhq.net/cloud to github.com/coinbase"
   exit 1
 fi
