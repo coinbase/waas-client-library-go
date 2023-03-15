@@ -38,8 +38,8 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("error fetching Ethereum mainnet network: %v", err)
+		log.Fatalf("error fetching Ethereum Goerli network: %v", err)
 	}
 
-	log.Printf("got Ethereum mainnet network: %v", network)
+	log.Printf("got Ethereum Goerli network: %v", network)
 }
