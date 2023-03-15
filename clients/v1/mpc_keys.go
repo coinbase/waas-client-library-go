@@ -12,8 +12,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// mpcKeyServiceName is the name of the MPCKeyService used by the Authenticator.
-const mpcKeyServiceName = "waas_mpc_key_service"
+const (
+	// mpcKeyServiceName is the name of the MPCKeyService used by the Authenticator.
+	mpcKeyServiceName = "waas_mpc_key_service"
+
+	// mpcKeyServiceEndpoint is the default endpoint URL to use for MPCKeyService.
+	mpcKeyServiceEndpoint = "https://api.developer.coinbase.com/waas/mpc_keys"
+)
 
 // MPCKeyServiceClient is the client to use to access WaaS MPCKeyService APIs.
 type MPCKeyServiceClient struct {
@@ -24,12 +29,14 @@ type MPCKeyServiceClient struct {
 // NewMPCKeyServiceClient returns a MPCKeyServiceClient based on the given inputs.
 func NewMPCKeyServiceClient(
 	ctx context.Context,
-	endpoint string,
 	waasOpts ...clients.WaaSClientOption,
 ) (*MPCKeyServiceClient, error) {
-	config := clients.GetConfig(waasOpts...)
+	config, err := clients.GetConfig(mpcKeyServiceName, mpcKeyServiceEndpoint, waasOpts...)
+	if err != nil {
+		return nil, err
+	}
 
-	clientOptions, err := clients.GetClientOptions(endpoint, mpcKeyServiceName, config)
+	clientOptions, err := clients.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}
@@ -39,9 +46,9 @@ func NewMPCKeyServiceClient(
 		return nil, err
 	}
 
-	baseURL, err := url.Parse(endpoint)
+	baseURL, err := url.Parse(config.Endpoint)
 	if err != nil {
-		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", endpoint, err)
+		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", config.Endpoint, err)
 	}
 
 	return &MPCKeyServiceClient{

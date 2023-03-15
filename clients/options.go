@@ -12,6 +12,8 @@ import (
 
 // WaaSClientConfig stores configuration information about a WaaS client.
 type WaaSClientConfig struct {
+	Endpoint      string
+	ServiceName   string
 	APIKey        *auth.APIKey
 	HTTPClient    *http.Client
 	ClientOptions []option.ClientOption
@@ -19,6 +21,13 @@ type WaaSClientConfig struct {
 
 // WaaSClientOption is a function that applies changes to a clientConfig.
 type WaaSClientOption func(c *WaaSClientConfig)
+
+// WithEndpoint returns an option to set the service endpoint.
+func WithEndpoint(endpoint string) WaaSClientOption {
+	return func(c *WaaSClientConfig) {
+		c.Endpoint = endpoint
+	}
+}
 
 // WithAPIKey returns an option to set the Coinbase Cloud API Key.
 func WithAPIKey(apiKey *auth.APIKey) WaaSClientOption {
@@ -42,23 +51,33 @@ func WithClientOptions(clientOptions ...option.ClientOption) WaaSClientOption {
 }
 
 // GetConfig returns a WaaSClientConfig with all of the WaaSClientOptions applied.
-func GetConfig(waasOpts ...WaaSClientOption) *WaaSClientConfig {
+// It uses the given default endpoint if none of the options set it.
+func GetConfig(
+	serviceName string,
+	defaultEndpoint string,
+	waasOpts ...WaaSClientOption) (*WaaSClientConfig, error) {
 	config := &WaaSClientConfig{}
 
 	for _, waasOpt := range waasOpts {
 		waasOpt(config)
 	}
 
-	return config
+	if config.Endpoint == "" {
+		config.Endpoint = defaultEndpoint
+	}
+
+	if serviceName == "" {
+		return nil, errors.New("service name must be provided")
+	}
+
+	config.ServiceName = serviceName
+
+	return config, nil
 }
 
 // GetClientOptions returns the list of ClientOptions based on the given endpoint, service name,
 // and config.
-func GetClientOptions(
-	endpoint string,
-	serviceName string,
-	config *WaaSClientConfig,
-) ([]option.ClientOption, error) {
+func GetClientOptions(config *WaaSClientConfig) ([]option.ClientOption, error) {
 	clientOptions := []option.ClientOption{}
 
 	// Start with explicitly indicated client options.
@@ -66,13 +85,17 @@ func GetClientOptions(
 		clientOptions = append(clientOptions, config.ClientOptions...)
 	}
 
-	if endpoint == "" {
+	if config.Endpoint == "" {
 		return nil, errors.New("endpoint must be provided")
 	}
 
-	clientOptions = append(clientOptions, option.WithEndpoint(endpoint))
+	clientOptions = append(clientOptions, option.WithEndpoint(config.Endpoint))
 
-	httpClient, err := GetHTTPClient(serviceName, config)
+	if config.ServiceName == "" {
+		return nil, errors.New("service name must be provided")
+	}
+
+	httpClient, err := GetHTTPClient(config.ServiceName, config)
 	if err != nil {
 		return nil, err
 	}

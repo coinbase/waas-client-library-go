@@ -11,8 +11,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// poolServiceName is the name of the PoolService used by the Authenticator.
-const poolServiceName = "waas_pool_service"
+const (
+	// poolServiceName is the name of the PoolService used by the Authenticator.
+	poolServiceName = "waas_pool_service"
+
+	// poolServiceEndpoint is the default endpoint URL to use for PoolService.
+	poolServiceEndpoint = "https://api.developer.coinbase.com/waas/pools"
+)
 
 // PoolServiceClient is the client to use to access WaaS PoolService APIs.
 type PoolServiceClient struct {
@@ -22,12 +27,14 @@ type PoolServiceClient struct {
 // NewPoolServiceClient returns a PoolServiceClient based on the given inputs.
 func NewPoolServiceClient(
 	ctx context.Context,
-	endpoint string,
 	waasOpts ...clients.WaaSClientOption,
 ) (*PoolServiceClient, error) {
-	config := clients.GetConfig(waasOpts...)
+	config, err := clients.GetConfig(poolServiceName, poolServiceEndpoint, waasOpts...)
+	if err != nil {
+		return nil, err
+	}
 
-	clientOptions, err := clients.GetClientOptions(endpoint, poolServiceName, config)
+	clientOptions, err := clients.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}

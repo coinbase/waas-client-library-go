@@ -13,8 +13,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// mpcWalletServiceName is the name of the MPCWalletService used by the Authenticator.
-const mpcWalletServiceName = "waas_mpc_wallet_service"
+const (
+	// mpcWalletServiceName is the name of the MPCWalletService used by the Authenticator.
+	mpcWalletServiceName = "waas_mpc_wallet_service"
+
+	// mpcWalletServiceEndpoint is the default endpoint URL to use for MPCWalletService.
+	mpcWalletServiceEndpoint = "https://api.developer.coinbase.com/waas/mpc_wallets"
+)
 
 // MPCWalletServiceClient is the client to use to access WaaS MPCWalletService APIs.
 type MPCWalletServiceClient struct {
@@ -25,12 +30,14 @@ type MPCWalletServiceClient struct {
 // NewMPCWalletServiceClient returns a MPCWalletServiceClient based on the given inputs.
 func NewMPCWalletServiceClient(
 	ctx context.Context,
-	endpoint string,
 	waasOpts ...clients.WaaSClientOption,
 ) (*MPCWalletServiceClient, error) {
-	config := clients.GetConfig(waasOpts...)
+	config, err := clients.GetConfig(mpcWalletServiceName, mpcWalletServiceEndpoint, waasOpts...)
+	if err != nil {
+		return nil, err
+	}
 
-	clientOptions, err := clients.GetClientOptions(endpoint, mpcWalletServiceName, config)
+	clientOptions, err := clients.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}
@@ -40,9 +47,9 @@ func NewMPCWalletServiceClient(
 		return nil, err
 	}
 
-	baseURL, err := url.Parse(endpoint)
+	baseURL, err := url.Parse(config.Endpoint)
 	if err != nil {
-		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", endpoint, err)
+		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", config.Endpoint, err)
 	}
 
 	return &MPCWalletServiceClient{

@@ -13,8 +13,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// mpcTransactionServiceName is the name of the MPCTransactionService used by the Authenticator.
-const mpcTransactionServiceName = "waas_mpc_transaction_service"
+const (
+	// mpcTransactionServiceName is the name of the MPCTransactionService used by the Authenticator.
+	mpcTransactionServiceName = "waas_mpc_transaction_service"
+
+	// mpcTransactionServiceEndpoint is the default endpoint URL to use for MPCTransactionService.
+	mpcTransactionServiceEndpoint = "https://api.developer.coinbase.com/waas/mpc_transactions"
+)
 
 // MPCTransactionServiceClient is the client to use to access WaaS MPCTransactionService APIs.
 type MPCTransactionServiceClient struct {
@@ -25,12 +30,14 @@ type MPCTransactionServiceClient struct {
 // NewMPCTransactionServiceClient returns a MPCTransactionServiceClient based on the given inputs.
 func NewMPCTransactionServiceClient(
 	ctx context.Context,
-	endpoint string,
 	waasOpts ...clients.WaaSClientOption,
 ) (*MPCTransactionServiceClient, error) {
-	config := clients.GetConfig(waasOpts...)
+	config, err := clients.GetConfig(mpcTransactionServiceName, mpcTransactionServiceEndpoint, waasOpts...)
+	if err != nil {
+		return nil, err
+	}
 
-	clientOptions, err := clients.GetClientOptions(endpoint, mpcTransactionServiceName, config)
+	clientOptions, err := clients.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}
@@ -40,9 +47,9 @@ func NewMPCTransactionServiceClient(
 		return nil, err
 	}
 
-	baseURL, err := url.Parse(endpoint)
+	baseURL, err := url.Parse(config.Endpoint)
 	if err != nil {
-		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", endpoint, err)
+		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", config.Endpoint, err)
 	}
 
 	return &MPCTransactionServiceClient{

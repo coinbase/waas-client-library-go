@@ -11,8 +11,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// protocolServiceName is the name of the ProtocolService used by the Authenticator.
-const protocolServiceName = "waas_protocol_service"
+const (
+	// protocolServiceName is the name of the ProtocolService used by the Authenticator.
+	protocolServiceName = "waas_protocol_service"
+
+	// protocolServiceEndpoint is the default endpoint URL to use for ProtocolService.
+	protocolServiceEndpoint = "https://api.developer.coinbase.com/waas/protocols"
+)
 
 // ProtocolServiceClient is the client to use to access WaaS ProtocolService APIs.
 type ProtocolServiceClient struct {
@@ -22,12 +27,14 @@ type ProtocolServiceClient struct {
 // NewProtocolServiceClient returns a ProtocolServiceClient based on the given inputs.
 func NewProtocolServiceClient(
 	ctx context.Context,
-	endpoint string,
 	waasOpts ...clients.WaaSClientOption,
 ) (*ProtocolServiceClient, error) {
-	config := clients.GetConfig(waasOpts...)
+	config, err := clients.GetConfig(protocolServiceName, protocolServiceEndpoint, waasOpts...)
+	if err != nil {
+		return nil, err
+	}
 
-	clientOptions, err := clients.GetClientOptions(endpoint, protocolServiceName, config)
+	clientOptions, err := clients.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}

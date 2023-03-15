@@ -11,8 +11,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// blockchainServiceName is the name of the BlockchainService used by the Authenticator.
-const blockchainServiceName = "waas_blockchain_service"
+const (
+	// blockchainServiceName is the name of the BlockchainService used by the Authenticator.
+	blockchainServiceName = "waas_blockchain_service"
+
+	// blockchainServiceEndpoint is the default endpoint URL to use for BlockchainService.
+	blockchainServiceEndpoint = "https://api.developer.coinbase.com/waas/blockchain"
+)
 
 // BlockchainServiceClient is the client to use to access WaaS BlockchainService APIs.
 type BlockchainServiceClient struct {
@@ -22,12 +27,14 @@ type BlockchainServiceClient struct {
 // NewBlockchainServiceClient returns a BlockchainServiceClient based on the given inputs.
 func NewBlockchainServiceClient(
 	ctx context.Context,
-	endpoint string,
 	waasOpts ...clients.WaaSClientOption,
 ) (*BlockchainServiceClient, error) {
-	config := clients.GetConfig(waasOpts...)
+	config, err := clients.GetConfig(blockchainServiceName, blockchainServiceEndpoint, waasOpts...)
+	if err != nil {
+		return nil, err
+	}
 
-	clientOptions, err := clients.GetClientOptions(endpoint, blockchainServiceName, config)
+	clientOptions, err := clients.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}

@@ -11,3 +11,15 @@ steps:
           propagate-uid-gid: true
     agents:
       queue: docker
+
+  - label: "Build"
+    commands:
+    - go build
+    plugins:
+      - file:///buildkite/plugins/docker:
+          image: 652969937640.dkr.ecr.us-east-1.amazonaws.com/cloud/waas-client-library-go/presubmit:latest
+          always-pull: true
+          propagate-environment: true
+          propagate-uid-gid: true
+    agents:
+      queue: docker
