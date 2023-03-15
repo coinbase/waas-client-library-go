@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.cbhq.net/cloud/waas-client-library-go/auth"
+	"github.com/coinbase/waas-client-library-go/auth"
 )
 
 // transport implements the http.RoundTripper interface for use by WaaS HTTP clients.

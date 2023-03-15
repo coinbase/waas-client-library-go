@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
-	"github.cbhq.net/cloud/waas-client-library-go/auth"
-	"github.cbhq.net/cloud/waas-client-library-go/clients"
-	v1clients "github.cbhq.net/cloud/waas-client-library-go/clients/v1"
-	blockchain "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
+	"github.com/coinbase/waas-client-library-go/auth"
+	"github.com/coinbase/waas-client-library-go/clients"
+	v1clients "github.com/coinbase/waas-client-library-go/clients/v1"
+	blockchain "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
 )
 
 const (

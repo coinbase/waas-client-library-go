@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.cbhq.net/cloud/waas-client-library-go/auth"
+	"github.com/coinbase/waas-client-library-go/auth"
 	"github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 )

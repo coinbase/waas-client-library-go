@@ -4,7 +4,7 @@ package v1
 
 import (
 	context "context"
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

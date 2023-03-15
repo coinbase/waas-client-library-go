@@ -3,9 +3,9 @@ package v1
 import (
 	"context"
 
-	"github.cbhq.net/cloud/waas-client-library-go/clients"
-	blockchainpb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
-	innerClient "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	"github.com/coinbase/waas-client-library-go/clients"
+	blockchainpb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
+	innerClient "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
 	"github.com/googleapis/gax-go"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc"

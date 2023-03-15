@@ -19,8 +19,8 @@ package v1_test
 import (
 	"context"
 
-	blockchainpb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	blockchainpb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
 	"google.golang.org/api/iterator"
 )
 
@@ -73,7 +73,7 @@ func ExampleBlockchainClient_GetNetwork() {
 
 	req := &blockchainpb.GetNetworkRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#GetNetworkRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#GetNetworkRequest.
 	}
 	resp, err := c.GetNetwork(ctx, req)
 	if err != nil {
@@ -98,7 +98,7 @@ func ExampleBlockchainClient_ListNetworks() {
 
 	req := &blockchainpb.ListNetworksRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#ListNetworksRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#ListNetworksRequest.
 	}
 	it := c.ListNetworks(ctx, req)
 	for {
@@ -129,7 +129,7 @@ func ExampleBlockchainClient_GetAsset() {
 
 	req := &blockchainpb.GetAssetRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#GetAssetRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#GetAssetRequest.
 	}
 	resp, err := c.GetAsset(ctx, req)
 	if err != nil {
@@ -154,7 +154,7 @@ func ExampleBlockchainClient_ListAssets() {
 
 	req := &blockchainpb.ListAssetsRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#ListAssetsRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1#ListAssetsRequest.
 	}
 	it := c.ListAssets(ctx, req)
 	for {

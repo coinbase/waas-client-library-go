@@ -19,8 +19,8 @@ package v1_test
 import (
 	"context"
 
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	protocolspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	protocolspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
 )
 
 func ExampleNewProtocolClient() {
@@ -72,7 +72,7 @@ func ExampleProtocolClient_ConstructTransaction() {
 
 	req := &protocolspb.ConstructTransactionRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransactionRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransactionRequest.
 	}
 	resp, err := c.ConstructTransaction(ctx, req)
 	if err != nil {
@@ -97,7 +97,7 @@ func ExampleProtocolClient_ConstructTransferTransaction() {
 
 	req := &protocolspb.ConstructTransferTransactionRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransferTransactionRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#ConstructTransferTransactionRequest.
 	}
 	resp, err := c.ConstructTransferTransaction(ctx, req)
 	if err != nil {
@@ -122,7 +122,7 @@ func ExampleProtocolClient_BroadcastTransaction() {
 
 	req := &protocolspb.BroadcastTransactionRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#BroadcastTransactionRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1#BroadcastTransactionRequest.
 	}
 	resp, err := c.BroadcastTransaction(ctx, req)
 	if err != nil {

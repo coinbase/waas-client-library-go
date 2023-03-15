@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package coinbase.crypto.types.v1;
 
-option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/crypto/types/v1";
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/crypto/types/v1";
 
 // A digital signature produced by a signing algorithm.
 message Signature {
