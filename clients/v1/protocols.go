@@ -3,10 +3,10 @@ package v1
 import (
 	"context"
 
-	"github.cbhq.net/cloud/waas-client-library-go/clients"
-	innerClient "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	protocolspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
-	typespb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
+	"github.com/coinbase/waas-client-library-go/clients"
+	innerClient "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	protocolspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1"
+	typespb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/types/v1"
 	"github.com/googleapis/gax-go"
 	"google.golang.org/grpc"
 )

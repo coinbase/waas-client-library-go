@@ -1,4 +1,4 @@
-module github.cbhq.net/cloud/waas-client-library-go
+module github.com/coinbase/waas-client-library-go
 
 go 1.18
 

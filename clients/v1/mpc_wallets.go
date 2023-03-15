@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.cbhq.net/cloud/waas-client-library-go/clients"
-	innerClient "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	mpc_walletspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1"
+	"github.com/coinbase/waas-client-library-go/clients"
+	innerClient "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	mpc_walletspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1"
 	"github.com/googleapis/gax-go"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc"

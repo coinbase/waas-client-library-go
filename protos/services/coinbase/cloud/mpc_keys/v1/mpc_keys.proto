@@ -11,7 +11,7 @@ import "google/api/resource.proto";
 import "google/longrunning/operations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1";
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {

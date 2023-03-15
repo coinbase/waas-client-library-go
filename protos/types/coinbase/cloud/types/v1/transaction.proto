@@ -5,7 +5,7 @@ package coinbase.cloud.types.v1;
 import "coinbase/cloud/protocols/ethereum/v1/inputs.proto";
 import "coinbase/crypto/types/v1/signatures.proto";
 
-option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/types/v1";
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/types/v1";
 
 // A message that wraps protocol-specific transactions, and provides additional
 // payloads that enable the transaction to be signed and broadcast.

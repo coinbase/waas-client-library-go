@@ -8,7 +8,7 @@ import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1";
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {

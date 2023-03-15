@@ -19,8 +19,8 @@ package v1_test
 import (
 	"context"
 
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
-	mpc_transactionspb "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
+	mpc_transactionspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1"
 	"google.golang.org/api/iterator"
 )
 
@@ -73,7 +73,7 @@ func ExampleMPCTransactionClient_CreateMPCTransaction() {
 
 	req := &mpc_transactionspb.CreateMPCTransactionRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#CreateMPCTransactionRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#CreateMPCTransactionRequest.
 	}
 	op, err := c.CreateMPCTransaction(ctx, req)
 	if err != nil {
@@ -103,7 +103,7 @@ func ExampleMPCTransactionClient_GetMPCTransaction() {
 
 	req := &mpc_transactionspb.GetMPCTransactionRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#GetMPCTransactionRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#GetMPCTransactionRequest.
 	}
 	resp, err := c.GetMPCTransaction(ctx, req)
 	if err != nil {
@@ -128,7 +128,7 @@ func ExampleMPCTransactionClient_ListMPCTransactions() {
 
 	req := &mpc_transactionspb.ListMPCTransactionsRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#ListMPCTransactionsRequest.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#ListMPCTransactionsRequest.
 	}
 	it := c.ListMPCTransactions(ctx, req)
 	for {

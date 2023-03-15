@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	v1 "github.cbhq.net/cloud/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
+	v1 "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1"
 	mock "github.com/stretchr/testify/mock"
 )
 
