@@ -44,5 +44,5 @@ To test that your API Key gives you access as expected to the WaaS APIs:
 3. Run `./waas-client-library-go`.
 4. You should see output like the following:
 ```
-2023/03/15 12:23:16 got Ethereum mainnet network: name:"networks/ethereum-goerli"  display_name:"Goerli Ethereum Testnet"  native_asset:"networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430"  protocol_family:"protocolFamilies/evm"  type:TESTNET
+2023/03/15 12:23:16 got Ethereum Goerli network: name:"networks/ethereum-goerli"  display_name:"Goerli Ethereum Testnet"  native_asset:"networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430"  protocol_family:"protocolFamilies/evm"  type:TESTNET
 ```
