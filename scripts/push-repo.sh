@@ -51,7 +51,7 @@ if ! (make all); then
 fi
 
 echo "Remove files before publishing to public repo"
-if ! (rm -r .buildkite scripts .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile); then
+if ! (rm -r .buildkite scripts ./.github/pull_request_template.md .codeflow.yml Dockerfile.presubmit api-linter.yml Makefile); then
   echo >&2 "Fatal: unable to remove files before publishing to public repo"
   exit 1
 fi
