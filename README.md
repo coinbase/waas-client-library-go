@@ -10,6 +10,10 @@ WaaS is Coinbase's suite of cloud APIs for creating, managing, and using Multi-P
 WaaS APIs are self-service and composable, allowing developers to easily create applications that
 interact with the blockchain and inherit the maximal security properties of MPC-based key management.
 
+## Developer Documentation
+
+[docs.cloud.coinbase.com/waas](https://docs.cloud.coinbase.com/waas/)
+
 ## Prerequisites
 
 - [Golang 1.17+](https://go.dev/learn/)
