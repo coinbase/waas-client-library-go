@@ -1,0 +1,337 @@
+{
+  "clientLibrary": {
+    "name": "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1",
+    "version": "$VERSION",
+    "language": "GO",
+    "apis": [
+      {
+        "id": "coinbase.cloud.mpc_wallets.v1",
+        "version": "v1"
+      }
+    ]
+  },
+  "snippets": [
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_CreateMPCWallet_sync",
+      "title": "api CreateMPCWallet Sample",
+      "description": "CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's\nRegisterDevice before this method is called. Under the hood, this calls MPCKeyService's\nCreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's\nListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation.",
+      "file": "MPCWalletClient/CreateMPCWallet/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "CreateMPCWallet",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.CreateMPCWallet",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.CreateMPCWalletRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "CreateMPCWalletOperation",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "CreateMPCWallet",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.CreateMPCWallet",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 58,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_GenerateAddress_sync",
+      "title": "api GenerateAddress Sample",
+      "description": "GenerateAddress generates an Address within an MPCWallet.",
+      "file": "MPCWalletClient/GenerateAddress/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GenerateAddress",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.GenerateAddress",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.GenerateAddressRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_walletspb.Address",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "GenerateAddress",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.GenerateAddress",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_GetAddress_sync",
+      "title": "api GetAddress Sample",
+      "description": "GetAddress gets an Address.",
+      "file": "MPCWalletClient/GetAddress/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetAddress",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.GetAddress",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.GetAddressRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_walletspb.Address",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "GetAddress",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.GetAddress",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_GetMPCWallet_sync",
+      "title": "api GetMPCWallet Sample",
+      "description": "GetMPCWallet gets an MPCWallet.",
+      "file": "MPCWalletClient/GetMPCWallet/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetMPCWallet",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.GetMPCWallet",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.GetMPCWalletRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_walletspb.MPCWallet",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "GetMPCWallet",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.GetMPCWallet",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_ListAddresses_sync",
+      "title": "api ListAddresses Sample",
+      "description": "ListAddresses lists Addresses.",
+      "file": "MPCWalletClient/ListAddresses/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListAddresses",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.ListAddresses",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.ListAddressesRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "AddressIterator",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "ListAddresses",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.ListAddresses",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_ListBalances_sync",
+      "title": "api ListBalances Sample",
+      "description": "ListBalances lists Balances.",
+      "file": "MPCWalletClient/ListBalances/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListBalances",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.ListBalances",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.ListBalancesRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "BalanceIterator",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "ListBalances",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.ListBalances",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_ListMPCWallets_sync",
+      "title": "api ListMPCWallets Sample",
+      "description": "ListMPCWallets lists MPCWallets.",
+      "file": "MPCWalletClient/ListMPCWallets/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListMPCWallets",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.ListMPCWallets",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.ListMPCWalletsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "MPCWalletIterator",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "ListMPCWallets",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.ListMPCWallets",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    }
+  ]
+}
