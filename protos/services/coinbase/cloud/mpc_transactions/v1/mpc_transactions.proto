@@ -1,0 +1,307 @@
+syntax = "proto3";
+
+package coinbase.cloud.mpc_transactions.v1;
+
+import "coinbase/cloud/types/v1/transaction.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/longrunning/operations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Coinbase Cloud - WaaS MPC Transactions API";
+        version: "1.0";
+    };
+    host: "https://api.coinbasecloud.com/waas/mpc_transactions"
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+// A service that orchestrates on-chain transactions originating from MPCWallets. The service handles
+// nonce management, transaction construction, signing, broadcasting, and confirmation detection including
+// on-chain re-organizations.
+service MPCTransactionService {
+  option (google.api.default_host) = "api.coinbasecloud.com/waas/mpc_transactions";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "A service that orchestrates on-chain transactions originating from MPCWallets. The service handles nonce management, transaction construction, signing, broadcasting, and confirmation detection including on-chain re-organizations."
+  };
+
+  // Creates an MPCTransaction. The long-running operation returned from this API will contain
+  // information about the state of the MPCTransaction that can be used to complete the operation.
+  // The LRO will be considered Done once the MPCTransaction reaches a state of CONFIRMING (i.e.
+  // broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
+  rpc CreateMPCTransaction(CreateMPCTransactionRequest) returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1/{parent=pools/*/mpcWallets/*}/mpcTransactions"
+      body: "*"
+    };
+    option (google.api.method_signature) = "parent,mpc_transaction,input";
+    option (google.longrunning.operation_info) = {
+      response_type: "MPCTransaction"
+      metadata_type: "CreateMPCTransactionMetadata"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Create MPC Transaction"
+      description: "Creates an MPCTransaction. The long-running operation returned from this API will contain information about the state of the MPCTransaction that can be used to complete the operation. The LRO will be considered Done once the MPCTransaction reaches a state of CONFIRMING (i.e. broadcast on-chain). See the MPCTransaction documentation for its lifecycle."
+    };
+  }
+
+  // Gets an MPCTransaction. There can be a delay between when CreateMPCTransaction is called
+  // and when this API will begin returning an MPCTransaction in the CREATED state.
+  rpc GetMPCTransaction(GetMPCTransactionRequest) returns (MPCTransaction) {
+    option (google.api.http) = {
+      get: "/v1/{name=pools/*/mpcWallets/*/mpcTransactions/*}"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get MPC Transaction"
+      description: "Gets an MPCTransaction. There can be a delay between when CreateMPCTransaction is called and when this API will begin returning an MPCTransaction in the CREATED state."
+    };
+  }
+
+  // Lists MPCTransactions.
+  rpc ListMPCTransactions(ListMPCTransactionsRequest) returns (ListMPCTransactionsResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=pools/*/mpcWallets/*}/mpcTransactions"
+    };
+    option (google.api.method_signature) = "parent";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "List MPC Transactions"
+      description: "Lists MPCTransactions."
+    };
+  }
+}
+
+// The MPCTransaction resource, which represents a transaction that is in the process of being
+// fulfilled. The lifecycle of a successful MPC transaction has five parts:
+//
+// 1. CREATED - The request has been received by the service.
+// 2. SIGNING - The MPCTransaction is waiting to be signed. At this point,
+// the WaaS SDK must poll for and process the CREATE_SIGNATURE MPCOperation
+// of the DeviceGroup associated with the underlying Address.
+// For any given Address, only one MPCTransaction can be in the SIGNING state
+// at a given time - i.e., an MPCTransaction must be successfully signed before the
+// the next one can be signed.
+// 3. SIGNED - The MPCTransaction has been signed and is waiting to be broadcast
+// on-chain. MPCTransactions are broadcast on a regular periodic schedule proportional
+// to the block production speed of the Network.
+// 4. CONFIRMING - The MPCTransaction has been successfully broadcast on-chain
+// and is awaiting confirmation.
+// 5. CONFIRMED - The MPCTransaction has been confirmed on-chain. It is possible for
+// the MPCTransaction to revert to CONFIRMING if there is an on-chain reorganization.
+message MPCTransaction {
+  option (google.api.resource) = {
+    type: "api.coinbasecloud.com/MPCTransaction"
+    pattern: "pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "MPCTransaction"
+      description: "The MPCTransaction resource, which represents a transaction that is in the process of being fulfilled. The lifecycle of a successful MPC transaction has five parts:\n\n 1. CREATED - The request has been received by the service.\n 2. SIGNING - The MPCTransaction is waiting to be signed. At this point, the WaaS SDK must poll for and process the CREATE_SIGNATURE MPCOperation of the DeviceGroup associated with the underlying Address. For any given Address, only one MPCTransaction can be in the SIGNING state at a given time - i.e., an MPCTransaction must be successfully signed before the the next one can be signed.\n 3. SIGNED - The MPCTransaction has been signed and is waiting to be broadcast on-chain. MPCTransactions are broadcast on a regular periodic schedule proportional to the block production speed of the Network.\n 4. CONFIRMING - The MPCTransaction has been successfully broadcast on-chain and is awaiting confirmation.\n 5. CONFIRMED - The MPCTransaction has been confirmed on-chain. It is possible for the MPCTransaction to revert to CONFIRMING if there is an on-chain reorganization."
+    }
+  };
+
+  // The resource name of the MPCTransaction.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}
+  string name = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the MPCTransaction.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}",
+    }
+  ];
+
+  // The resource name of the Network on which to broadcast the MPCTransaction.
+  // Format: networks/{network_id}
+  string network = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "network"
+      description: "The resource name of the Network on which to broadcast the MPCTransaction.\n Format: networks/{network_id}"
+    }
+  ];
+
+  // The resource name of the Addresses from which to send the MPCTransaction.
+  // For account-based Networks, only the first address is used.
+  // Format: networks/{network_id}/addresses/{address_id}.
+  // (-- api-linter: core::0140::prepositions=disabled --)
+  repeated string from_addresses = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "from_addresses"
+      description: "The resource name of the Addresses from which to send the MPCTransaction. For account-based Networks, only the first address is used.\n Format: networks/{network_id}/addresses/{address_id}."
+    }
+  ];
+
+  // The state of the MPCTransaction.
+  enum State {
+    // The default unspecified state.
+    STATE_UNSPECIFIED = 0;
+
+    // The request to create the MPCTransaction has been received by the service.
+    CREATED = 1;
+
+    // The MPCTransaction is waiting to be signed by the WaaS SDK.
+    // Only one MPCTransaction per Address can be in the SIGNING state.
+    SIGNING = 2;
+
+    // The MPCTransaction has been signed and is waiting to be broadcast on-chain.
+    SIGNED = 3;
+
+    // The MPCTransaction has been successfully broadcast on-chain and is awaiting confirmation.
+    CONFIRMING = 4;
+    
+    // The MPCTransaction has been confirmed on-chain. It is possible for the MPCTransaction
+    // to revert to CONFIRMING if there is an on-chain reorganization.
+    CONFIRMED = 5;
+
+    // The MPCTransaction was broadcast, but failed on-chain.
+    FAILED = 6;
+
+    // The MPCTransaction was cancelled by the service.
+    CANCELLED = 7;
+  }
+
+  // The current state of the MPCTransaction.
+  State state = 4 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "state"
+      description: "The current state of the MPCTransaction."
+    }
+  ];
+
+  // The underlying transaction to be signed and broadcast. Fields in the transaction, such as the hash,
+  // will become populated as the MPCTransaction goes through its lifecycle.
+  coinbase.cloud.types.v1.Transaction transaction = 5 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "transaction"
+      description: "The underlying transaction to be signed and broadcast. Fields in the transaction, such as the hash, will become populated as the MPCTransaction goes through its lifecycle."
+    }
+  ]; 
+}
+
+// The request message for CreateMPCTransaction.
+message CreateMPCTransactionRequest {
+  // The resource name of the parent MPCWallet.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/MPCTransaction"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "mpcWalletName"}
+    }
+  ];
+
+  // The MPCTransaction to be created.
+  MPCTransaction mpc_transaction = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The transaction input.
+  coinbase.cloud.types.v1.TransactionInput input = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // Whether the nonce specified in the transaction input should be respected, 
+  // as opposed to assigned by the service. This is intended for the use case of
+  // replacing transactions that fail to confirm on-chain due to too low of a transaction fee.
+  // Setting this to true has the side effect of canceling any pending transactions from the
+  // same address with nonce greater than or equal to the one provided. Use this
+  // with caution.
+  bool override_nonce = 4 [
+    (google.api.field_behavior) = OPTIONAL,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "input"
+      description: "Whether the nonce specified in the transaction input should be respected, as opposed to assigned by the service. This is intended for the use case of replacing transactions that fail to confirm on-chain due to too low of a transaction fee. Setting this to true has the side effect of canceling any pending transactions from the same address with nonce greater than or equal to the one provided. Use this with caution."
+    }
+  ];
+
+  // A user-provided request ID to allow for idempotency. This should be a UUID.
+  string request_id = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Metadata associated with the CreateMPCTransaction long-running operation.
+message CreateMPCTransactionMetadata {
+  // The resource name of the DeviceGroup to poll for using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/DeviceGroup"}
+  ];
+
+  // The current state of the MPCTransaction. Once this field is populated, 
+  // GetMPCTransaction can also be called using the name.
+  MPCTransaction.State state = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The resource name of the MPCTransaction, if it has been created.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}
+  string mpc_transaction = 3 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/MPCTransaction"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the MPCTransaction.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}",
+    }
+  ];
+
+  // A message describing the current state of the Broadcast and whether any
+  // action needs to be taken.
+  string message = 4;
+}
+
+// The request message for GetMPCTransaction.
+message GetMPCTransactionRequest {
+  // The resource name of the MPCTransaction to get.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}/mpcTransactions/{mpc_transaction_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.coinbasecloud.com/MPCTransaction"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "mpcTransactionName"}
+    }
+  ];
+}
+
+// The request message for ListMPCTransactions.
+message ListMPCTransactionsRequest {
+  // The resource name of the parent MPCWallet.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {child_type: "api.coinbasecloud.com/MPCTransaction"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "mpcWalletName"}
+    }
+  ];
+
+  // The maximum number of MPCTransactions to return. If unspecified, at most 50 MPCTransactions
+  // will be returned.
+  int32 page_size = 2;
+
+  // A page token, received from a previous ListMPCTransactions call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 3;
+}
+
+// The response message for ListMPCTransactions.
+message ListMPCTransactionsResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListMPCTransactionsResponse"
+      description: "The response message for ListMPCTransactions."
+    }
+  };
+
+  // The list of MPCTransactions.
+  repeated MPCTransaction mpc_transactions = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}

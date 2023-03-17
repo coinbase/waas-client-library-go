@@ -1,0 +1,153 @@
+{
+  "clientLibrary": {
+    "name": "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1",
+    "version": "$VERSION",
+    "language": "GO",
+    "apis": [
+      {
+        "id": "coinbase.cloud.pools.v1",
+        "version": "v1"
+      }
+    ]
+  },
+  "snippets": [
+    {
+      "regionTag": "api_v1_generated_PoolService_CreatePool_sync",
+      "title": "api CreatePool Sample",
+      "description": "CreatePool creates a Pool. Call this method before creating any resources scoped to a Pool.",
+      "file": "PoolClient/CreatePool/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "CreatePool",
+        "fullName": "coinbase.cloud.pools.v1.PoolClient.CreatePool",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "poolspb.CreatePoolRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*poolspb.Pool",
+        "client": {
+          "shortName": "PoolClient",
+          "fullName": "coinbase.cloud.pools.v1.PoolClient"
+        },
+        "method": {
+          "shortName": "CreatePool",
+          "fullName": "coinbase.cloud.pools.v1.PoolService.CreatePool",
+          "service": {
+            "shortName": "PoolService",
+            "fullName": "coinbase.cloud.pools.v1.PoolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_PoolService_GetPool_sync",
+      "title": "api GetPool Sample",
+      "description": "GetPool gets a Pool.",
+      "file": "PoolClient/GetPool/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetPool",
+        "fullName": "coinbase.cloud.pools.v1.PoolClient.GetPool",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "poolspb.GetPoolRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*poolspb.Pool",
+        "client": {
+          "shortName": "PoolClient",
+          "fullName": "coinbase.cloud.pools.v1.PoolClient"
+        },
+        "method": {
+          "shortName": "GetPool",
+          "fullName": "coinbase.cloud.pools.v1.PoolService.GetPool",
+          "service": {
+            "shortName": "PoolService",
+            "fullName": "coinbase.cloud.pools.v1.PoolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_PoolService_ListPools_sync",
+      "title": "api ListPools Sample",
+      "description": "ListPools lists Pools.",
+      "file": "PoolClient/ListPools/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListPools",
+        "fullName": "coinbase.cloud.pools.v1.PoolClient.ListPools",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "poolspb.ListPoolsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "PoolIterator",
+        "client": {
+          "shortName": "PoolClient",
+          "fullName": "coinbase.cloud.pools.v1.PoolClient"
+        },
+        "method": {
+          "shortName": "ListPools",
+          "fullName": "coinbase.cloud.pools.v1.PoolService.ListPools",
+          "service": {
+            "shortName": "PoolService",
+            "fullName": "coinbase.cloud.pools.v1.PoolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    }
+  ]
+}
