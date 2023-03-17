@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package coinbase.crypto.types.v1;
+
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/crypto/types/v1";
+
+// A message representing a public key.
+message PublicKey {
+  // The public key contents.
+  oneof public_key {
+    // An Elliptic Curve Cryptography (ECC) public key.
+    EllipticPublicKey elliptic_public_key = 1;    
+  }
+}
+
+// An enumeration of supported elliptic curve types.
+enum EllipticCurve {
+  // The default unspecified value.
+  ELLIPTIC_CURVE_UNSPECIFIED = 0;
+
+  // The curve used by Bitcoin and Ethereum.
+  SECP256K1 = 1;
+}
+
+// An Elliptic Curve Cryptography (ECC) public key.
+message EllipticPublicKey {
+  // The elliptic curve used by this public key.
+  EllipticCurve elliptic_curve = 1;
+
+  // The public key in compressed form as defined in the Standards for Efficient
+  // Cryptography (SEC) 1, Version 2.0, Section 2.3.3.
+  bytes public_key = 2;
+}
