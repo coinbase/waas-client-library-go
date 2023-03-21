@@ -14,21 +14,11 @@ interact with the blockchain and inherit the maximal security properties of MPC-
 
 For full documentation, refer to [docs.cloud.coinbase.com/waas](https://docs.cloud.coinbase.com/waas/).
 
+For APIs that require multi-party computation (MPC), refer to the [WaaS SDK repository](https://github.com/coinbase/waas-sdk-react-native).
+
 ## Prerequisites
 
 - [Golang 1.17+](https://go.dev/learn/)
-- [node 17+](https://nodejs.org/en/download/)
-- [yarn 1.22+](https://yarnpkg.com/getting-started/install)
-
-For iOS development:
-- [Xcode 14.0+](https://developer.apple.com/xcode/)
-  - iOS15.2+ simulator (iPhone 14 recommended)
-- [CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
-
-For Android development:
-- [Android Studio](https://developer.android.com/studio)
-  - 64-bit Android emulator
-- [Android NDK 30+](https://developer.android.com/ndk)
 
 ## Repository Structure
 - [`auth/`](./auth/) contains the authentication-related code for accessing WaaS APIs.
