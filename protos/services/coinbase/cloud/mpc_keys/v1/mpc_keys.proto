@@ -18,7 +18,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         title: "MPCKeys API";
         version: "1.0";
     };
-    host: "https://api.developer.coinbase.com/waas/mpc_keys"
+    host: "api.developer.coinbase.com/waas/mpc_keys"
     schemes: HTTPS;
     consumes: "application/json";
     produces: "application/json";

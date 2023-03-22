@@ -10,7 +10,7 @@
       "description": "A service providing a set of stateless APIs for constructing and broadcasting Network-specific transactions."
     }
   ],
-  "host": "https://api.developer.coinbase.com/waas/protocols",
+  "host": "api.developer.coinbase.com/waas/protocols",
   "schemes": [
     "https"
   ],

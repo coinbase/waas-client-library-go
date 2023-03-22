@@ -10,7 +10,7 @@
       "description": "A service for managing the Pool resource. A Pool is a top-level container for segregating the resources under it via authorization checks. Pool-scoped resources require a Pool to be created before they themselves can be created."
     }
   ],
-  "host": "https://api.developer.coinbase.com/waas/pools",
+  "host": "api.developer.coinbase.com/waas/pools",
   "schemes": [
     "https"
   ],

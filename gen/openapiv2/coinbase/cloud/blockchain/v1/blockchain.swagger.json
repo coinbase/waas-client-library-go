@@ -10,7 +10,7 @@
       "description": "A service providing a set of read-only APIs for information about the blockchain networks that WaaS supports. Users can query BlockchainService to figure out the Networks and Assets that can be transacted with using WaaS APIs."
     }
   ],
-  "host": "https://api.developer.coinbase.com/waas/blockchain",
+  "host": "api.developer.coinbase.com/waas/blockchain",
   "schemes": [
     "https"
   ],

@@ -10,7 +10,7 @@
       "description": "A service that manages BIP-32-based Hierarchically Deterministic (HD) collections of on-chain Addresses and their associated Asset balances. The Addresses are backed by the MPCKey resources of KeyService, and information about the Assets can be queried using BlockchainService. Because of the backing by MPC Keys, full functionality of these APIs requires use of the WaaS SDK."
     }
   ],
-  "host": "https://api.developer.coinbase.com/waas/mpc_wallets",
+  "host": "api.developer.coinbase.com/waas/mpc_wallets",
   "schemes": [
     "https"
   ],
