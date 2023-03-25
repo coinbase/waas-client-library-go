@@ -14,10 +14,10 @@ import (
 
 const (
 	// apiKeyName is the name of the API Key to use. Fill this out before running the main function.
-	apiKeyName = "organizations/my-organization/apiKeys/my-api-key"
+	apiKeyName = "organizations/my-organization/apiKeys/81cf3ba5-20a1-4cbb-9e74-36958a6045de"
 
 	// apiKeyPrivateKey is the private key of the API Key to use. Fill this out before running the main function.
-	apiKeyPrivateKey = "-----BEGIN ECDSA Private Key-----\nmy-private-key\n-----END ECDSA Private Key-----\n"
+	apiKeyPrivateKey = "nMHcCAQEEIMPXz8rbTqK/hxu9sQuKU4mk0hXJcT9LOKjLojCrrLXuoAoGCCqGSM49\nAwEHoUQDQgAE5eaTJdKFj7kT8K/PN+/3lbah77hmCFzFPAQOBzGS4npMNgcnqB5e\nh0HqjRZ6zp8GrqxwTtothzPeF7OVZm4XdQ==\n-----END ECDSA Private Key-----\n", "createTime": "2023-03-25T14:21:02.144895772Z" }"
 )
 
 // An example function to demonstrate how to use the WaaS client libraries.
