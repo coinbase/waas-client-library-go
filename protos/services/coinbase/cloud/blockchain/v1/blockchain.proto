@@ -1,0 +1,355 @@
+syntax = "proto3";
+
+package coinbase.cloud.blockchain.v1;
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/blockchain/v1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Blockchain API";
+        version: "1.0";
+    };
+    host: "api.developer.coinbase.com/waas/blockchain"
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+// A service providing a set of read-only APIs for information about the blockchain
+// networks that WaaS supports. Users can query BlockchainService to figure out the Networks
+// and Assets that can be transacted with using WaaS APIs.
+service BlockchainService {
+  option (google.api.default_host) = "api.developer.coinbase.com/waas/blockchain";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "A service providing a set of read-only APIs for information about the blockchain networks that WaaS supports. Users can query BlockchainService to figure out the Networks and Assets that can be transacted with using WaaS APIs."
+  };
+
+  // Retrieves a Network by resource name.
+  rpc GetNetwork(GetNetworkRequest) returns (Network) {
+    option (google.api.http) = {
+      get: "/v1/{name=networks/*}"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "GetNetwork"
+      description: "Retrieves a Network by resource name."
+    };
+  }
+
+  // Returns the list of Networks available for use.
+  rpc ListNetworks(ListNetworksRequest) returns (ListNetworksResponse) {
+    option (google.api.http) = {
+      get: "/v1/networks"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListNetworks"
+      description: "Returns the list of Networks available for use."
+    };
+  }
+
+  // Retrieves an Asset by resource name.
+  rpc GetAsset(GetAssetRequest) returns (Asset) {
+    option (google.api.http) = {
+      get: "/v1/{name=networks/*/assets/*}"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "GetAsset"
+      description: "Retrieves an Asset by resource name."
+    };
+  }
+
+  // Returns a list of Assets available on a given Network.
+  rpc ListAssets(ListAssetsRequest) returns (ListAssetsResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=networks/*}/assets"
+    };
+    option (google.api.method_signature) = "parent";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListAssets"
+      description: "Returns a list of Assets available on a given Network."
+    };
+  }
+}
+
+// The Network resource, which represents a blockchain network.
+message Network {
+  option (google.api.resource) = {
+    type: "api.developer.coinbase.com/Network"
+    pattern: "networks/{network_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Network"
+      description: "The Network resource, which represents a blockchain network."
+    }
+  };
+
+  // The resource name of the Network.
+  // Format: networks/{network_id}.
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the Network.\nFormat: networks/{network_id}"
+      example: "\"networks/ethereum-goerli\""
+    }
+  ];
+
+  // A user-readable name for the Network.
+  string display_name = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "displayName"
+      description: "A user-readable name for the Network."
+      example: "\"Goerli Ethereum Testnet\""
+    }
+  ];
+
+  // The native Asset for this Network.
+  // Format: networks/{network_id}/assets/{asset_id}
+  string native_asset = 3 [
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Asset"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "nativeAsset"
+      description: "The native Asset for this Network.\nFormat: networks/{network_id}/assets/{asset_id}"
+      example: "\"networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430\""
+    }
+  ];
+
+  // The protocol family this Network is a part of.
+  // Today, the only supported value is "protocolFamilies/evm".
+  string protocol_family = 4 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "protocolFamily"
+      description: "The protocol family this Network is a part of.\nToday, the only supported value is 'protocolFamilies/evm'.",
+      example: "\"protocolFamilies/evm\""
+    }
+  ];
+
+  // The type of Network.
+  enum Type {
+    // The default unused value.
+    TYPE_UNSPECIFIED = 0;
+
+    // A mainnet Network, storing real funds.
+    MAINNET = 1;
+
+    // A testnet Network, used for testing.
+    TESTNET = 2;
+  }
+
+  // The type of Network.
+  Type type = 5 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "type"
+      description: "The type of Network."
+      example: "\"TESTNET\""
+    }
+  ];
+}
+
+// The Asset resource, which represents an on-chain asset.
+// For fungible assets, one resource exists per Asset. In the case
+// of non-fungible tokens, a unique Asset entry exists for every token.
+message Asset {
+  option (google.api.resource) = {
+    type: "api.developer.coinbase.com/Asset"
+    pattern: "networks/{network_id}/assets/{asset_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Asset"
+      description: "The Asset resource, which represents an on-chain asset.\nFor fungible assets, one resource exists per Asset.\nIn the case of non-fungible tokens, a unique Asset entry exists for every token."
+    }
+  };
+
+  // The resource name of the Asset.
+  // Format: networks/{network_id}/assets/{asset_id}
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the Asset.\nFormat: networks/{network_id}/assets/{asset_id}"
+      example: "\"networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430\""
+    }
+  ];
+
+  // The symbol representation of this asset (e.g. ETH) as advertised by the Network.
+  //
+  // For a native Asset this may be implicit, e.g., the on-chain data may not include
+  // any symbol reference.
+  //
+  // For some protocols there can be Assets with arbitrary symbols that are not globally
+  // unique, and it should not be trusted to represent a canonical symbol/ticker.
+  string advertised_symbol = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "advertisedSymbol"
+      description: "The symbol representation of this asset (e.g. ETH) as advertised by the Network.\nFor a native Asset this may be implicit, e.g., the on-chain data may not include any symbol reference.\nFor some protocols there can be Assets with arbitrary symbols that are not globally unique, and it should not be trusted to represent a canonical symbol/ticker.",
+      example: "\"ETH\""
+    }
+  ];
+
+  // The number of decimals the Asset uses. Note: in some instances this
+  // value can change over time.
+  int32 decimals = 3 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "decimals"
+      description: "The number of decimals the Asset uses.\nNote: in some instances this value can change over time.",
+      example: "\"18\""
+    }
+  ];
+
+  // The defining characteristics that combine to uniquely identify an Asset on-chain.
+  // Fungible tokens, such as ERC-20s, require an asset_group_id (the contract address).
+  // Non-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s
+  // require a both an asset_group_id and a sub_group_id (the token ID).
+  message Definition {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+      json_schema: {
+        title: "Asset.Definition"
+        description: "The defining characteristics that combine to uniquely identify an Asset on-chain.\nFungible tokens, such as ERC-20s, require an asset_group_id (the contract address).\nNon-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s require a both an asset_group_id and a sub_group_id (the token ID)."
+      }
+    };
+
+    // The type of Asset the definition describes.
+    // Possible values: "native", "erc20", "erc721", "erc1155"
+    string asset_type = 1 [
+      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "assetType"
+        description: "The type of Asset the definition describes.\nPossible values: 'native', 'erc20', 'erc721', 'erc1155'",
+        example: "\"native\""
+      }
+    ];
+
+    // The identifier that distinguishes this Asset group. Generally a
+    // contract address for the Asset. For a native Asset this is not set.
+    string asset_group_id = 2 [
+      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "assetGroupId"
+        description: "The identifier that distinguishes this Asset group.\nGenerally a 0x-prefixed contract address for the Asset. For a native Asset this is not set.",
+        example: "\"0x887CFe31C888EE0780795b7feFF46CE7f9AB556C\""
+      }
+    ];
+
+    // The identifier that distinguishes the specific Asset within the
+    // asset group. Generally a token ID. For a native Asset or ERC-20
+    // this is not set.
+    string sub_group_id = 3 [
+      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "subGroupId"
+        description: "The identifier that distinguishes the specific Asset within the asset group.\nGenerally a token ID. For a native Asset or ERC-20 this is not set.",
+      }
+    ];
+  }
+
+  // The Asset's definition.
+  Definition definition = 4 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "definition"
+      description: "The Asset's definition.",
+    }
+  ];
+}
+
+// The request message for GetNetwork.
+message GetNetworkRequest {
+  // The resource name of the Network.
+  // Format: networks/{network_id}.
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+}
+
+// The request message for ListNetworks.
+message ListNetworksRequest {
+  // The maximum number of Networks to return. The default is 50.
+  int32 page_size = 1;
+
+  // A page token, received from a previous ListNetworks call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 2;
+}
+
+// The response message for ListNetworks.
+message ListNetworksResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListNetworksResponse"
+      description: "The response message for ListNetworks."
+    }
+  };
+
+  // The list of Networks.
+  repeated Network networks = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}
+
+// The request message for GetAsset.
+message GetAssetRequest {
+  // The resource name of the Asset.
+  // Format: networks/{network_id}/assets/{asset_id}.
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Asset"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "assetName"}
+    }
+  ];
+}
+
+// The request message for ListAssets.
+message ListAssetsRequest {
+  // The resource name of the parent Network.
+  // Format: networks/{network_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "api.developer.coinbase.com/Asset"
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+
+  // The maximum number of Assets to return. The default is 50.
+  int32 page_size = 2;
+
+  // A page token, received from a previous ListAssets call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 3;
+
+  // A filter string which conforms to https://google.aip.dev/160.
+  // Supported queries include any conjunction of the following:
+  // 1. definition.asset_type (= | !=) "{asset_type}"
+  // 2. definition.asset_group_id (= | !=) "{asset_group_id}"
+  // 3. definition.sub_group_id (= | !=) "{sub_group_id}"
+  string filter = 4;
+}
+
+// The response message for ListAssets.
+message ListAssetsResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListAssetsResponse"
+      description: "The response message for ListAssets."
+    }
+  };
+
+  // The list of Assets.
+  repeated Asset assets = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}

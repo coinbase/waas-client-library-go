@@ -1,0 +1,507 @@
+syntax = "proto3";
+
+package coinbase.cloud.mpc_wallets.v1;
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/longrunning/operations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "MPC Wallets API";
+        version: "1.0";
+    };
+    host: "api.developer.coinbase.com/waas/mpc_wallets"
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+// A service that manages BIP-32-based Hierarchically Deterministic (HD) collections of on-chain
+// Addresses and their associated Asset balances. The Addresses are backed by the MPCKey resources
+// of KeyService, and information about the Assets can be queried using BlockchainService. Because
+// of the backing by MPC Keys, full functionality of these APIs requires use of the WaaS SDK.
+service MPCWalletService {
+  option (google.api.default_host) = "api.developer.coinbase.com/waas/mpc_wallets";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "A service that manages BIP-32-based Hierarchically Deterministic (HD) collections of on-chain Addresses and their associated Asset balances. The Addresses are backed by the MPCKey resources of KeyService, and information about the Assets can be queried using BlockchainService. Because of the backing by MPC Keys, full functionality of these APIs requires use of the WaaS SDK."
+  };
+
+  // Creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's
+  // RegisterDevice before this method is called. Under the hood, this calls MPCKeyService's 
+  // CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's
+  // ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's 
+  // computeMPCOperation to complete the operation.
+  rpc CreateMPCWallet(CreateMPCWalletRequest) returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1/{parent=pools/*}/mpcWallets"
+      body: "mpc_wallet"
+    };
+    option (google.api.method_signature) = "parent,mpc_wallet,device,device_group_id";
+    option (google.longrunning.operation_info) = {
+      response_type: "MPCWallet"
+      metadata_type: "CreateMPCWalletMetadata"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "CreateMPCWallet"
+      description: "Creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's RegisterDevice before this method is called.\n\n Under the hood, this calls MPCKeyService's CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's computeMPCOperation to complete the operation."
+    };
+  }
+
+  // Retrieves an MPCWallet by resource name.
+  rpc GetMPCWallet(GetMPCWalletRequest) returns (MPCWallet) {
+    option (google.api.http) = {
+      get: "/v1/{name=pools/*/mpcWallets/*}"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "GetMPCWallet"
+      description: "Retrieves an MPCWallet by resource name."
+    };
+  }
+
+  // Returns a list of MPCWallets in a Pool.
+  rpc ListMPCWallets(ListMPCWalletsRequest) returns (ListMPCWalletsResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=pools/*}/mpcWallets"
+    };
+    option (google.api.method_signature) = "parent";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListMPCWallets"
+      description: "Returns a list of MPCWallets in a Pool."
+    };
+  }
+
+  // Generates an Address within an MPCWallet.
+  rpc GenerateAddress(GenerateAddressRequest) returns (Address) {
+    option (google.api.http) = {
+      post: "/v1/{mpc_wallet=pools/*/mpcWallets/*}:generateAddress"
+      body: "*"
+    };
+    option (google.api.method_signature) = "mpc_wallet,network";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "GenerateAddress"
+      description: "Generates an Address within an MPCWallet."
+    };
+  }
+
+  // Retrieves an Address by resource name.
+  rpc GetAddress(GetAddressRequest) returns (Address) {
+    option (google.api.http) = {
+      get: "/v1/{name=networks/*/addresses/*}"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "GetAddress"
+      description: "Retrieves an Address by resource name."
+    };
+  }
+
+  // Returns a list of Addresses in an MPCWallet.
+  rpc ListAddresses(ListAddressesRequest) returns (ListAddressesResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=networks/*}/addresses"
+    };
+    option (google.api.method_signature) = "parent,mpc_wallet";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListAddresses"
+      description: "Returns a list of Addresses in an MPCWallet."
+    };
+  }
+
+  // Returns a list of Balances.
+  rpc ListBalances(ListBalancesRequest) returns (ListBalancesResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=networks/*/addresses/*}/balances"
+    };
+    option (google.api.method_signature) = "parent";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListBalances"
+      description: "Returns a list of Balances."
+    };
+  }
+}
+
+// The MPCWallet resource, which represents a collection of on-chain Addresses and their
+// backing MPCKeys.
+message MPCWallet {
+  option (google.api.resource) = {
+    type: "api.developer.coinbase.com/MPCWallet"
+    pattern: "pools/{pool_id}/mpcWallets/{mpc_wallet_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "MPCWallet"
+      description: "The MPCWallet resource, which represents a collection of on-chain Addresses and their backing MPCKeys."
+    }
+  };
+
+  // The resource name of the MPCWallet.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}
+  string name = 1[
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the MPCWallet.\nFormat: pools/{pool_id}/mpcWallets/{mpc_wallet_id}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/mpcWallets/d28197e8-372c-461c-9a00-2da3c528c2d1\""
+    }
+  ];
+
+  // The resource name of the MPCKeyService DeviceGroup associated with this MPCWallet. 
+  // The DeviceGroup performs the underlying MPC operations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "deviceGroup"
+      description: "The resource name of the MPCKeyService DeviceGroup associated with this MPCWallet. The DeviceGroup performs the underlying MPC operations. Format: pools/{pool_id}/deviceGroups/{device_group_id}",
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777\""
+    }
+  ];
+}
+
+// The Address resource, which represents an on-chain Address backed by an MPCKey
+// in an MPCWallet.
+message Address {
+  option (google.api.resource) = {
+    type: "api.developer.coinbase.com/Address"
+    pattern: "networks/{network_id}/addresses/{address_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Address"
+      description: "The Address resource, which represents an on-chain Address backed by an MPCKey in an MPCWallet."
+    }
+  };
+
+  // The resource name of the Address. The resource ID of the Address is
+  // equal to the address field.
+  // Format: networks/{network_id}/addresses/{address_id}
+  string name = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the Address.\nFormat: networks/{network_id}/addresses/{address_id}"
+      example: "\"networks/ethereum-goerli/addresses/0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5\""
+    }
+  ];
+
+  // The address value - for example, a 0x-prefixed checksummed hexadecimal string.
+  // This is equal to the resource ID of the Address.
+  string address = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "address"
+      description: "The address value - for example, a 0x-prefixed checksummed hexadecimal string. This is equal to the resource ID of the Address."
+      example: "\"0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc\""
+    }
+  ];
+
+  // The resource names of the MPCKeys that back this Address.
+  // For EVM networks, there will be only one MPCKey.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}
+  repeated string mpc_keys = 3 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCKey"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "mpcKeys"
+      description: "The resource names of the MPCKeys that back this Address. For EVM networks, there will be only one MPCKey.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}/mpcKeys/{mpc_key_id}"
+      example: "[\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777/mpcKeys/d28b946b-533b-466e-bb61-91d938743858\"]"
+    }
+  ];
+
+  // The resource name of the MPCWallet to which this Address belongs.
+  // Format: pools/{pool}/mpcWallets/{mpcWallet}
+  string mpc_wallet = 4 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "mpcWallet"
+      description: "The resource name of the MPCWallet to which this Address belongs. Format: pools/{pool}/mpcWallets/{mpcWallet}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/mpcWallets/d28197e8-372c-461c-9a00-2da3c528c2d1\""
+    }
+  ];
+}
+
+// The Balance resource, which represents an amount of an Asset held on-chain by an Address.
+message Balance {
+  option (google.api.resource) = {
+    type: "api.developer.coinbase.com/Balance"
+    pattern: "networks/{network_id}/addresses/{address_id}/balances/{balance_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Balance"
+      description: "The Balance resource, which represents an amount of an Asset held on-chain by an Address."
+    }
+  };
+
+  // The resource name of the Balance.
+  // Format: networks/{network_id}/addresses/{address_id}/balances/{balance_id}
+  string name = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the Balance.\nFormat: networks/{network_id}/addresses/{address_id}/balances/{balance_id}",
+      example: "\"networks/ethereum-goerli/addresses/0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5/balances/e1835806-0718-418a-b185-93553c496655\""
+    }
+  ];
+
+  // The resource name of the Asset to which this Balance corresponds.
+  // Format: networks/{network}/assets/{asset}
+  string asset = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Asset"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "asset"
+      description: "The resource name of the Asset to which this Balance corresponds. Format: networks/{network}/assets/{asset}"
+      example: "\"networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430\""
+    }
+  ];
+
+  // The amount of the Asset, denominated in atomic units of the asset (e.g., Wei for Ether),
+  // as a base-10 number.
+  string amount = 3 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "amount"
+      description: "The amount of the Asset, denominated in atomic units of the asset (e.g., Wei for Ether), as a base-10 number."
+      example: "\"10000000\""
+    }
+  ];
+
+  // The resource name of the MPCWallet to which this Balance belongs.
+  // Format: pools/{pool}/mpcWallets/{mpcWallet}
+  string mpc_wallet = 4 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "mpcWallet"
+      description: "The resource name of the MPCWallet to which this Balance belongs. Format: pools/{pool}/mpcWallets/{mpcWallet}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/mpcWallets/d28197e8-372c-461c-9a00-2da3c528c2d1\""
+    }
+  ];
+}
+
+// The request message for CreateMPCWallet.
+message CreateMPCWalletRequest {
+  // The resource name of the parent Pool.
+  // Format: pools/{pool_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {child_type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "poolName"}
+    }
+  ];
+
+  // The MPCWallet to be created. This should be blank.
+  MPCWallet mpc_wallet = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The resource name of the Device that will initially be the sole member of the underlying
+  // DeviceGroup. This Device should have already been registered using MPCKeyService's
+  // RegisterDevice.
+  // Format: devices/{device_id}
+  string device = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Device"}
+  ];
+
+  // A user-provided request ID to allow for idempotency. This should be a UUID.
+  string request_id = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Metadata associated with the CreateMPCWallet long-running operation.
+message CreateMPCWalletMetadata {
+  // The resource name of the DeviceGroup to poll for using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "device_group"
+      description: "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777\""
+    }
+  ];
+}
+
+// The request message for GetMPCWallet.
+message GetMPCWalletRequest {
+  // The resource name of the MPCWallet.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "mpcWalletName"}
+    }
+  ];
+}
+
+// The request message for ListMPCWallets.
+message ListMPCWalletsRequest {
+  // The resource name of the parent Pool.
+  // Format: pools/{pool_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {child_type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "poolName"}
+    }
+  ];
+
+  // The maximum number of MPCWallets to return. The default is 50.
+  int32 page_size = 2;
+
+  // A page token, received from a previous ListMPCWallets call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 3;
+}
+
+// The response message for ListMPCWallets.
+message ListMPCWalletsResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListMPCWalletsResponse"
+      description: "The response message for ListMPCWallets."
+    }
+  };
+
+  // The list of MPCWallets.
+  repeated MPCWallet mpc_wallets = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}
+
+// The request message for GenerateAddress.
+message GenerateAddressRequest {
+  // The resource name of the MPCWallet within which to generate the Address.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}
+  string mpc_wallet = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "mpcWalletName"}
+    }
+  ];
+
+  // The resource name of the Network for which to generate the Address.
+  // Format: networks/{network_id}
+  string network = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"}
+  ];
+
+  // A user-provided request ID to allow for idempotency. This should be a UUID.
+  string request_id = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// The request message for GetAddress.
+message GetAddressRequest {
+  // The resource name of the Address.
+  // Format: networks/{network_id}/addresses/{address_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+}
+
+// The request message for ListAddresses.
+message ListAddressesRequest {
+  // The resource name of the parent Network.
+  // Format: networks/{network_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "api.developer.coinbase.com/Address"
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+
+  // The resource name of the MPCWallet to which the Addresses belong.
+  // Format: pools/{pool_id}/mpcWallets/{mpc_wallet_id}
+  string mpc_wallet = 2 [
+    (google.api.field_behavior) = OPTIONAL,
+    (google.api.resource_reference) = {
+      type: "api.developer.coinbase.com/MPCWallet"
+    }
+  ];
+
+  // The maximum number of Addresses to return. The default is 50.
+  int32 page_size = 3 [(google.api.field_behavior) = OPTIONAL];
+
+  // A page token, received from a previous ListAddresses call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// The response message for ListAddresses.
+message ListAddressesResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListAddressesResponse"
+      description: "The response message for ListAddresses."
+    }
+  };
+
+  // The list of Addresses.
+  repeated Address addresses = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}
+
+// The request message for ListBalances.
+message ListBalancesRequest {
+  // The resource name of the parent Address.
+  // Format: networks/{network_id}/addresses/{address_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "api.developer.coinbase.com/Balance"
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "addressName"}
+    }
+  ];
+
+  // The maximum number of Balances to return. If unspecified, at most 50 Balances
+  // will be returned.
+  int32 page_size = 3 [(google.api.field_behavior) = OPTIONAL];
+
+  // A page token, received from a previous ListBalances call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// The response message for ListBalances.
+message ListBalancesResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListBalancesResponse"
+      description: "The response message for ListBalances."
+    }
+  };
+
+  // The list of Balances.
+  repeated Balance balances = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}
