@@ -58,7 +58,11 @@ service ProtocolService {
     };
   }
 
-  // Broadcasts a transaction to a node in the Network.
+  // Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
+  // 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
+  // via block explorers such as Etherscan.
+  // 2. Set the signature(s) in the required_signatures of the Transaction.
+  // The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
   rpc BroadcastTransaction(BroadcastTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
     option (google.api.http) = {
       post: "/v1/{network=networks/*}:broadcastTransaction"
@@ -67,7 +71,7 @@ service ProtocolService {
     option (google.api.method_signature) = "network,transaction";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "BroadcastTransaction"
-      description: "Broadcasts a transaction to a node in the Network."
+      description: "Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:\n 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions via block explorers such as Etherscan.\n 2. Set the signature(s) in the required_signatures of the Transaction.\n // The TransactionInput itself is not required. The Transaction returned will have the hash set on it."
     };
   }
 }
@@ -126,7 +130,11 @@ message ConstructTransferTransactionRequest {
 }
 
 // The request message for BroadcastTransaction. For the broadcast to complete successfully,
-// the required_signatures' signature values must be populated (i.e. the transaction must be signed).
+// one of the following must be true:
+// 1. The raw_signed_transaction on the Transaction is populated. This is equivalent to the payload
+// used to broadcast transactions via block explorers such as Etherscan.
+// 2. The signature(s) in the required_signatures of the Transaction is populated.
+// The TransactionInput itself is not required.
 message BroadcastTransactionRequest {
   // The resource name of the Network.
   // Format: networks/{network_id}
@@ -138,7 +146,9 @@ message BroadcastTransactionRequest {
     }
   ];
 
-  // The transaction to broadcast. For the broadcast to complete successfully,
-  // the required_signatures' signature values must be populated (i.e. the transaction must be signed).
+  // The transaction to broadcast. For the broadcast to complete successfully, one of the following must be true:
+  // 1. The raw_signed_transaction on the Transaction is populated. This is equivalent to the payload
+  // used to broadcast transactions via block explorers such as Etherscan.
+  // 2. The signature(s) in the required_signatures of the Transaction is populated.
   coinbase.cloud.types.v1.Transaction transaction = 2;
 }

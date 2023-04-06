@@ -24,7 +24,7 @@
     "/v1/{networkName}:broadcastTransaction": {
       "post": {
         "summary": "BroadcastTransaction",
-        "description": "Broadcasts a transaction to a node in the Network.",
+        "description": "Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:\n 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions via block explorers such as Etherscan.\n 2. Set the signature(s) in the required_signatures of the Transaction.\n // The TransactionInput itself is not required. The Transaction returned will have the hash set on it.",
         "operationId": "ProtocolService_BroadcastTransaction",
         "responses": {
           "200": {
@@ -58,10 +58,10 @@
               "properties": {
                 "transaction": {
                   "$ref": "#/definitions/v1Transaction",
-                  "description": "The transaction to broadcast. For the broadcast to complete successfully,\nthe required_signatures' signature values must be populated (i.e. the transaction must be signed)."
+                  "description": "The transaction to broadcast. For the broadcast to complete successfully, one of the following must be true:\n1. The raw_signed_transaction on the Transaction is populated. This is equivalent to the payload\nused to broadcast transactions via block explorers such as Etherscan.\n2. The signature(s) in the required_signatures of the Transaction is populated."
                 }
               },
-              "description": "The request message for BroadcastTransaction. For the broadcast to complete successfully,\nthe required_signatures' signature values must be populated (i.e. the transaction must be signed)."
+              "description": "The request message for BroadcastTransaction. For the broadcast to complete successfully,\none of the following must be true:\n1. The raw_signed_transaction on the Transaction is populated. This is equivalent to the payload\nused to broadcast transactions via block explorers such as Etherscan.\n2. The signature(s) in the required_signatures of the Transaction is populated.\nThe TransactionInput itself is not required."
             }
           }
         ],

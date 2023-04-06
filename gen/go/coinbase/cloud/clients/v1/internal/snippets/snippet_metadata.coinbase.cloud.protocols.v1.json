@@ -14,7 +14,7 @@
     {
       "regionTag": "api_v1_generated_ProtocolService_BroadcastTransaction_sync",
       "title": "api BroadcastTransaction Sample",
-      "description": "BroadcastTransaction broadcasts a transaction to a node in the Network.",
+      "description": "BroadcastTransaction broadcasts a transaction to a node in the Network. There are two ways of invoking this API: \n1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions\nvia block explorers such as Etherscan.\n2. Set the signature(s) in the required_signatures of the Transaction.\nThe TransactionInput itself is not required. The Transaction returned will have the hash set on it.",
       "file": "ProtocolClient/BroadcastTransaction/main.go",
       "language": "GO",
       "clientMethod": {

@@ -26,7 +26,11 @@ type ProtocolServiceClient interface {
 	// moves an Asset from one Address to another. The payloads in the required_signatures of the
 	// returned Transaction must be signed before the Transaction is broadcast.
 	ConstructTransferTransaction(ctx context.Context, in *ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
-	// Broadcasts a transaction to a node in the Network.
+	// Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
+	// 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
+	// via block explorers such as Etherscan.
+	// 2. Set the signature(s) in the required_signatures of the Transaction.
+	// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 	BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
 }
 
@@ -76,7 +80,11 @@ type ProtocolServiceServer interface {
 	// moves an Asset from one Address to another. The payloads in the required_signatures of the
 	// returned Transaction must be signed before the Transaction is broadcast.
 	ConstructTransferTransaction(context.Context, *ConstructTransferTransactionRequest) (*v1.Transaction, error)
-	// Broadcasts a transaction to a node in the Network.
+	// Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
+	// 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
+	// via block explorers such as Etherscan.
+	// 2. Set the signature(s) in the required_signatures of the Transaction.
+	// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 	BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*v1.Transaction, error)
 	mustEmbedUnimplementedProtocolServiceServer()
 }

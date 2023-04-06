@@ -142,7 +142,13 @@ func (c *ProtocolClient) ConstructTransferTransaction(ctx context.Context, req *
 	return c.internalClient.ConstructTransferTransaction(ctx, req, opts...)
 }
 
-// BroadcastTransaction broadcasts a transaction to a node in the Network.
+// BroadcastTransaction broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
+//
+// Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
+// via block explorers such as Etherscan.
+//
+// Set the signature(s) in the required_signatures of the Transaction.
+// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 func (c *ProtocolClient) BroadcastTransaction(ctx context.Context, req *protocolspb.BroadcastTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
 	return c.internalClient.BroadcastTransaction(ctx, req, opts...)
 }
@@ -468,7 +474,13 @@ func (c *protocolRESTClient) ConstructTransferTransaction(ctx context.Context, r
 	}
 	return resp, nil
 }
-// BroadcastTransaction broadcasts a transaction to a node in the Network.
+// BroadcastTransaction broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
+//
+// Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
+// via block explorers such as Etherscan.
+//
+// Set the signature(s) in the required_signatures of the Transaction.
+// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 func (c *protocolRESTClient) BroadcastTransaction(ctx context.Context, req *protocolspb.BroadcastTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
