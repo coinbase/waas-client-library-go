@@ -1,0 +1,566 @@
+{
+  "clientLibrary": {
+    "name": "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1",
+    "version": "$VERSION",
+    "language": "GO",
+    "apis": [
+      {
+        "id": "coinbase.cloud.mpc_keys.v1",
+        "version": "v1"
+      }
+    ]
+  },
+  "snippets": [
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_AddDevice_sync",
+      "title": "api AddDevice Sample",
+      "description": "AddDevice adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using\nRegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this\noperation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,\nand use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation.\nAfter the operation is computed on WaaS SDK, the Device will have access to cryptographic materials\nrequired to process MPCOperations for this DeviceGroup.\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member\nand all existing Devices in the DeviceGroup will stay functional.\nUse the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.",
+      "file": "MPCKeyClient/AddDevice/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "AddDevice",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.AddDevice",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.AddDeviceRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "AddDeviceOperation",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "AddDevice",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.AddDevice",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 58,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_CreateDeviceGroup_sync",
+      "title": "api CreateDeviceGroup Sample",
+      "description": "CreateDeviceGroup creates a DeviceGroup. The DeviceGroup must contain exactly one registered Device, and\nthe Seed in the DeviceGroup must have at least one HardenedChild. After calling this,\nuse ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation.",
+      "file": "MPCKeyClient/CreateDeviceGroup/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "CreateDeviceGroup",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.CreateDeviceGroup",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.CreateDeviceGroupRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "CreateDeviceGroupOperation",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "CreateDeviceGroup",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.CreateDeviceGroup",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 58,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_CreateMPCKey_sync",
+      "title": "api CreateMPCKey Sample",
+      "description": "CreateMPCKey creates an MPCKey. There must be a HardenedChild in the Seed of the parent\nDeviceGroup which is a prefix of the derivation path provided in the MPCKey.",
+      "file": "MPCKeyClient/CreateMPCKey/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "CreateMPCKey",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.CreateMPCKey",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.CreateMPCKeyRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_keyspb.MPCKey",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "CreateMPCKey",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.CreateMPCKey",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_CreateSignature_sync",
+      "title": "api CreateSignature Sample",
+      "description": "CreateSignature creates a Signature using an MPCKey. After calling this, use ListMPCOperations\nto poll for the pending CreateSignature operation, and use the WaaS SDK's\ncomputeMPCOperation to complete the operation.",
+      "file": "MPCKeyClient/CreateSignature/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "CreateSignature",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.CreateSignature",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.CreateSignatureRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "CreateSignatureOperation",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "CreateSignature",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.CreateSignature",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 58,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_GetDevice_sync",
+      "title": "api GetDevice Sample",
+      "description": "GetDevice retrieves a Device by resource name.",
+      "file": "MPCKeyClient/GetDevice/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetDevice",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.GetDevice",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.GetDeviceRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_keyspb.Device",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "GetDevice",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.GetDevice",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_GetDeviceGroup_sync",
+      "title": "api GetDeviceGroup Sample",
+      "description": "GetDeviceGroup retrieves a DeviceGroup by resource name.",
+      "file": "MPCKeyClient/GetDeviceGroup/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetDeviceGroup",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.GetDeviceGroup",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.GetDeviceGroupRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_keyspb.DeviceGroup",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "GetDeviceGroup",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.GetDeviceGroup",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_GetMPCKey_sync",
+      "title": "api GetMPCKey Sample",
+      "description": "GetMPCKey retrieves an MPCKey by resource name.",
+      "file": "MPCKeyClient/GetMPCKey/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetMPCKey",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.GetMPCKey",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.GetMPCKeyRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_keyspb.MPCKey",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "GetMPCKey",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.GetMPCKey",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_ListMPCOperations_sync",
+      "title": "api ListMPCOperations Sample",
+      "description": "ListMPCOperations lists the pending MPCOperations awaiting computation associated with the given\nparent DeviceGroup. Use this API in combination with the WaaS SDK's computeMPCOperation\nmethod to complete the operation.",
+      "file": "MPCKeyClient/ListMPCOperations/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListMPCOperations",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.ListMPCOperations",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.ListMPCOperationsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_keyspb.ListMPCOperationsResponse",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "ListMPCOperations",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.ListMPCOperations",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_PrepareDeviceArchive_sync",
+      "title": "api PrepareDeviceArchive Sample",
+      "description": "PrepareDeviceArchive prepares an archive in the local storage of the given Device. The archive contains cryptographic materials\nthat can be used to export MPCKeys, which have the given DeviceGroup as their parent.\nThe Device specified in the request must be a member of this DeviceGroup and must participate\nin the associated MPC operation for the archive to be prepared. After calling this,\nuse ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the\nWaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.",
+      "file": "MPCKeyClient/PrepareDeviceArchive/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "PrepareDeviceArchive",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.PrepareDeviceArchive",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.PrepareDeviceArchiveRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "PrepareDeviceArchiveOperation",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "PrepareDeviceArchive",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.PrepareDeviceArchive",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 58,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_PrepareDeviceBackup_sync",
+      "title": "api PrepareDeviceBackup Sample",
+      "description": "PrepareDeviceBackup prepares a backup in the given Device. The backup contains certain cryptographic materials\nthat can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\nThe Device specified in the request must be a member of this DeviceGroup and must participate in the associated\nMPC operation for the backup to be prepared.\nAfter calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,\nand use the WaaS SDK's ComputeMPCOperation to complete the operation. Once the operation completes,\nthe Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely\nin a storage provider of your choice. If the user loses access to their existing Device and wants to recover\nMPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.",
+      "file": "MPCKeyClient/PrepareDeviceBackup/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "PrepareDeviceBackup",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.PrepareDeviceBackup",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.PrepareDeviceBackupRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "PrepareDeviceBackupOperation",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "PrepareDeviceBackup",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.PrepareDeviceBackup",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 58,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_RegisterDevice_sync",
+      "title": "api RegisterDevice Sample",
+      "description": "RegisterDevice registers a new Device. A Device must be registered before it can be added to a DeviceGroup.",
+      "file": "MPCKeyClient/RegisterDevice/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "RegisterDevice",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.RegisterDevice",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.RegisterDeviceRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*mpc_keyspb.Device",
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "RegisterDevice",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.RegisterDevice",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCKeyService_RevokeDevice_sync",
+      "title": "api RevokeDevice Sample",
+      "description": "RevokeDevice revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a\npart of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,\nand the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of.\nUse this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.\nEnsure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking\nthe RevokeDevice RPC.",
+      "file": "MPCKeyClient/RevokeDevice/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "RevokeDevice",
+        "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient.RevokeDevice",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_keyspb.RevokeDeviceRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "client": {
+          "shortName": "MPCKeyClient",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyClient"
+        },
+        "method": {
+          "shortName": "RevokeDevice",
+          "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService.RevokeDevice",
+          "service": {
+            "shortName": "MPCKeyService",
+            "fullName": "coinbase.cloud.mpc_keys.v1.MPCKeyService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 51,
+          "type": "FULL"
+        }
+      ]
+    }
+  ]
+}
