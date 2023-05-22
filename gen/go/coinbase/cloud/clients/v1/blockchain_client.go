@@ -47,6 +47,7 @@ type BlockchainCallOptions struct {
 	ListNetworks []gax.CallOption
 	GetAsset []gax.CallOption
 	ListAssets []gax.CallOption
+	BatchGetAssets []gax.CallOption
 }
 
 func defaultBlockchainGRPCClientOptions() []option.ClientOption {
@@ -71,6 +72,8 @@ func defaultBlockchainCallOptions() *BlockchainCallOptions {
 		},
 		ListAssets: []gax.CallOption{
 		},
+		BatchGetAssets: []gax.CallOption{
+		},
 	}
 }
 
@@ -84,6 +87,8 @@ func defaultBlockchainRESTCallOptions() *BlockchainCallOptions {
 		},
 		ListAssets: []gax.CallOption{
 		},
+		BatchGetAssets: []gax.CallOption{
+		},
 	}
 }
 
@@ -96,6 +101,7 @@ type internalBlockchainClient interface {
 	ListNetworks(context.Context, *blockchainpb.ListNetworksRequest, ...gax.CallOption) *NetworkIterator
 	GetAsset(context.Context, *blockchainpb.GetAssetRequest, ...gax.CallOption) (*blockchainpb.Asset, error)
 	ListAssets(context.Context, *blockchainpb.ListAssetsRequest, ...gax.CallOption) *AssetIterator
+	BatchGetAssets(context.Context, *blockchainpb.BatchGetAssetsRequest, ...gax.CallOption) (*blockchainpb.BatchGetAssetsResponse, error)
 }
 
 // BlockchainClient is a client for interacting with .
@@ -154,6 +160,11 @@ func (c *BlockchainClient) GetAsset(ctx context.Context, req *blockchainpb.GetAs
 // ListAssets returns a list of Assets available on a given Network.
 func (c *BlockchainClient) ListAssets(ctx context.Context, req *blockchainpb.ListAssetsRequest, opts ...gax.CallOption) *AssetIterator {
 	return c.internalClient.ListAssets(ctx, req, opts...)
+}
+
+// BatchGetAssets returns the list of Assets indicated by the given request.
+func (c *BlockchainClient) BatchGetAssets(ctx context.Context, req *blockchainpb.BatchGetAssetsRequest, opts ...gax.CallOption) (*blockchainpb.BatchGetAssetsResponse, error) {
+	return c.internalClient.BatchGetAssets(ctx, req, opts...)
 }
 
 // blockchainGRPCClient is a client for interacting with  over gRPC transport.
@@ -429,6 +440,23 @@ func (c *blockchainGRPCClient) ListAssets(ctx context.Context, req *blockchainpb
 	it.pageInfo.Token = req.GetPageToken()
 
 	return it
+}
+
+func (c *blockchainGRPCClient) BatchGetAssets(ctx context.Context, req *blockchainpb.BatchGetAssetsRequest, opts ...gax.CallOption) (*blockchainpb.BatchGetAssetsResponse, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).BatchGetAssets[0:len((*c.CallOptions).BatchGetAssets):len((*c.CallOptions).BatchGetAssets)], opts...)
+	var resp *blockchainpb.BatchGetAssetsResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.blockchainClient.BatchGetAssets(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 // GetNetwork retrieves a Network by resource name.
@@ -709,6 +737,67 @@ func (c *blockchainRESTClient) ListAssets(ctx context.Context, req *blockchainpb
 	it.pageInfo.Token = req.GetPageToken()
 
 	return it
+}
+// BatchGetAssets returns the list of Assets indicated by the given request.
+func (c *blockchainRESTClient) BatchGetAssets(ctx context.Context, req *blockchainpb.BatchGetAssetsRequest, opts ...gax.CallOption) (*blockchainpb.BatchGetAssetsResponse, error) {
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/%v/assets:batchGet", req.GetParent())
+
+	params := url.Values{}
+	if items := req.GetNames(); len(items) > 0 {
+		for _, item := range items {
+		  params.Add("names", fmt.Sprintf("%v", item))
+		}
+	}
+
+	baseUrl.RawQuery = params.Encode()
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).BatchGetAssets[0:len((*c.CallOptions).BatchGetAssets):len((*c.CallOptions).BatchGetAssets)], opts...)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &blockchainpb.BatchGetAssetsResponse{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+	return resp, nil
 }
 // AssetIterator manages a stream of *blockchainpb.Asset.
 type AssetIterator struct {

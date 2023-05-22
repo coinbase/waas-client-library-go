@@ -55,6 +55,7 @@ type MPCWalletCallOptions struct {
 	GetAddress []gax.CallOption
 	ListAddresses []gax.CallOption
 	ListBalances []gax.CallOption
+	ListBalanceDetails []gax.CallOption
 }
 
 func defaultMPCWalletGRPCClientOptions() []option.ClientOption {
@@ -85,6 +86,8 @@ func defaultMPCWalletCallOptions() *MPCWalletCallOptions {
 		},
 		ListBalances: []gax.CallOption{
 		},
+		ListBalanceDetails: []gax.CallOption{
+		},
 	}
 }
 
@@ -104,6 +107,8 @@ func defaultMPCWalletRESTCallOptions() *MPCWalletCallOptions {
 		},
 		ListBalances: []gax.CallOption{
 		},
+		ListBalanceDetails: []gax.CallOption{
+		},
 	}
 }
 
@@ -120,6 +125,7 @@ type internalMPCWalletClient interface {
 	GetAddress(context.Context, *mpc_walletspb.GetAddressRequest, ...gax.CallOption) (*mpc_walletspb.Address, error)
 	ListAddresses(context.Context, *mpc_walletspb.ListAddressesRequest, ...gax.CallOption) *AddressIterator
 	ListBalances(context.Context, *mpc_walletspb.ListBalancesRequest, ...gax.CallOption) *BalanceIterator
+	ListBalanceDetails(context.Context, *mpc_walletspb.ListBalanceDetailsRequest, ...gax.CallOption) *BalanceDetailIterator
 }
 
 // MPCWalletClient is a client for interacting with .
@@ -191,7 +197,10 @@ func (c *MPCWalletClient) ListMPCWallets(ctx context.Context, req *mpc_walletspb
 	return c.internalClient.ListMPCWallets(ctx, req, opts...)
 }
 
-// GenerateAddress generates an Address within an MPCWallet.
+// GenerateAddress generates an Address within an MPCWallet. The Address values generated are identical across
+// Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice
+// for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will
+// result in two pairs of identical addresses on Ethereum Mainnet and Goerli.
 func (c *MPCWalletClient) GenerateAddress(ctx context.Context, req *mpc_walletspb.GenerateAddressRequest, opts ...gax.CallOption) (*mpc_walletspb.Address, error) {
 	return c.internalClient.GenerateAddress(ctx, req, opts...)
 }
@@ -209,6 +218,11 @@ func (c *MPCWalletClient) ListAddresses(ctx context.Context, req *mpc_walletspb.
 // ListBalances returns a list of Balances.
 func (c *MPCWalletClient) ListBalances(ctx context.Context, req *mpc_walletspb.ListBalancesRequest, opts ...gax.CallOption) *BalanceIterator {
 	return c.internalClient.ListBalances(ctx, req, opts...)
+}
+
+// ListBalanceDetails returns a list of BalanceDetails.
+func (c *MPCWalletClient) ListBalanceDetails(ctx context.Context, req *mpc_walletspb.ListBalanceDetailsRequest, opts ...gax.CallOption) *BalanceDetailIterator {
+	return c.internalClient.ListBalanceDetails(ctx, req, opts...)
 }
 
 // mPCWalletGRPCClient is a client for interacting with  over gRPC transport.
@@ -602,6 +616,51 @@ func (c *mPCWalletGRPCClient) ListBalances(ctx context.Context, req *mpc_wallets
 	return it
 }
 
+func (c *mPCWalletGRPCClient) ListBalanceDetails(ctx context.Context, req *mpc_walletspb.ListBalanceDetailsRequest, opts ...gax.CallOption) *BalanceDetailIterator {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).ListBalanceDetails[0:len((*c.CallOptions).ListBalanceDetails):len((*c.CallOptions).ListBalanceDetails)], opts...)
+	it := &BalanceDetailIterator{}
+	req = proto.Clone(req).(*mpc_walletspb.ListBalanceDetailsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*mpc_walletspb.BalanceDetail, string, error) {
+		resp := &mpc_walletspb.ListBalanceDetailsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			var err error
+			resp, err = c.mPCWalletClient.ListBalanceDetails(ctx, req, settings.GRPC...)
+			return err
+		}, opts...)
+		if err != nil {
+			return nil, "", err
+		}
+
+		it.Response = resp
+		return resp.GetBalanceDetails(), resp.GetNextPageToken(), nil
+	}
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
 // CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered using MPCKeyService’s
 // RegisterDevice before this method is called. Under the hood, this calls MPCKeyService’s
 // CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService’s
@@ -816,7 +875,10 @@ func (c *mPCWalletRESTClient) ListMPCWallets(ctx context.Context, req *mpc_walle
 
 	return it
 }
-// GenerateAddress generates an Address within an MPCWallet.
+// GenerateAddress generates an Address within an MPCWallet. The Address values generated are identical across
+// Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice
+// for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will
+// result in two pairs of identical addresses on Ethereum Mainnet and Goerli.
 func (c *mPCWalletRESTClient) GenerateAddress(ctx context.Context, req *mpc_walletspb.GenerateAddressRequest, opts ...gax.CallOption) (*mpc_walletspb.Address, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1101,6 +1163,92 @@ func (c *mPCWalletRESTClient) ListBalances(ctx context.Context, req *mpc_wallets
 
 	return it
 }
+// ListBalanceDetails returns a list of BalanceDetails.
+func (c *mPCWalletRESTClient) ListBalanceDetails(ctx context.Context, req *mpc_walletspb.ListBalanceDetailsRequest, opts ...gax.CallOption) *BalanceDetailIterator {
+	it := &BalanceDetailIterator{}
+	req = proto.Clone(req).(*mpc_walletspb.ListBalanceDetailsRequest)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*mpc_walletspb.BalanceDetail, string, error) {
+		resp := &mpc_walletspb.ListBalanceDetailsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		baseUrl, err := url.Parse(c.endpoint)
+		if err != nil {
+			return nil, "", err
+		}
+		baseUrl.Path += fmt.Sprintf("/v1/%v/balanceDetails", req.GetParent())
+
+		params := url.Values{}
+		if req.GetPageSize() != 0 {
+			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
+		}
+		if req.GetPageToken() != "" {
+			params.Add("pageToken", fmt.Sprintf("%v", req.GetPageToken()))
+		}
+
+		baseUrl.RawQuery = params.Encode()
+
+		// Build HTTP headers from client and context metadata.
+		headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
+		e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			if settings.Path != "" {
+				baseUrl.Path = settings.Path
+			}
+			httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
+			if err != nil {
+				return err
+			}
+			httpReq.Header = headers
+
+			httpRsp, err := c.httpClient.Do(httpReq)
+			if err != nil{
+				return err
+			}
+			defer httpRsp.Body.Close()
+
+			if err = googleapi.CheckResponse(httpRsp); err != nil {
+				return err
+			}
+
+			buf, err := ioutil.ReadAll(httpRsp.Body)
+			if err != nil {
+				return err
+			}
+
+			if err := unm.Unmarshal(buf, resp); err != nil {
+				return maybeUnknownEnum(err)
+			}
+
+			return nil
+		}, opts...)
+		if e != nil {
+			return nil, "", e
+		}
+		it.Response = resp
+		return resp.GetBalanceDetails(), resp.GetNextPageToken(), nil
+	}
+
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
 // CreateMPCWalletOperation manages a long-running operation from CreateMPCWallet.
 type CreateMPCWalletOperation struct {
 	lro *longrunning.Operation
@@ -1225,6 +1373,53 @@ func (it *AddressIterator) bufLen() int {
 }
 
 func (it *AddressIterator) takeBuf() interface{} {
+	b := it.items
+	it.items = nil
+	return b
+}
+
+// BalanceDetailIterator manages a stream of *mpc_walletspb.BalanceDetail.
+type BalanceDetailIterator struct {
+	items    []*mpc_walletspb.BalanceDetail
+	pageInfo *iterator.PageInfo
+	nextFunc func() error
+
+	// Response is the raw response for the current page.
+	// It must be cast to the RPC response type.
+	// Calling Next() or InternalFetch() updates this value.
+	Response interface{}
+
+	// InternalFetch is for use by the Google Cloud Libraries only.
+	// It is not part of the stable interface of this package.
+	//
+	// InternalFetch returns results from a single call to the underlying RPC.
+	// The number of results is no greater than pageSize.
+	// If there are no more results, nextPageToken is empty and err is nil.
+	InternalFetch func(pageSize int, pageToken string) (results []*mpc_walletspb.BalanceDetail, nextPageToken string, err error)
+}
+
+// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
+func (it *BalanceDetailIterator) PageInfo() *iterator.PageInfo {
+	return it.pageInfo
+}
+
+// Next returns the next result. Its second return value is iterator.Done if there are no more
+// results. Once Next returns Done, all subsequent calls will return Done.
+func (it *BalanceDetailIterator) Next() (*mpc_walletspb.BalanceDetail, error) {
+	var item *mpc_walletspb.BalanceDetail
+	if err := it.nextFunc(); err != nil {
+		return item, err
+	}
+	item = it.items[0]
+	it.items = it.items[1:]
+	return item, nil
+}
+
+func (it *BalanceDetailIterator) bufLen() int {
+	return len(it.items)
+}
+
+func (it *BalanceDetailIterator) takeBuf() interface{} {
 	b := it.items
 	it.items = nil
 	return b

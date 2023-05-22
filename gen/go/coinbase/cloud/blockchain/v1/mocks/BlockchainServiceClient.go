@@ -17,6 +17,36 @@ type BlockchainServiceClient struct {
 	mock.Mock
 }
 
+// BatchGetAssets provides a mock function with given fields: ctx, in, opts
+func (_m *BlockchainServiceClient) BatchGetAssets(ctx context.Context, in *v1.BatchGetAssetsRequest, opts ...grpc.CallOption) (*v1.BatchGetAssetsResponse, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *v1.BatchGetAssetsResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BatchGetAssetsRequest, ...grpc.CallOption) *v1.BatchGetAssetsResponse); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*v1.BatchGetAssetsResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *v1.BatchGetAssetsRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAsset provides a mock function with given fields: ctx, in, opts
 func (_m *BlockchainServiceClient) GetAsset(ctx context.Context, in *v1.GetAssetRequest, opts ...grpc.CallOption) (*v1.Asset, error) {
 	_va := make([]interface{}, len(opts))

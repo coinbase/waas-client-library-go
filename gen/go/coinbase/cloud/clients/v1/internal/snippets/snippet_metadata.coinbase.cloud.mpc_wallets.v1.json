@@ -60,7 +60,7 @@
     {
       "regionTag": "api_v1_generated_MPCWalletService_GenerateAddress_sync",
       "title": "api GenerateAddress Sample",
-      "description": "GenerateAddress generates an Address within an MPCWallet.",
+      "description": "GenerateAddress generates an Address within an MPCWallet. The Address values generated are identical across\nNetworks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice\nfor networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will\nresult in two pairs of identical addresses on Ethereum Mainnet and Goerli.",
       "file": "MPCWalletClient/GenerateAddress/main.go",
       "language": "GO",
       "clientMethod": {
@@ -226,6 +226,52 @@
         "method": {
           "shortName": "ListAddresses",
           "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.ListAddresses",
+          "service": {
+            "shortName": "MPCWalletService",
+            "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_MPCWalletService_ListBalanceDetails_sync",
+      "title": "api ListBalanceDetails Sample",
+      "description": "ListBalanceDetails returns a list of BalanceDetails.",
+      "file": "MPCWalletClient/ListBalanceDetails/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListBalanceDetails",
+        "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient.ListBalanceDetails",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "mpc_walletspb.ListBalanceDetailsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "BalanceDetailIterator",
+        "client": {
+          "shortName": "MPCWalletClient",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletClient"
+        },
+        "method": {
+          "shortName": "ListBalanceDetails",
+          "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService.ListBalanceDetails",
           "service": {
             "shortName": "MPCWalletService",
             "fullName": "coinbase.cloud.mpc_wallets.v1.MPCWalletService"

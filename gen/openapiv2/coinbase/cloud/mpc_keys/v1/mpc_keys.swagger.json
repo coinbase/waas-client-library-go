@@ -56,6 +56,42 @@
         ]
       }
     },
+    "/v1/device:revoke": {
+      "post": {
+        "summary": "RevokeDevice",
+        "description": "Revokes a registered Device.\n This operation removes the registered Device from all the DeviceGroups that it is a part of.\n Once the Device is revoked, cryptographic materials in your physical Device are invalidated, and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of. Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.\n Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking the RevokeDevice RPC.",
+        "operationId": "MPCKeyService_RevokeDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message for RevokeDevice.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RevokeDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MPCKeyService"
+        ]
+      }
+    },
     "/v1/{deviceGroupName}": {
       "get": {
         "summary": "GetDeviceGroup",
@@ -177,6 +213,174 @@
         ]
       }
     },
+    "/v1/{deviceGroupName}:addDevice": {
+      "post": {
+        "summary": "AddDevice",
+        "description": "Adds a Device to an existing DeviceGroup. \n\nPrior to this API being called, the Device must be registered using RegisterDevice RPC. \n\n The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this operation. \n\n After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation, and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation. After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials required to process MPCOperations for this DeviceGroup.  \n\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member and all existing Devices in the DeviceGroup will stay functional.  \n\nMPCKeyService will expose RemoveDevice RPC in a future release that can remove any of the existing Devices from the DeviceGroup.",
+        "operationId": "MPCKeyService_AddDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/googlelongrunningOperation"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceGroupName",
+            "description": "The resource name of the DeviceGroup to which the Device is being added.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "pools/[^/]+/deviceGroups/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "device": {
+                  "type": "string",
+                  "title": "The resource name of the Device that is being added to the DeviceGroup.\nThe Device must not be part of the DeviceGroup specified above.\nFormat: devices/{device_id}"
+                },
+                "requestId": {
+                  "type": "string",
+                  "description": "A user-provided request ID to allow for idempotency. This should be a UUID."
+                }
+              },
+              "description": "The request message for AddDevice.",
+              "required": [
+                "device"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "MPCKeyService"
+        ]
+      }
+    },
+    "/v1/{deviceGroupName}:prepareDeviceArchive": {
+      "post": {
+        "summary": "PrepareDeviceArchive",
+        "description": "Prepares an archive in the local storage of the given Device.\n\n The archive contains cryptographic materials that can be used to export MPCKeys, which have the given DeviceGroup as their parent.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the archive to be prepared. After calling this, use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.\n\n Once the operation completes, the Device can utilize the WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.",
+        "operationId": "MPCKeyService_PrepareDeviceArchive",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/googlelongrunningOperation"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceGroupName",
+            "description": "The resource name of the DeviceGroup. The prepared archive will include cryptographic materials to export the\nprivate keys corresponding to each of the MPCKey under this DeviceGroup.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "pools/[^/]+/deviceGroups/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "device": {
+                  "type": "string",
+                  "title": "The resource name of the Device that prepares the archive in its local storage.\nThe Device must be part of the DeviceGroup specified above.\nFormat: devices/{device_id}"
+                },
+                "requestId": {
+                  "type": "string",
+                  "description": "A user-provided request ID to allow for idempotency. This should be a UUID."
+                }
+              },
+              "description": "The request message for PrepareDeviceArchive.",
+              "required": [
+                "device"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "MPCKeyService"
+        ]
+      }
+    },
+    "/v1/{deviceGroupName}:prepareDeviceBackup": {
+      "post": {
+        "summary": "PrepareDeviceBackup",
+        "description": "Prepares a backup in the given Device.\n\n The backup contains certain cryptographic materials that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the backup to be prepared. \n\n After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation. \n\n Once the operation completes, the Device can utilize WaaS SDK to download the backup bundle. \n\n We recommend storing this backup bundle securely in a storage provider of your choice. \n\n If the user loses access to their existing Device and wants to recover MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.",
+        "operationId": "MPCKeyService_PrepareDeviceBackup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/googlelongrunningOperation"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceGroupName",
+            "description": "The resource name of the DeviceGroup. The prepared backup will include cryptographic materials to recover the\nMPCKeys under this DeviceGroup on a new Device.\nFormat: pools/{pool_id}/deviceGroups/{device_group_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "pools/[^/]+/deviceGroups/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "device": {
+                  "type": "string",
+                  "title": "The resource name of the Device that prepares the backup.\nThe Device must be part of the DeviceGroup specified above.\nFormat: devices/{device_id}"
+                },
+                "requestId": {
+                  "type": "string",
+                  "description": "A user-provided request ID to allow for idempotency. This should be a UUID."
+                }
+              },
+              "description": "The request message for PrepareDeviceBackup.",
+              "required": [
+                "device"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "MPCKeyService"
+        ]
+      }
+    },
     "/v1/{deviceName}": {
       "get": {
         "summary": "GetDevice",
@@ -247,7 +451,7 @@
     },
     "/v1/{mpcKeyName}/signatures": {
       "post": {
-        "summary": "Create Signature",
+        "summary": "CreateSignature",
         "description": "Creates a Signature using an MPCKey.\n\n After calling this, use ListMPCOperations to poll for the pending CreateSignature operation, and use the WaaS SDK's computeMPCOperation to complete the operation.",
         "operationId": "MPCKeyService_CreateSignature",
         "responses": {
@@ -457,6 +661,31 @@
         }
       },
       "description": "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors)."
+    },
+    "v1AddDeviceMetadata": {
+      "type": "object",
+      "properties": {
+        "deviceGroup": {
+          "type": "string",
+          "example": "pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777",
+          "description": "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}",
+          "title": "device_group",
+          "readOnly": true
+        },
+        "participatingDevices": {
+          "type": "array",
+          "example": [
+            "devices/1591089c-229d-4578-ab94-a3fa3442d77b"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of Device resource names that can compute the MPCOperation by invoking ComputeAddDeviceMPCOperation on the WaaS SDK.\nFormat: devices/{device}",
+          "title": "devices",
+          "readOnly": true
+        }
+      },
+      "description": "Metadata associated with the AddDevice long-running operation."
     },
     "v1CreateDeviceGroupMetadata": {
       "type": "object",
@@ -684,10 +913,51 @@
           "$ref": "#/definitions/v1CreateSignatureMetadata",
           "description": "Metadata associated with the CreateSignature long-running operation.",
           "title": "createSignatureMetadata"
+        },
+        "prepareDeviceArchiveMetadata": {
+          "$ref": "#/definitions/v1PrepareDeviceArchiveMetadata",
+          "description": "Metadata associated with the PrepareDeviceArchive long-running operation.",
+          "title": "prepareDeviceArchiveMetadata"
+        },
+        "prepareDeviceBackupMetadata": {
+          "$ref": "#/definitions/v1PrepareDeviceBackupMetadata",
+          "description": "Metadata associated with the PrepareDeviceBackup long-running operation.",
+          "title": "prepareDeviceBackupMetadata"
+        },
+        "addDeviceMetadata": {
+          "$ref": "#/definitions/v1AddDeviceMetadata",
+          "description": "Metadata associated with the AddDevice long-running operation.",
+          "title": "addDeviceMetadata"
         }
       },
       "description": "The MPCOperation resource, which represents a pending MPC operation of a DeviceGroup waiting for computation. Poll the ListMPCOperations method for these pending MPCOperations, and use the WaaS SDK's ComputeMPCOperation to complete the operation. The MPCOperation resource ID is guaranteed to be the same as that of the underlying long-running operation.",
       "title": "MPCOperation"
+    },
+    "v1PrepareDeviceArchiveMetadata": {
+      "type": "object",
+      "properties": {
+        "deviceGroup": {
+          "type": "string",
+          "example": "pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777",
+          "description": "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}",
+          "title": "device_group",
+          "readOnly": true
+        }
+      },
+      "description": "Metadata associated with the PrepareDeviceArchive long-running operation."
+    },
+    "v1PrepareDeviceBackupMetadata": {
+      "type": "object",
+      "properties": {
+        "deviceGroup": {
+          "type": "string",
+          "example": "pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777",
+          "description": "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}",
+          "title": "device_group",
+          "readOnly": true
+        }
+      },
+      "description": "Metadata associated with the PrepareDeviceBackup long-running operation."
     },
     "v1PublicKey": {
       "type": "object",
@@ -717,6 +987,19 @@
         "registrationData"
       ]
     },
+    "v1RevokeDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The resource name of the Device that is being revoked.\nFormat: devices/{device_id}"
+        }
+      },
+      "description": "The request message for RevokeDevice.",
+      "required": [
+        "name"
+      ]
+    },
     "v1Seed": {
       "type": "object",
       "properties": {
@@ -727,6 +1010,13 @@
           },
           "description": "The hardened children derived from the Seed. To create an MPCKey, at least one hardened child must be derived.",
           "title": "hardenedChildren"
+        },
+        "mpcKeyExportMetadata": {
+          "type": "string",
+          "format": "byte",
+          "description": "The metadata to be used to export MPCKeys derived from this Seed.\n\n This metadata has to be passed to WaaS SDK's ExportPrivateKeys to export private keys corresponding to MPCKeys that are derived from this Seed's HardenedChildren.",
+          "title": "mpcKeyExportMetadata",
+          "readOnly": true
         }
       },
       "description": "A byte sequence at the root of a hierarchically deterministic (HD) wallet as defined in BIP-32. A DeviceGroup has exactly one Seed.",

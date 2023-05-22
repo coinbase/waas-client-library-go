@@ -76,6 +76,18 @@ service BlockchainService {
       description: "Returns a list of Assets available on a given Network."
     };
   }
+
+  // Returns the list of Assets indicated by the given request.
+  rpc BatchGetAssets(BatchGetAssetsRequest) returns (BatchGetAssetsResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=networks/*}/assets:batchGet"
+    };
+    option (google.api.method_signature) = "parent,names";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "BatchGetAssets"
+      description: "Returns the list of Assets indicated by the given request."
+    };
+  }
 }
 
 // The Network resource, which represents a blockchain network.
@@ -154,8 +166,6 @@ message Network {
 }
 
 // The Asset resource, which represents an on-chain asset.
-// For fungible assets, one resource exists per Asset. In the case
-// of non-fungible tokens, a unique Asset entry exists for every token.
 message Asset {
   option (google.api.resource) = {
     type: "api.developer.coinbase.com/Asset"
@@ -164,7 +174,7 @@ message Asset {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       title: "Asset"
-      description: "The Asset resource, which represents an on-chain asset.\nFor fungible assets, one resource exists per Asset.\nIn the case of non-fungible tokens, a unique Asset entry exists for every token."
+      description: "The Asset resource, which represents an on-chain asset."
     }
   };
 
@@ -352,4 +362,46 @@ message ListAssetsResponse {
   // A token, which can be sent as page_token to retrieve the next page.
   // If this field is omitted, there are no subsequent pages.
   string next_page_token = 2;
+}
+
+// The request message for BatchGetAssets.
+message BatchGetAssetsRequest {
+  // The resource name of the parent Network.
+  // Format: networks/{network_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "api.developer.coinbase.com/Asset"
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+
+  // The resource names of the Assets to retrieve.
+  // Each name has format: networks/{network_id}/assets/{asset_id}
+  // A maximum of 1000 Assets can be retrieved in a batch.
+  repeated string names = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type: "api.developer.coinbase.com/Asset"
+  }];
+}
+
+// The response message for BatchGetAssets.
+message BatchGetAssetsResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "BatchGetAssetsResponse"
+      description: "The response message for BatchGetAssets."
+    }
+  };
+
+  // The list of Assets.
+  // Note: The returned Assets may not be in the same order as in the request.
+  repeated Asset assets = 1;
+
+  // The resource names of the Assets that were not found.
+  // Each name has format: networks/{network_id}/assets/{asset_id}.
+  repeated string not_found = 2;
 }

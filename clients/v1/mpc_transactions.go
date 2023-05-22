@@ -92,9 +92,9 @@ func (w *WrappedCreateMPCTransactionOperation) Wait(
 	ctx context.Context,
 	opts ...gax.CallOption,
 ) (*mpc_transactionspb.MPCTransaction, error) {
-	deviceGroup, err := w.CreateMPCTransactionOperation.Wait(ctx, clients.LROOptions(w, version, opts)...)
+	mpcTransaction, err := w.CreateMPCTransactionOperation.Wait(ctx, clients.LROOptions(w, version, opts)...)
 
-	return deviceGroup, clients.UnwrapError(err)
+	return mpcTransaction, clients.UnwrapError(err)
 }
 
 // Poll delegates to the wrapped longrunning CreateMPCTransactionOperation with the
@@ -103,9 +103,9 @@ func (w *WrappedCreateMPCTransactionOperation) Poll(
 	ctx context.Context,
 	opts ...gax.CallOption,
 ) (*mpc_transactionspb.MPCTransaction, error) {
-	deviceGroup, err := w.CreateMPCTransactionOperation.Poll(ctx, clients.LROOptions(w, version, opts)...)
+	mpcTransaction, err := w.CreateMPCTransactionOperation.Poll(ctx, clients.LROOptions(w, version, opts)...)
 
-	return deviceGroup, clients.UnwrapError(err)
+	return mpcTransaction, clients.UnwrapError(err)
 }
 
 // CreateMPCTransaction creates an MPCTransaction. The long-running operation returned from this API will contain

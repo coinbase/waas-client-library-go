@@ -54,6 +54,10 @@ type MPCKeyCallOptions struct {
 	CreateMPCKey []gax.CallOption
 	GetMPCKey []gax.CallOption
 	CreateSignature []gax.CallOption
+	PrepareDeviceArchive []gax.CallOption
+	PrepareDeviceBackup []gax.CallOption
+	AddDevice []gax.CallOption
+	RevokeDevice []gax.CallOption
 }
 
 func defaultMPCKeyGRPCClientOptions() []option.ClientOption {
@@ -86,6 +90,14 @@ func defaultMPCKeyCallOptions() *MPCKeyCallOptions {
 		},
 		CreateSignature: []gax.CallOption{
 		},
+		PrepareDeviceArchive: []gax.CallOption{
+		},
+		PrepareDeviceBackup: []gax.CallOption{
+		},
+		AddDevice: []gax.CallOption{
+		},
+		RevokeDevice: []gax.CallOption{
+		},
 	}
 }
 
@@ -107,6 +119,14 @@ func defaultMPCKeyRESTCallOptions() *MPCKeyCallOptions {
 		},
 		CreateSignature: []gax.CallOption{
 		},
+		PrepareDeviceArchive: []gax.CallOption{
+		},
+		PrepareDeviceBackup: []gax.CallOption{
+		},
+		AddDevice: []gax.CallOption{
+		},
+		RevokeDevice: []gax.CallOption{
+		},
 	}
 }
 
@@ -125,6 +145,13 @@ type internalMPCKeyClient interface {
 	GetMPCKey(context.Context, *mpc_keyspb.GetMPCKeyRequest, ...gax.CallOption) (*mpc_keyspb.MPCKey, error)
 	CreateSignature(context.Context, *mpc_keyspb.CreateSignatureRequest, ...gax.CallOption) (*CreateSignatureOperation, error)
 	CreateSignatureOperation(name string) *CreateSignatureOperation
+	PrepareDeviceArchive(context.Context, *mpc_keyspb.PrepareDeviceArchiveRequest, ...gax.CallOption) (*PrepareDeviceArchiveOperation, error)
+	PrepareDeviceArchiveOperation(name string) *PrepareDeviceArchiveOperation
+	PrepareDeviceBackup(context.Context, *mpc_keyspb.PrepareDeviceBackupRequest, ...gax.CallOption) (*PrepareDeviceBackupOperation, error)
+	PrepareDeviceBackupOperation(name string) *PrepareDeviceBackupOperation
+	AddDevice(context.Context, *mpc_keyspb.AddDeviceRequest, ...gax.CallOption) (*AddDeviceOperation, error)
+	AddDeviceOperation(name string) *AddDeviceOperation
+	RevokeDevice(context.Context, *mpc_keyspb.RevokeDeviceRequest, ...gax.CallOption) error
 }
 
 // MPCKeyClient is a client for interacting with .
@@ -246,6 +273,71 @@ func (c *MPCKeyClient) CreateSignature(ctx context.Context, req *mpc_keyspb.Crea
 // The name must be that of a previously created CreateSignatureOperation, possibly from a different process.
 func (c *MPCKeyClient) CreateSignatureOperation(name string) *CreateSignatureOperation {
 	return c.internalClient.CreateSignatureOperation(name)
+}
+
+// PrepareDeviceArchive prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
+// that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
+// The Device specified in the request must be a member of this DeviceGroup and must participate
+// in the associated MPC operation for the archive to be prepared. After calling this,
+// use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK’s
+// ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
+// WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+func (c *MPCKeyClient) PrepareDeviceArchive(ctx context.Context, req *mpc_keyspb.PrepareDeviceArchiveRequest, opts ...gax.CallOption) (*PrepareDeviceArchiveOperation, error) {
+	return c.internalClient.PrepareDeviceArchive(ctx, req, opts...)
+}
+
+// PrepareDeviceArchiveOperation returns a new PrepareDeviceArchiveOperation from a given name.
+// The name must be that of a previously created PrepareDeviceArchiveOperation, possibly from a different process.
+func (c *MPCKeyClient) PrepareDeviceArchiveOperation(name string) *PrepareDeviceArchiveOperation {
+	return c.internalClient.PrepareDeviceArchiveOperation(name)
+}
+
+// PrepareDeviceBackup prepares a backup in the given Device. The backup contains certain cryptographic materials
+// that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
+// The Device specified in the request must be a member of this DeviceGroup and must participate in the associated
+// MPC operation for the backup to be prepared.
+// After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,
+// and use the WaaS SDK’s ComputeMPCOperation to complete the operation. Once the operation completes,
+// the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
+// in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
+// MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+func (c *MPCKeyClient) PrepareDeviceBackup(ctx context.Context, req *mpc_keyspb.PrepareDeviceBackupRequest, opts ...gax.CallOption) (*PrepareDeviceBackupOperation, error) {
+	return c.internalClient.PrepareDeviceBackup(ctx, req, opts...)
+}
+
+// PrepareDeviceBackupOperation returns a new PrepareDeviceBackupOperation from a given name.
+// The name must be that of a previously created PrepareDeviceBackupOperation, possibly from a different process.
+func (c *MPCKeyClient) PrepareDeviceBackupOperation(name string) *PrepareDeviceBackupOperation {
+	return c.internalClient.PrepareDeviceBackupOperation(name)
+}
+
+// AddDevice adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
+// RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
+// operation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,
+// and use the WaaS SDK’s ComputeAddDeviceMPCOperation to complete the operation.
+// After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials
+// required to process MPCOperations for this DeviceGroup.
+// Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
+// and all existing Devices in the DeviceGroup will stay functional.
+// Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+func (c *MPCKeyClient) AddDevice(ctx context.Context, req *mpc_keyspb.AddDeviceRequest, opts ...gax.CallOption) (*AddDeviceOperation, error) {
+	return c.internalClient.AddDevice(ctx, req, opts...)
+}
+
+// AddDeviceOperation returns a new AddDeviceOperation from a given name.
+// The name must be that of a previously created AddDeviceOperation, possibly from a different process.
+func (c *MPCKeyClient) AddDeviceOperation(name string) *AddDeviceOperation {
+	return c.internalClient.AddDeviceOperation(name)
+}
+
+// RevokeDevice revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
+// part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,
+// and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of.
+// Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.
+// Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking
+// the RevokeDevice RPC.
+func (c *MPCKeyClient) RevokeDevice(ctx context.Context, req *mpc_keyspb.RevokeDeviceRequest, opts ...gax.CallOption) error {
+	return c.internalClient.RevokeDevice(ctx, req, opts...)
 }
 
 // mPCKeyGRPCClient is a client for interacting with  over gRPC transport.
@@ -604,6 +696,74 @@ func (c *mPCKeyGRPCClient) CreateSignature(ctx context.Context, req *mpc_keyspb.
 	return &CreateSignatureOperation{
 		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
 	}, nil
+}
+
+func (c *mPCKeyGRPCClient) PrepareDeviceArchive(ctx context.Context, req *mpc_keyspb.PrepareDeviceArchiveRequest, opts ...gax.CallOption) (*PrepareDeviceArchiveOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "device_group", url.QueryEscape(req.GetDeviceGroup())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).PrepareDeviceArchive[0:len((*c.CallOptions).PrepareDeviceArchive):len((*c.CallOptions).PrepareDeviceArchive)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.PrepareDeviceArchive(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &PrepareDeviceArchiveOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
+func (c *mPCKeyGRPCClient) PrepareDeviceBackup(ctx context.Context, req *mpc_keyspb.PrepareDeviceBackupRequest, opts ...gax.CallOption) (*PrepareDeviceBackupOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "device_group", url.QueryEscape(req.GetDeviceGroup())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).PrepareDeviceBackup[0:len((*c.CallOptions).PrepareDeviceBackup):len((*c.CallOptions).PrepareDeviceBackup)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.PrepareDeviceBackup(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &PrepareDeviceBackupOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
+func (c *mPCKeyGRPCClient) AddDevice(ctx context.Context, req *mpc_keyspb.AddDeviceRequest, opts ...gax.CallOption) (*AddDeviceOperation, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "device_group", url.QueryEscape(req.GetDeviceGroup())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).AddDevice[0:len((*c.CallOptions).AddDevice):len((*c.CallOptions).AddDevice)], opts...)
+	var resp *longrunningpb.Operation
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.mPCKeyClient.AddDevice(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &AddDeviceOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+	}, nil
+}
+
+func (c *mPCKeyGRPCClient) RevokeDevice(ctx context.Context, req *mpc_keyspb.RevokeDeviceRequest, opts ...gax.CallOption) error {
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
+	opts = append((*c.CallOptions).RevokeDevice[0:len((*c.CallOptions).RevokeDevice):len((*c.CallOptions).RevokeDevice)], opts...)
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		_, err = c.mPCKeyClient.RevokeDevice(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	return err
 }
 
 // RegisterDevice registers a new Device. A Device must be registered before it can be added to a DeviceGroup.
@@ -1089,6 +1249,342 @@ func (c *mPCKeyRESTClient) CreateSignature(ctx context.Context, req *mpc_keyspb.
 	}, nil
 }
 
+// PrepareDeviceArchive prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
+// that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
+// The Device specified in the request must be a member of this DeviceGroup and must participate
+// in the associated MPC operation for the archive to be prepared. After calling this,
+// use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK’s
+// ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
+// WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+func (c *mPCKeyRESTClient) PrepareDeviceArchive(ctx context.Context, req *mpc_keyspb.PrepareDeviceArchiveRequest, opts ...gax.CallOption) (*PrepareDeviceArchiveOperation, error) {
+	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
+	jsonReq, err := m.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/%v:prepareDeviceArchive", req.GetDeviceGroup())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "device_group", url.QueryEscape(req.GetDeviceGroup())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &longrunningpb.Operation{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+
+	override := fmt.Sprintf("/v1/%s", resp.GetName())
+	return &PrepareDeviceArchiveOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+		pollPath: override,
+	}, nil
+}
+
+// PrepareDeviceBackup prepares a backup in the given Device. The backup contains certain cryptographic materials
+// that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
+// The Device specified in the request must be a member of this DeviceGroup and must participate in the associated
+// MPC operation for the backup to be prepared.
+// After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,
+// and use the WaaS SDK’s ComputeMPCOperation to complete the operation. Once the operation completes,
+// the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
+// in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
+// MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+func (c *mPCKeyRESTClient) PrepareDeviceBackup(ctx context.Context, req *mpc_keyspb.PrepareDeviceBackupRequest, opts ...gax.CallOption) (*PrepareDeviceBackupOperation, error) {
+	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
+	jsonReq, err := m.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/%v:prepareDeviceBackup", req.GetDeviceGroup())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "device_group", url.QueryEscape(req.GetDeviceGroup())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &longrunningpb.Operation{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+
+	override := fmt.Sprintf("/v1/%s", resp.GetName())
+	return &PrepareDeviceBackupOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+		pollPath: override,
+	}, nil
+}
+
+// AddDevice adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
+// RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
+// operation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,
+// and use the WaaS SDK’s ComputeAddDeviceMPCOperation to complete the operation.
+// After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials
+// required to process MPCOperations for this DeviceGroup.
+// Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
+// and all existing Devices in the DeviceGroup will stay functional.
+// Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+func (c *mPCKeyRESTClient) AddDevice(ctx context.Context, req *mpc_keyspb.AddDeviceRequest, opts ...gax.CallOption) (*AddDeviceOperation, error) {
+	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
+	jsonReq, err := m.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/%v:addDevice", req.GetDeviceGroup())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "device_group", url.QueryEscape(req.GetDeviceGroup())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &longrunningpb.Operation{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+
+	override := fmt.Sprintf("/v1/%s", resp.GetName())
+	return &AddDeviceOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, resp),
+		pollPath: override,
+	}, nil
+}
+
+// RevokeDevice revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
+// part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,
+// and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of.
+// Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.
+// Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking
+// the RevokeDevice RPC.
+func (c *mPCKeyRESTClient) RevokeDevice(ctx context.Context, req *mpc_keyspb.RevokeDeviceRequest, opts ...gax.CallOption) error {
+	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
+	jsonReq, err := m.Marshal(req)
+	if err != nil {
+		return err
+	}
+
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/device:revoke")
+
+	// Build HTTP headers from client and context metadata.
+	headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
+	return gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		// Returns nil if there is no error, otherwise wraps
+		// the response code and body into a non-nil error
+		return googleapi.CheckResponse(httpRsp)
+	}, opts...)
+}
+// AddDeviceOperation manages a long-running operation from AddDevice.
+type AddDeviceOperation struct {
+	lro *longrunning.Operation
+	pollPath string
+}
+
+// AddDeviceOperation returns a new AddDeviceOperation from a given name.
+// The name must be that of a previously created AddDeviceOperation, possibly from a different process.
+func (c *mPCKeyGRPCClient) AddDeviceOperation(name string) *AddDeviceOperation {
+	return &AddDeviceOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
+}
+
+// AddDeviceOperation returns a new AddDeviceOperation from a given name.
+// The name must be that of a previously created AddDeviceOperation, possibly from a different process.
+func (c *mPCKeyRESTClient) AddDeviceOperation(name string) *AddDeviceOperation {
+	override := fmt.Sprintf("/v1/%s", name)
+	return &AddDeviceOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+		pollPath: override,
+	}
+}
+
+// Wait blocks until the long-running operation is completed, returning the response and any errors encountered.
+//
+// See documentation of Poll for error-handling information.
+func (op *AddDeviceOperation) Wait(ctx context.Context, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	opts = append([]gax.CallOption{gax.WithPath(op.pollPath)}, opts...)
+	var resp mpc_keyspb.DeviceGroup
+	if err := op.lro.WaitWithInterval(ctx, &resp, time.Minute, opts...); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// Poll fetches the latest state of the long-running operation.
+//
+// Poll also fetches the latest metadata, which can be retrieved by Metadata.
+//
+// If Poll fails, the error is returned and op is unmodified. If Poll succeeds and
+// the operation has completed with failure, the error is returned and op.Done will return true.
+// If Poll succeeds and the operation has completed successfully,
+// op.Done will return true, and the response of the operation is returned.
+// If Poll succeeds and the operation has not completed, the returned response and error are both nil.
+func (op *AddDeviceOperation) Poll(ctx context.Context, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	opts = append([]gax.CallOption{gax.WithPath(op.pollPath)}, opts...)
+	var resp mpc_keyspb.DeviceGroup
+	if err := op.lro.Poll(ctx, &resp, opts...); err != nil {
+		return nil, err
+	}
+	if !op.Done() {
+		return nil, nil
+	}
+	return &resp, nil
+}
+
+// Metadata returns metadata associated with the long-running operation.
+// Metadata itself does not contact the server, but Poll does.
+// To get the latest metadata, call this method after a successful call to Poll.
+// If the metadata is not available, the returned metadata and error are both nil.
+func (op *AddDeviceOperation) Metadata() (*mpc_keyspb.AddDeviceMetadata, error) {
+	var meta mpc_keyspb.AddDeviceMetadata
+	if err := op.lro.Metadata(&meta); err == longrunning.ErrNoMetadata {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+	return &meta, nil
+}
+
+// Done reports whether the long-running operation has completed.
+func (op *AddDeviceOperation) Done() bool {
+	return op.lro.Done()
+}
+
+// Name returns the name of the long-running operation.
+// The name is assigned by the server and is unique within the service from which the operation is created.
+func (op *AddDeviceOperation) Name() string {
+	return op.lro.Name()
+}
+
 // CreateDeviceGroupOperation manages a long-running operation from CreateDeviceGroup.
 type CreateDeviceGroupOperation struct {
 	lro *longrunning.Operation
@@ -1250,5 +1746,169 @@ func (op *CreateSignatureOperation) Done() bool {
 // Name returns the name of the long-running operation.
 // The name is assigned by the server and is unique within the service from which the operation is created.
 func (op *CreateSignatureOperation) Name() string {
+	return op.lro.Name()
+}
+
+// PrepareDeviceArchiveOperation manages a long-running operation from PrepareDeviceArchive.
+type PrepareDeviceArchiveOperation struct {
+	lro *longrunning.Operation
+	pollPath string
+}
+
+// PrepareDeviceArchiveOperation returns a new PrepareDeviceArchiveOperation from a given name.
+// The name must be that of a previously created PrepareDeviceArchiveOperation, possibly from a different process.
+func (c *mPCKeyGRPCClient) PrepareDeviceArchiveOperation(name string) *PrepareDeviceArchiveOperation {
+	return &PrepareDeviceArchiveOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
+}
+
+// PrepareDeviceArchiveOperation returns a new PrepareDeviceArchiveOperation from a given name.
+// The name must be that of a previously created PrepareDeviceArchiveOperation, possibly from a different process.
+func (c *mPCKeyRESTClient) PrepareDeviceArchiveOperation(name string) *PrepareDeviceArchiveOperation {
+	override := fmt.Sprintf("/v1/%s", name)
+	return &PrepareDeviceArchiveOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+		pollPath: override,
+	}
+}
+
+// Wait blocks until the long-running operation is completed, returning the response and any errors encountered.
+//
+// See documentation of Poll for error-handling information.
+func (op *PrepareDeviceArchiveOperation) Wait(ctx context.Context, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	opts = append([]gax.CallOption{gax.WithPath(op.pollPath)}, opts...)
+	var resp mpc_keyspb.DeviceGroup
+	if err := op.lro.WaitWithInterval(ctx, &resp, time.Minute, opts...); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// Poll fetches the latest state of the long-running operation.
+//
+// Poll also fetches the latest metadata, which can be retrieved by Metadata.
+//
+// If Poll fails, the error is returned and op is unmodified. If Poll succeeds and
+// the operation has completed with failure, the error is returned and op.Done will return true.
+// If Poll succeeds and the operation has completed successfully,
+// op.Done will return true, and the response of the operation is returned.
+// If Poll succeeds and the operation has not completed, the returned response and error are both nil.
+func (op *PrepareDeviceArchiveOperation) Poll(ctx context.Context, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	opts = append([]gax.CallOption{gax.WithPath(op.pollPath)}, opts...)
+	var resp mpc_keyspb.DeviceGroup
+	if err := op.lro.Poll(ctx, &resp, opts...); err != nil {
+		return nil, err
+	}
+	if !op.Done() {
+		return nil, nil
+	}
+	return &resp, nil
+}
+
+// Metadata returns metadata associated with the long-running operation.
+// Metadata itself does not contact the server, but Poll does.
+// To get the latest metadata, call this method after a successful call to Poll.
+// If the metadata is not available, the returned metadata and error are both nil.
+func (op *PrepareDeviceArchiveOperation) Metadata() (*mpc_keyspb.PrepareDeviceArchiveMetadata, error) {
+	var meta mpc_keyspb.PrepareDeviceArchiveMetadata
+	if err := op.lro.Metadata(&meta); err == longrunning.ErrNoMetadata {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+	return &meta, nil
+}
+
+// Done reports whether the long-running operation has completed.
+func (op *PrepareDeviceArchiveOperation) Done() bool {
+	return op.lro.Done()
+}
+
+// Name returns the name of the long-running operation.
+// The name is assigned by the server and is unique within the service from which the operation is created.
+func (op *PrepareDeviceArchiveOperation) Name() string {
+	return op.lro.Name()
+}
+
+// PrepareDeviceBackupOperation manages a long-running operation from PrepareDeviceBackup.
+type PrepareDeviceBackupOperation struct {
+	lro *longrunning.Operation
+	pollPath string
+}
+
+// PrepareDeviceBackupOperation returns a new PrepareDeviceBackupOperation from a given name.
+// The name must be that of a previously created PrepareDeviceBackupOperation, possibly from a different process.
+func (c *mPCKeyGRPCClient) PrepareDeviceBackupOperation(name string) *PrepareDeviceBackupOperation {
+	return &PrepareDeviceBackupOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+	}
+}
+
+// PrepareDeviceBackupOperation returns a new PrepareDeviceBackupOperation from a given name.
+// The name must be that of a previously created PrepareDeviceBackupOperation, possibly from a different process.
+func (c *mPCKeyRESTClient) PrepareDeviceBackupOperation(name string) *PrepareDeviceBackupOperation {
+	override := fmt.Sprintf("/v1/%s", name)
+	return &PrepareDeviceBackupOperation{
+		lro: longrunning.InternalNewOperation(*c.LROClient, &longrunningpb.Operation{Name: name}),
+		pollPath: override,
+	}
+}
+
+// Wait blocks until the long-running operation is completed, returning the response and any errors encountered.
+//
+// See documentation of Poll for error-handling information.
+func (op *PrepareDeviceBackupOperation) Wait(ctx context.Context, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	opts = append([]gax.CallOption{gax.WithPath(op.pollPath)}, opts...)
+	var resp mpc_keyspb.DeviceGroup
+	if err := op.lro.WaitWithInterval(ctx, &resp, time.Minute, opts...); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// Poll fetches the latest state of the long-running operation.
+//
+// Poll also fetches the latest metadata, which can be retrieved by Metadata.
+//
+// If Poll fails, the error is returned and op is unmodified. If Poll succeeds and
+// the operation has completed with failure, the error is returned and op.Done will return true.
+// If Poll succeeds and the operation has completed successfully,
+// op.Done will return true, and the response of the operation is returned.
+// If Poll succeeds and the operation has not completed, the returned response and error are both nil.
+func (op *PrepareDeviceBackupOperation) Poll(ctx context.Context, opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
+	opts = append([]gax.CallOption{gax.WithPath(op.pollPath)}, opts...)
+	var resp mpc_keyspb.DeviceGroup
+	if err := op.lro.Poll(ctx, &resp, opts...); err != nil {
+		return nil, err
+	}
+	if !op.Done() {
+		return nil, nil
+	}
+	return &resp, nil
+}
+
+// Metadata returns metadata associated with the long-running operation.
+// Metadata itself does not contact the server, but Poll does.
+// To get the latest metadata, call this method after a successful call to Poll.
+// If the metadata is not available, the returned metadata and error are both nil.
+func (op *PrepareDeviceBackupOperation) Metadata() (*mpc_keyspb.PrepareDeviceBackupMetadata, error) {
+	var meta mpc_keyspb.PrepareDeviceBackupMetadata
+	if err := op.lro.Metadata(&meta); err == longrunning.ErrNoMetadata {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+	return &meta, nil
+}
+
+// Done reports whether the long-running operation has completed.
+func (op *PrepareDeviceBackupOperation) Done() bool {
+	return op.lro.Done()
+}
+
+// Name returns the name of the long-running operation.
+// The name is assigned by the server and is unique within the service from which the operation is created.
+func (op *PrepareDeviceBackupOperation) Name() string {
 	return op.lro.Name()
 }

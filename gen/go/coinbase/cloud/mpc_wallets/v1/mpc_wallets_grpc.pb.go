@@ -29,7 +29,10 @@ type MPCWalletServiceClient interface {
 	GetMPCWallet(ctx context.Context, in *GetMPCWalletRequest, opts ...grpc.CallOption) (*MPCWallet, error)
 	// Returns a list of MPCWallets in a Pool.
 	ListMPCWallets(ctx context.Context, in *ListMPCWalletsRequest, opts ...grpc.CallOption) (*ListMPCWalletsResponse, error)
-	// Generates an Address within an MPCWallet.
+	// Generates an Address within an MPCWallet. The Address values generated are identical across
+	// Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice
+	// for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will
+	// result in two pairs of identical addresses on Ethereum Mainnet and Goerli.
 	GenerateAddress(ctx context.Context, in *GenerateAddressRequest, opts ...grpc.CallOption) (*Address, error)
 	// Retrieves an Address by resource name.
 	GetAddress(ctx context.Context, in *GetAddressRequest, opts ...grpc.CallOption) (*Address, error)
@@ -37,6 +40,8 @@ type MPCWalletServiceClient interface {
 	ListAddresses(ctx context.Context, in *ListAddressesRequest, opts ...grpc.CallOption) (*ListAddressesResponse, error)
 	// Returns a list of Balances.
 	ListBalances(ctx context.Context, in *ListBalancesRequest, opts ...grpc.CallOption) (*ListBalancesResponse, error)
+	// Returns a list of BalanceDetails.
+	ListBalanceDetails(ctx context.Context, in *ListBalanceDetailsRequest, opts ...grpc.CallOption) (*ListBalanceDetailsResponse, error)
 }
 
 type mPCWalletServiceClient struct {
@@ -110,6 +115,15 @@ func (c *mPCWalletServiceClient) ListBalances(ctx context.Context, in *ListBalan
 	return out, nil
 }
 
+func (c *mPCWalletServiceClient) ListBalanceDetails(ctx context.Context, in *ListBalanceDetailsRequest, opts ...grpc.CallOption) (*ListBalanceDetailsResponse, error) {
+	out := new(ListBalanceDetailsResponse)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.mpc_wallets.v1.MPCWalletService/ListBalanceDetails", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MPCWalletServiceServer is the server API for MPCWalletService service.
 // All implementations must embed UnimplementedMPCWalletServiceServer
 // for forward compatibility
@@ -124,7 +138,10 @@ type MPCWalletServiceServer interface {
 	GetMPCWallet(context.Context, *GetMPCWalletRequest) (*MPCWallet, error)
 	// Returns a list of MPCWallets in a Pool.
 	ListMPCWallets(context.Context, *ListMPCWalletsRequest) (*ListMPCWalletsResponse, error)
-	// Generates an Address within an MPCWallet.
+	// Generates an Address within an MPCWallet. The Address values generated are identical across
+	// Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice
+	// for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will
+	// result in two pairs of identical addresses on Ethereum Mainnet and Goerli.
 	GenerateAddress(context.Context, *GenerateAddressRequest) (*Address, error)
 	// Retrieves an Address by resource name.
 	GetAddress(context.Context, *GetAddressRequest) (*Address, error)
@@ -132,6 +149,8 @@ type MPCWalletServiceServer interface {
 	ListAddresses(context.Context, *ListAddressesRequest) (*ListAddressesResponse, error)
 	// Returns a list of Balances.
 	ListBalances(context.Context, *ListBalancesRequest) (*ListBalancesResponse, error)
+	// Returns a list of BalanceDetails.
+	ListBalanceDetails(context.Context, *ListBalanceDetailsRequest) (*ListBalanceDetailsResponse, error)
 	mustEmbedUnimplementedMPCWalletServiceServer()
 }
 
@@ -159,6 +178,9 @@ func (UnimplementedMPCWalletServiceServer) ListAddresses(context.Context, *ListA
 }
 func (UnimplementedMPCWalletServiceServer) ListBalances(context.Context, *ListBalancesRequest) (*ListBalancesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBalances not implemented")
+}
+func (UnimplementedMPCWalletServiceServer) ListBalanceDetails(context.Context, *ListBalanceDetailsRequest) (*ListBalanceDetailsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBalanceDetails not implemented")
 }
 func (UnimplementedMPCWalletServiceServer) mustEmbedUnimplementedMPCWalletServiceServer() {}
 
@@ -299,6 +321,24 @@ func _MPCWalletService_ListBalances_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MPCWalletService_ListBalanceDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBalanceDetailsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MPCWalletServiceServer).ListBalanceDetails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.mpc_wallets.v1.MPCWalletService/ListBalanceDetails",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MPCWalletServiceServer).ListBalanceDetails(ctx, req.(*ListBalanceDetailsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MPCWalletService_ServiceDesc is the grpc.ServiceDesc for MPCWalletService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -333,6 +373,10 @@ var MPCWalletService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListBalances",
 			Handler:    _MPCWalletService_ListBalances_Handler,
+		},
+		{
+			MethodName: "ListBalanceDetails",
+			Handler:    _MPCWalletService_ListBalanceDetails_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -131,6 +131,29 @@ func (_m *MPCWalletServiceServer) ListAddresses(_a0 context.Context, _a1 *v1.Lis
 	return r0, r1
 }
 
+// ListBalanceDetails provides a mock function with given fields: _a0, _a1
+func (_m *MPCWalletServiceServer) ListBalanceDetails(_a0 context.Context, _a1 *v1.ListBalanceDetailsRequest) (*v1.ListBalanceDetailsResponse, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 *v1.ListBalanceDetailsResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListBalanceDetailsRequest) *v1.ListBalanceDetailsResponse); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*v1.ListBalanceDetailsResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListBalanceDetailsRequest) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListBalances provides a mock function with given fields: _a0, _a1
 func (_m *MPCWalletServiceServer) ListBalances(_a0 context.Context, _a1 *v1.ListBalancesRequest) (*v1.ListBalancesResponse, error) {
 	ret := _m.Called(_a0, _a1)

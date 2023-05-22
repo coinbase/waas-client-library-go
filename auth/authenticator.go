@@ -38,10 +38,6 @@ func (a *Authenticator) BuildJWT(service, uri string) (string, error) {
 		return "", fmt.Errorf("jwt: Could not decode private key")
 	}
 
-	if block.Type != "ECDSA Private Key" {
-		return "", fmt.Errorf("jwt: Bad private key type")
-	}
-
 	key, err := x509.ParseECPrivateKey(block.Bytes)
 	if err != nil {
 		return "", fmt.Errorf("jwt: %w", err)

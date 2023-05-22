@@ -12,6 +12,52 @@
   },
   "snippets": [
     {
+      "regionTag": "api_v1_generated_BlockchainService_BatchGetAssets_sync",
+      "title": "api BatchGetAssets Sample",
+      "description": "BatchGetAssets returns the list of Assets indicated by the given request.",
+      "file": "BlockchainClient/BatchGetAssets/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "BatchGetAssets",
+        "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient.BatchGetAssets",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "blockchainpb.BatchGetAssetsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*blockchainpb.BatchGetAssetsResponse",
+        "client": {
+          "shortName": "BlockchainClient",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient"
+        },
+        "method": {
+          "shortName": "BatchGetAssets",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainService.BatchGetAssets",
+          "service": {
+            "shortName": "BlockchainService",
+            "fullName": "coinbase.cloud.blockchain.v1.BlockchainService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
       "regionTag": "api_v1_generated_BlockchainService_GetAsset_sync",
       "title": "api GetAsset Sample",
       "description": "GetAsset retrieves an Asset by resource name.",

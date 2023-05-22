@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package coinbase.cloud.protocols.v1;
 
+import "coinbase/cloud/blockchain/v1/blockchain.proto";
+import "coinbase/cloud/protocols/ethereum/v1/outputs.proto";
 import "coinbase/cloud/types/v1/transaction.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
@@ -74,6 +76,20 @@ service ProtocolService {
       description: "Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:\n 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions via block explorers such as Etherscan.\n 2. Set the signature(s) in the required_signatures of the Transaction.\n // The TransactionInput itself is not required. The Transaction returned will have the hash set on it."
     };
   }
+
+  // Estimates the current network fee for the specified Network. For EVM Networks, this
+  // corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+  rpc EstimateFee(EstimateFeeRequest) returns (EstimateFeeResponse) {
+    option (google.api.http) = {
+      post: "/v1/{network=networks/*}:estimateFee"
+      body: "*"
+    };
+    option (google.api.method_signature) = "network";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "EstimateFee"
+      description: "Estimates the current network fee for the specified Network. For EVM Networks, this corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas."
+    };
+  }
 }
 
 // The request message for ConstructTransaction.
@@ -127,6 +143,13 @@ message ConstructTransferTransactionRequest {
 
   // The fee to be paid for the transfer. If not provided, the API will default to a network-based fee estimate.
   coinbase.cloud.types.v1.TransactionFee fee = 7 [(google.api.field_behavior) = OPTIONAL];
+
+  // The Definition of the BlockchainService Asset for which the transfer transaction is being constructed.
+  // Supplying an Asset Definition is not strictly necessary for constructing transfer transactions for a native Asset
+  // or an ERC-20.
+  // For an ERC-721, an Asset Definition with a sub_group_id must be provided to specify the token being transferred.
+  // For an ERC-1155, an Asset Definition with a sub_group_id must be provided to specify the token being transferred.
+  coinbase.cloud.blockchain.v1.Asset.Definition asset_definition = 8 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // The request message for BroadcastTransaction. For the broadcast to complete successfully,
@@ -151,4 +174,26 @@ message BroadcastTransactionRequest {
   // used to broadcast transactions via block explorers such as Etherscan.
   // 2. The signature(s) in the required_signatures of the Transaction is populated.
   coinbase.cloud.types.v1.Transaction transaction = 2;
+}
+
+// The request message for EstimateFee.
+message EstimateFeeRequest {
+  // The resource name of the Network.
+  // Format: networks/{network_id}
+  string network = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+}
+
+// The response message for EstimateFee.
+message EstimateFeeResponse {
+  // The estimated fee for the given Network.
+  oneof network_fee_estimate {
+    // The estimated network fee for the given EVM Network.
+    coinbase.cloud.protocols.ethereum.v1.FeeEstimate ethereum_fee_estimate = 1;
+  }
 }

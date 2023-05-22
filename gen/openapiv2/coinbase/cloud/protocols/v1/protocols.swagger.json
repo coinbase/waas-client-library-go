@@ -178,6 +178,10 @@
                 "fee": {
                   "$ref": "#/definitions/v1TransactionFee",
                   "description": "The fee to be paid for the transfer. If not provided, the API will default to a network-based fee estimate."
+                },
+                "assetDefinition": {
+                  "$ref": "#/definitions/AssetDefinition",
+                  "description": "The Definition of the BlockchainService Asset for which the transfer transaction is being constructed.\nSupplying an Asset Definition is not strictly necessary for constructing transfer transactions for a native Asset\nor an ERC-20.\nFor an ERC-721, an Asset Definition with a sub_group_id must be provided to specify the token being transferred.\nFor an ERC-1155, an Asset Definition with a sub_group_id must be provided to specify the token being transferred."
                 }
               },
               "description": "The request message for ConstructTransferTransaction.",
@@ -194,9 +198,76 @@
           "ProtocolService"
         ]
       }
+    },
+    "/v1/{networkName}:estimateFee": {
+      "post": {
+        "summary": "EstimateFee",
+        "description": "Estimates the current network fee for the specified Network. For EVM Networks, this corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.",
+        "operationId": "ProtocolService_EstimateFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1EstimateFeeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the Network.\nFormat: networks/{network_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "description": "The request message for EstimateFee."
+            }
+          }
+        ],
+        "tags": [
+          "ProtocolService"
+        ]
+      }
     }
   },
   "definitions": {
+    "AssetDefinition": {
+      "type": "object",
+      "properties": {
+        "assetType": {
+          "type": "string",
+          "example": "native",
+          "description": "The type of Asset the definition describes.\nPossible values: 'native', 'erc20', 'erc721', 'erc1155'",
+          "title": "assetType"
+        },
+        "assetGroupId": {
+          "type": "string",
+          "example": "0x887CFe31C888EE0780795b7feFF46CE7f9AB556C",
+          "description": "The identifier that distinguishes this Asset group.\nGenerally a 0x-prefixed contract address for the Asset. For a native Asset this is not set.",
+          "title": "assetGroupId"
+        },
+        "subGroupId": {
+          "type": "string",
+          "description": "The identifier that distinguishes the specific Asset within the asset group.\nGenerally a token ID. For a native Asset or ERC-20 this is not set.",
+          "title": "subGroupId"
+        }
+      },
+      "description": "The defining characteristics that combine to uniquely identify an Asset on-chain.\nFungible tokens, such as ERC-20s, require an asset_group_id (the contract address).\nNon-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s require a both an asset_group_id and a sub_group_id (the token ID).",
+      "title": "Asset.Definition"
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -303,6 +374,34 @@
         }
       },
       "description": "A message representing an EIP-1559 transaction input."
+    },
+    "v1EstimateFeeResponse": {
+      "type": "object",
+      "properties": {
+        "ethereumFeeEstimate": {
+          "$ref": "#/definitions/v1FeeEstimate",
+          "description": "The estimated network fee for the given EVM Network."
+        }
+      },
+      "description": "The response message for EstimateFee."
+    },
+    "v1FeeEstimate": {
+      "type": "object",
+      "properties": {
+        "gasPrice": {
+          "type": "string",
+          "description": "The estimated legacy gas price denominated in atomic units of the native asset\nas a \"0x\"-prefixed hex string."
+        },
+        "maxFeePerGas": {
+          "type": "string",
+          "description": "The estimated max fee per gas (EIP-1559) denominated in atomic units of the asset\nas a \"0x\"-prefixed hex string."
+        },
+        "maxPriorityFeePerGas": {
+          "type": "string",
+          "description": "The estimated max priority fee per gas (EIP-1559) denominated in atomic units of\nthe native asset as a \"0x\"-prefixed hex string."
+        }
+      },
+      "description": "A message representing a fee estimate on an Ethereum-like network."
     },
     "v1RLPTransaction": {
       "type": "object",

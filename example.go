@@ -16,8 +16,8 @@ const (
 	// apiKeyName is the name of the API Key to use. Fill this out before running the main function.
 	apiKeyName = "organizations/my-organization/apiKeys/my-api-key"
 
-	// apiKeyPrivateKey is the private key of the API Key to use. Fill this out before running the main function.
-	apiKeyPrivateKey = "-----BEGIN ECDSA Private Key-----\nmy-private-key\n-----END ECDSA Private Key-----\n"
+	// privKeyTemplate is the private key of the API Key to use. Fill this out before running the main function.
+	privKeyTemplate = "-----BEGIN EC PRIVATE KEY-----\nmy-private-key\n-----END EC PRIVATE KEY-----\n"
 )
 
 // An example function to demonstrate how to use the WaaS client libraries.
@@ -26,7 +26,7 @@ func main() {
 
 	authOpt := clients.WithAPIKey(&auth.APIKey{
 		Name:       apiKeyName,
-		PrivateKey: apiKeyPrivateKey,
+		PrivateKey: privKeyTemplate,
 	})
 
 	poolsClient, err := v1clients.NewPoolServiceClient(ctx, authOpt)

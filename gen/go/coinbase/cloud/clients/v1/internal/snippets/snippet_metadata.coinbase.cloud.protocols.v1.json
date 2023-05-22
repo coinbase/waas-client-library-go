@@ -148,6 +148,52 @@
           "type": "FULL"
         }
       ]
+    },
+    {
+      "regionTag": "api_v1_generated_ProtocolService_EstimateFee_sync",
+      "title": "api EstimateFee Sample",
+      "description": "EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this\ncorresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.",
+      "file": "ProtocolClient/EstimateFee/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "EstimateFee",
+        "fullName": "coinbase.cloud.protocols.v1.ProtocolClient.EstimateFee",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "protocolspb.EstimateFeeRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*protocolspb.EstimateFeeResponse",
+        "client": {
+          "shortName": "ProtocolClient",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolClient"
+        },
+        "method": {
+          "shortName": "EstimateFee",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolService.EstimateFee",
+          "service": {
+            "shortName": "ProtocolService",
+            "fullName": "coinbase.cloud.protocols.v1.ProtocolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
     }
   ]
 }

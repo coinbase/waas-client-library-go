@@ -8,6 +8,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -43,6 +44,41 @@ type MPCKeyServiceClient interface {
 	// to poll for the pending CreateSignature operation, and use the WaaS SDK's
 	// computeMPCOperation to complete the operation.
 	CreateSignature(ctx context.Context, in *CreateSignatureRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
+	// Prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
+	// that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
+	// The Device specified in the request must be a member of this DeviceGroup and must participate
+	// in the associated MPC operation for the archive to be prepared. After calling this,
+	// use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
+	// ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
+	// WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+	PrepareDeviceArchive(ctx context.Context, in *PrepareDeviceArchiveRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
+	// Prepares a backup in the given Device. The backup contains certain cryptographic materials
+	// that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
+	// The Device specified in the request must be a member of this DeviceGroup and must participate in the associated
+	// MPC operation for the backup to be prepared.
+	// After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,
+	// and use the WaaS SDK's ComputeMPCOperation to complete the operation. Once the operation completes,
+	// the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
+	// in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
+	// MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+	PrepareDeviceBackup(ctx context.Context, in *PrepareDeviceBackupRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
+	// Adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
+	// RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
+	// operation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,
+	// and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation.
+	// After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials
+	// required to process MPCOperations for this DeviceGroup.
+	// Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
+	// and all existing Devices in the DeviceGroup will stay functional.
+	// Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+	AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
+	// Revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
+	// part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,
+	// and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of.
+	// Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.
+	// Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking
+	// the RevokeDevice RPC.
+	RevokeDevice(ctx context.Context, in *RevokeDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type mPCKeyServiceClient struct {
@@ -125,6 +161,42 @@ func (c *mPCKeyServiceClient) CreateSignature(ctx context.Context, in *CreateSig
 	return out, nil
 }
 
+func (c *mPCKeyServiceClient) PrepareDeviceArchive(ctx context.Context, in *PrepareDeviceArchiveRequest, opts ...grpc.CallOption) (*longrunning.Operation, error) {
+	out := new(longrunning.Operation)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/PrepareDeviceArchive", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mPCKeyServiceClient) PrepareDeviceBackup(ctx context.Context, in *PrepareDeviceBackupRequest, opts ...grpc.CallOption) (*longrunning.Operation, error) {
+	out := new(longrunning.Operation)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/PrepareDeviceBackup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mPCKeyServiceClient) AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*longrunning.Operation, error) {
+	out := new(longrunning.Operation)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/AddDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mPCKeyServiceClient) RevokeDevice(ctx context.Context, in *RevokeDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.mpc_keys.v1.MPCKeyService/RevokeDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MPCKeyServiceServer is the server API for MPCKeyService service.
 // All implementations must embed UnimplementedMPCKeyServiceServer
 // for forward compatibility
@@ -153,6 +225,41 @@ type MPCKeyServiceServer interface {
 	// to poll for the pending CreateSignature operation, and use the WaaS SDK's
 	// computeMPCOperation to complete the operation.
 	CreateSignature(context.Context, *CreateSignatureRequest) (*longrunning.Operation, error)
+	// Prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
+	// that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
+	// The Device specified in the request must be a member of this DeviceGroup and must participate
+	// in the associated MPC operation for the archive to be prepared. After calling this,
+	// use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
+	// ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
+	// WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+	PrepareDeviceArchive(context.Context, *PrepareDeviceArchiveRequest) (*longrunning.Operation, error)
+	// Prepares a backup in the given Device. The backup contains certain cryptographic materials
+	// that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
+	// The Device specified in the request must be a member of this DeviceGroup and must participate in the associated
+	// MPC operation for the backup to be prepared.
+	// After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,
+	// and use the WaaS SDK's ComputeMPCOperation to complete the operation. Once the operation completes,
+	// the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
+	// in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
+	// MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+	PrepareDeviceBackup(context.Context, *PrepareDeviceBackupRequest) (*longrunning.Operation, error)
+	// Adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
+	// RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
+	// operation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,
+	// and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation.
+	// After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials
+	// required to process MPCOperations for this DeviceGroup.
+	// Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
+	// and all existing Devices in the DeviceGroup will stay functional.
+	// Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+	AddDevice(context.Context, *AddDeviceRequest) (*longrunning.Operation, error)
+	// Revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
+	// part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,
+	// and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of.
+	// Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.
+	// Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking
+	// the RevokeDevice RPC.
+	RevokeDevice(context.Context, *RevokeDeviceRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMPCKeyServiceServer()
 }
 
@@ -183,6 +290,18 @@ func (UnimplementedMPCKeyServiceServer) GetMPCKey(context.Context, *GetMPCKeyReq
 }
 func (UnimplementedMPCKeyServiceServer) CreateSignature(context.Context, *CreateSignatureRequest) (*longrunning.Operation, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSignature not implemented")
+}
+func (UnimplementedMPCKeyServiceServer) PrepareDeviceArchive(context.Context, *PrepareDeviceArchiveRequest) (*longrunning.Operation, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PrepareDeviceArchive not implemented")
+}
+func (UnimplementedMPCKeyServiceServer) PrepareDeviceBackup(context.Context, *PrepareDeviceBackupRequest) (*longrunning.Operation, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PrepareDeviceBackup not implemented")
+}
+func (UnimplementedMPCKeyServiceServer) AddDevice(context.Context, *AddDeviceRequest) (*longrunning.Operation, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDevice not implemented")
+}
+func (UnimplementedMPCKeyServiceServer) RevokeDevice(context.Context, *RevokeDeviceRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RevokeDevice not implemented")
 }
 func (UnimplementedMPCKeyServiceServer) mustEmbedUnimplementedMPCKeyServiceServer() {}
 
@@ -341,6 +460,78 @@ func _MPCKeyService_CreateSignature_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MPCKeyService_PrepareDeviceArchive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrepareDeviceArchiveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MPCKeyServiceServer).PrepareDeviceArchive(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.mpc_keys.v1.MPCKeyService/PrepareDeviceArchive",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MPCKeyServiceServer).PrepareDeviceArchive(ctx, req.(*PrepareDeviceArchiveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MPCKeyService_PrepareDeviceBackup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrepareDeviceBackupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MPCKeyServiceServer).PrepareDeviceBackup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.mpc_keys.v1.MPCKeyService/PrepareDeviceBackup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MPCKeyServiceServer).PrepareDeviceBackup(ctx, req.(*PrepareDeviceBackupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MPCKeyService_AddDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MPCKeyServiceServer).AddDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.mpc_keys.v1.MPCKeyService/AddDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MPCKeyServiceServer).AddDevice(ctx, req.(*AddDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MPCKeyService_RevokeDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MPCKeyServiceServer).RevokeDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.mpc_keys.v1.MPCKeyService/RevokeDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MPCKeyServiceServer).RevokeDevice(ctx, req.(*RevokeDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MPCKeyService_ServiceDesc is the grpc.ServiceDesc for MPCKeyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -379,6 +570,22 @@ var MPCKeyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateSignature",
 			Handler:    _MPCKeyService_CreateSignature_Handler,
+		},
+		{
+			MethodName: "PrepareDeviceArchive",
+			Handler:    _MPCKeyService_PrepareDeviceArchive_Handler,
+		},
+		{
+			MethodName: "PrepareDeviceBackup",
+			Handler:    _MPCKeyService_PrepareDeviceBackup_Handler,
+		},
+		{
+			MethodName: "AddDevice",
+			Handler:    _MPCKeyService_AddDevice_Handler,
+		},
+		{
+			MethodName: "RevokeDevice",
+			Handler:    _MPCKeyService_RevokeDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

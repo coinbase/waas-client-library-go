@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "MPC Transactions API",
+    "title": "MPCTransactions API",
     "version": "1.0"
   },
   "tags": [

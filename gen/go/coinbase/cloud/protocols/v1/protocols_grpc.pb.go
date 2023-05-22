@@ -32,6 +32,9 @@ type ProtocolServiceClient interface {
 	// 2. Set the signature(s) in the required_signatures of the Transaction.
 	// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 	BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
+	// Estimates the current network fee for the specified Network. For EVM Networks, this
+	// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+	EstimateFee(ctx context.Context, in *EstimateFeeRequest, opts ...grpc.CallOption) (*EstimateFeeResponse, error)
 }
 
 type protocolServiceClient struct {
@@ -69,6 +72,15 @@ func (c *protocolServiceClient) BroadcastTransaction(ctx context.Context, in *Br
 	return out, nil
 }
 
+func (c *protocolServiceClient) EstimateFee(ctx context.Context, in *EstimateFeeRequest, opts ...grpc.CallOption) (*EstimateFeeResponse, error) {
+	out := new(EstimateFeeResponse)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.protocols.v1.ProtocolService/EstimateFee", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProtocolServiceServer is the server API for ProtocolService service.
 // All implementations must embed UnimplementedProtocolServiceServer
 // for forward compatibility
@@ -86,6 +98,9 @@ type ProtocolServiceServer interface {
 	// 2. Set the signature(s) in the required_signatures of the Transaction.
 	// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 	BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*v1.Transaction, error)
+	// Estimates the current network fee for the specified Network. For EVM Networks, this
+	// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+	EstimateFee(context.Context, *EstimateFeeRequest) (*EstimateFeeResponse, error)
 	mustEmbedUnimplementedProtocolServiceServer()
 }
 
@@ -101,6 +116,9 @@ func (UnimplementedProtocolServiceServer) ConstructTransferTransaction(context.C
 }
 func (UnimplementedProtocolServiceServer) BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*v1.Transaction, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BroadcastTransaction not implemented")
+}
+func (UnimplementedProtocolServiceServer) EstimateFee(context.Context, *EstimateFeeRequest) (*EstimateFeeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateFee not implemented")
 }
 func (UnimplementedProtocolServiceServer) mustEmbedUnimplementedProtocolServiceServer() {}
 
@@ -169,6 +187,24 @@ func _ProtocolService_BroadcastTransaction_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProtocolService_EstimateFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateFeeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProtocolServiceServer).EstimateFee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.protocols.v1.ProtocolService/EstimateFee",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProtocolServiceServer).EstimateFee(ctx, req.(*EstimateFeeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProtocolService_ServiceDesc is the grpc.ServiceDesc for ProtocolService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -187,6 +223,10 @@ var ProtocolService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BroadcastTransaction",
 			Handler:    _ProtocolService_BroadcastTransaction_Handler,
+		},
+		{
+			MethodName: "EstimateFee",
+			Handler:    _ProtocolService_EstimateFee_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -46,6 +46,7 @@ type ProtocolCallOptions struct {
 	ConstructTransaction []gax.CallOption
 	ConstructTransferTransaction []gax.CallOption
 	BroadcastTransaction []gax.CallOption
+	EstimateFee []gax.CallOption
 }
 
 func defaultProtocolGRPCClientOptions() []option.ClientOption {
@@ -68,6 +69,8 @@ func defaultProtocolCallOptions() *ProtocolCallOptions {
 		},
 		BroadcastTransaction: []gax.CallOption{
 		},
+		EstimateFee: []gax.CallOption{
+		},
 	}
 }
 
@@ -78,6 +81,8 @@ func defaultProtocolRESTCallOptions() *ProtocolCallOptions {
 		ConstructTransferTransaction: []gax.CallOption{
 		},
 		BroadcastTransaction: []gax.CallOption{
+		},
+		EstimateFee: []gax.CallOption{
 		},
 	}
 }
@@ -90,6 +95,7 @@ type internalProtocolClient interface {
 	ConstructTransaction(context.Context, *protocolspb.ConstructTransactionRequest, ...gax.CallOption) (*typespb.Transaction, error)
 	ConstructTransferTransaction(context.Context, *protocolspb.ConstructTransferTransactionRequest, ...gax.CallOption) (*typespb.Transaction, error)
 	BroadcastTransaction(context.Context, *protocolspb.BroadcastTransactionRequest, ...gax.CallOption) (*typespb.Transaction, error)
+	EstimateFee(context.Context, *protocolspb.EstimateFeeRequest, ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error)
 }
 
 // ProtocolClient is a client for interacting with .
@@ -151,6 +157,12 @@ func (c *ProtocolClient) ConstructTransferTransaction(ctx context.Context, req *
 // The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
 func (c *ProtocolClient) BroadcastTransaction(ctx context.Context, req *protocolspb.BroadcastTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
 	return c.internalClient.BroadcastTransaction(ctx, req, opts...)
+}
+
+// EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this
+// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+func (c *ProtocolClient) EstimateFee(ctx context.Context, req *protocolspb.EstimateFeeRequest, opts ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error) {
+	return c.internalClient.EstimateFee(ctx, req, opts...)
 }
 
 // protocolGRPCClient is a client for interacting with  over gRPC transport.
@@ -355,6 +367,23 @@ func (c *protocolGRPCClient) BroadcastTransaction(ctx context.Context, req *prot
 	return resp, nil
 }
 
+func (c *protocolGRPCClient) EstimateFee(ctx context.Context, req *protocolspb.EstimateFeeRequest, opts ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "network", url.QueryEscape(req.GetNetwork())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).EstimateFee[0:len((*c.CallOptions).EstimateFee):len((*c.CallOptions).EstimateFee)], opts...)
+	var resp *protocolspb.EstimateFeeResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.protocolClient.EstimateFee(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 // ConstructTransaction constructs an unsigned transaction. The payloads in the required_signatures of the
 // returned Transaction must be signed before the Transaction is broadcast.
 func (c *protocolRESTClient) ConstructTransaction(ctx context.Context, req *protocolspb.ConstructTransactionRequest, opts ...gax.CallOption) (*typespb.Transaction, error) {
@@ -501,6 +530,65 @@ func (c *protocolRESTClient) BroadcastTransaction(ctx context.Context, req *prot
 	opts = append((*c.CallOptions).BroadcastTransaction[0:len((*c.CallOptions).BroadcastTransaction):len((*c.CallOptions).BroadcastTransaction)], opts...)
 	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
 	resp := &typespb.Transaction{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+	return resp, nil
+}
+// EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this
+// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+func (c *protocolRESTClient) EstimateFee(ctx context.Context, req *protocolspb.EstimateFeeRequest, opts ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error) {
+	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
+	jsonReq, err := m.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/%v:estimateFee", req.GetNetwork())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "network", url.QueryEscape(req.GetNetwork())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).EstimateFee[0:len((*c.CallOptions).EstimateFee):len((*c.CallOptions).EstimateFee)], opts...)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &protocolspb.EstimateFeeResponse{}
 	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		if settings.Path != "" {
 			baseUrl.Path = settings.Path

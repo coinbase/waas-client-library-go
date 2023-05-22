@@ -185,6 +185,51 @@
           "BlockchainService"
         ]
       }
+    },
+    "/v1/{networkName}/assets:batchGet": {
+      "get": {
+        "summary": "BatchGetAssets",
+        "description": "Returns the list of Assets indicated by the given request.",
+        "operationId": "BlockchainService_BatchGetAssets",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1BatchGetAssetsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "networkName",
+            "description": "The resource name of the parent Network.\nFormat: networks/{network_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+"
+          },
+          {
+            "name": "names",
+            "description": "The resource names of the Assets to retrieve.\nEach name has format: networks/{network_id}/assets/{asset_id}\nA maximum of 1000 Assets can be retrieved in a batch.",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "BlockchainService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -267,8 +312,29 @@
           "title": "definition"
         }
       },
-      "description": "The Asset resource, which represents an on-chain asset.\nFor fungible assets, one resource exists per Asset.\nIn the case of non-fungible tokens, a unique Asset entry exists for every token.",
+      "description": "The Asset resource, which represents an on-chain asset.",
       "title": "Asset"
+    },
+    "v1BatchGetAssetsResponse": {
+      "type": "object",
+      "properties": {
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Asset"
+          },
+          "description": "The list of Assets.\nNote: The returned Assets may not be in the same order as in the request."
+        },
+        "notFound": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The resource names of the Assets that were not found.\nEach name has format: networks/{network_id}/assets/{asset_id}."
+        }
+      },
+      "description": "The response message for BatchGetAssets.",
+      "title": "BatchGetAssetsResponse"
     },
     "v1ListAssetsResponse": {
       "type": "object",

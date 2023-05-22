@@ -125,7 +125,7 @@ func (b *BlockchainServiceClient) ListNetworks(
 	return &networkIteratorImpl{iter: b.client.ListNetworks(ctx, req, opts...)}
 }
 
-// GetAsset get an Asset.
+// GetAsset retrieves an Asset by resource name.
 func (b *BlockchainServiceClient) GetAsset(
 	ctx context.Context,
 	req *blockchainpb.GetAssetRequest,
@@ -185,4 +185,14 @@ func (b *BlockchainServiceClient) ListAssets(
 	req *blockchainpb.ListAssetsRequest,
 	opts ...gax.CallOption) AssetIterator {
 	return &assetIteratorImpl{b.client.ListAssets(ctx, req, opts...)}
+}
+
+// BatchGetAssets returns the list of Assets indicated by the given request.
+func (b *BlockchainServiceClient) BatchGetAssets(
+	ctx context.Context,
+	req *blockchainpb.BatchGetAssetsRequest,
+	opts ...gax.CallOption) (*blockchainpb.BatchGetAssetsResponse, error) {
+	asset, err := b.client.BatchGetAssets(ctx, req, opts...)
+
+	return asset, clients.UnwrapError(err)
 }

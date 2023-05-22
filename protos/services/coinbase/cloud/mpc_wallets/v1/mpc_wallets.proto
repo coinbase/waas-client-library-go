@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package coinbase.cloud.mpc_wallets.v1;
 
+import "coinbase/cloud/blockchain/v1/blockchain.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
@@ -13,7 +14,7 @@ option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
-        title: "MPC Wallets API";
+        title: "MPCWallets API";
         version: "1.0";
     };
     host: "api.developer.coinbase.com/waas/mpc_wallets"
@@ -77,7 +78,10 @@ service MPCWalletService {
     };
   }
 
-  // Generates an Address within an MPCWallet.
+  // Generates an Address within an MPCWallet. The Address values generated are identical across
+  // Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice
+  // for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will
+  // result in two pairs of identical addresses on Ethereum Mainnet and Goerli.
   rpc GenerateAddress(GenerateAddressRequest) returns (Address) {
     option (google.api.http) = {
       post: "/v1/{mpc_wallet=pools/*/mpcWallets/*}:generateAddress"
@@ -86,7 +90,7 @@ service MPCWalletService {
     option (google.api.method_signature) = "mpc_wallet,network";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "GenerateAddress"
-      description: "Generates an Address within an MPCWallet."
+      description: "Generates an Address within an MPCWallet. The Address values generated are identical across Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will result in two pairs of identical addresses on Ethereum Mainnet and Goerli."
     };
   }
 
@@ -123,6 +127,18 @@ service MPCWalletService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "ListBalances"
       description: "Returns a list of Balances."
+    };
+  }
+
+  // Returns a list of BalanceDetails.
+  rpc ListBalanceDetails(ListBalanceDetailsRequest) returns (ListBalanceDetailsResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=networks/*/addresses/*/balances/*}/balanceDetails"
+    };
+    option (google.api.method_signature) = "parent";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ListBalanceDetails"
+      description: "Returns a list of BalanceDetails."
     };
   }
 }
@@ -261,17 +277,18 @@ message Balance {
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "asset"
       description: "The resource name of the Asset to which this Balance corresponds. Format: networks/{network}/assets/{asset}"
-      example: "\"networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430\""
+      example: "\"networks/ethereum-goerli/assets/e1835806-0718-418a-b185-93553c496655\""
     }
   ];
 
-  // The amount of the Asset, denominated in atomic units of the asset (e.g., Wei for Ether),
-  // as a base-10 number.
+  // The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of
+  // atomic units (e.g., Wei for Ether) as a base-10 number. For ERC-721 and ERC-1155 contracts, it
+  // is the count of distinct token IDs held by address.
   string amount = 3 [
     (google.api.field_behavior) = OUTPUT_ONLY,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "amount"
-      description: "The amount of the Asset, denominated in atomic units of the asset (e.g., Wei for Ether), as a base-10 number."
+      description: "The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of atomic units (e.g., Wei for Ether) as a base-10 number. For ERC-721 and ERC-1155 contracts, it is the count of distinct token IDs held by address."
       example: "\"10000000\""
     }
   ];
@@ -284,6 +301,80 @@ message Balance {
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "mpcWallet"
       description: "The resource name of the MPCWallet to which this Balance belongs. Format: pools/{pool}/mpcWallets/{mpcWallet}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/mpcWallets/d28197e8-372c-461c-9a00-2da3c528c2d1\""
+    }
+  ];
+}
+
+// The BalanceDetail resource, which enumerates the specific tokens held which compose a Balance.
+message BalanceDetail {
+  option (google.api.resource) = {
+    type: "api.developer.coinbase.com/BalanceDetail"
+    pattern: "networks/{network_id}/addresses/{address_id}/balances/{balance_id}/balanceDetails/{balance_detail_id}"
+  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "BalanceDetail"
+      description: "The BalanceDetail resource, which enumerates the specific tokens held which compose a Balance."
+    }
+  };
+
+  // The resource name of the BalanceDetail.
+  // Format: networks/{network_id}/addresses/{address_id}/balances/{balance_id}/balanceDetails/{balance_detail_id}
+  string name = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "name"
+      description: "The resource name of the BalanceDetail.\nFormat: networks/{network_id}/addresses/{address_id}/balances/{balance_id}/balanceDetails/{balance_detail_id}",
+      example: "\"networks/ethereum-goerli/addresses/0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5/balances/e1835806-0718-418a-b185-93553c496655/balanceDetails/25b036cb-e968-5351-8b0e-3cabc6cddabc\""
+    }
+  ];
+
+  // The resource name of the Asset to which the parent Balance corresponds.
+  // Format: networks/{network}/assets/{asset}
+  string asset = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Asset"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "asset"
+      description: "The resource name of the Asset to which the parent Balance corresponds. Format: networks/{network}/assets/{asset}"
+      example: "\"networks/ethereum-goerli/assets/e1835806-0718-418a-b185-93553c496655\""
+    }
+  ];
+
+  // The amount of the BalanceDetail as a base-10 number.
+  // For a BalanceDetail for a native Balance or ERC-20 Balance, this is denominated in atomic units of the asset.
+  string amount = 3 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "amount"
+      description: "// The amount of the BalanceDetail as a base-10 number."
+      example: "\"10000000\""
+    }
+  ];
+
+  // The asset definition which can be used to identify what token the amount corresponds to.
+  //
+  // A BalanceDetail for a native Balance will only have the asset_type field set ("native").
+  // A BalanceDetail for an ERC-20 Balance will only have the asset_type ("erc20") and asset_group_id (contract address) fields set.
+  // A BalanceDetail for an ERC-721 Balance or ERC-1155 Balance will have the asset_type ("erc721" or "erc1155"),
+  // asset_group_id (contract address), and sub_group_id (token ID) fields set.
+  coinbase.cloud.blockchain.v1.Asset.Definition asset_definition = 4 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "asset_definition"
+      description: "The asset definition which can be used to identify what token the amount corresponds to.\n\n A BalanceDetail for a native Balance will only have the asset_type field set (\"native\").\n A BalanceDetail for an ERC-20 Balance will only have the asset_type (\"erc20\") and asset_group_id (contract address) fields set.\n A BalanceDetail for an ERC-721 Balance or ERC-1155 Balance will have the asset_type (\"erc721\" or \"erc1155\"),\n asset_group_id (contract address), and sub_group_id (token ID) fields set."
+    }
+  ];
+
+  // The resource name of the MPCWallet to which the parent Balance belongs.
+  // Format: pools/{pool}/mpcWallets/{mpcWallet}
+  string mpc_wallet = 5 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCWallet"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "mpcWallet"
+      description: "The resource name of the MPCWallet to which the parent Balance belongs. Format: pools/{pool}/mpcWallets/{mpcWallet}"
       example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/mpcWallets/d28197e8-372c-461c-9a00-2da3c528c2d1\""
     }
   ];
@@ -411,7 +502,7 @@ message GetAddressRequest {
   // Format: networks/{network_id}/addresses/{address_id}
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Address"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       field_configuration: {path_param_name: "networkName"}
     }
@@ -480,7 +571,7 @@ message ListBalancesRequest {
     }
   ];
 
-  // The maximum number of Balances to return. If unspecified, at most 50 Balances
+  // The maximum number of Balances to return. If unspecified, at most 25 Balances
   // will be returned.
   int32 page_size = 3 [(google.api.field_behavior) = OPTIONAL];
 
@@ -500,6 +591,46 @@ message ListBalancesResponse {
 
   // The list of Balances.
   repeated Balance balances = 1;
+
+  // A token, which can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+}
+
+// The request message for ListBalanceDetails.
+message ListBalanceDetailsRequest {
+  // The resource name of the parent Balance.
+  // Format: networks/{network_id}/addresses/{address_id}/balances/{balance_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "api.developer.coinbase.com/BalanceDetail"
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "balanceName"}
+    }
+  ];
+
+  // The maximum number of BalanceDetails to return. If unspecified, at most 25 BalanceDetails
+  // will be returned.
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+
+  // A page token, received from a previous ListBalanceDetails call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// The response message for ListBalanceDetails.
+message ListBalanceDetailsResponse{
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ListBalanceDetailsResponse"
+      description: "The response message for ListBalanceDetails."
+    }
+  };
+
+  // The list of balance details.
+  repeated BalanceDetail balance_details = 1;
 
   // A token, which can be sent as page_token to retrieve the next page.
   // If this field is omitted, there are no subsequent pages.

@@ -185,3 +185,108 @@ func (n BalanceResourceName) AddressResourceName() AddressResourceName {
 		AddressId: n.AddressId,
 	}
 }
+
+type BalanceDetailResourceName struct {
+	NetworkId       string
+	AddressId       string
+	BalanceId       string
+	BalanceDetailId string
+}
+
+func (n AddressResourceName) BalanceDetailResourceName(
+	balanceId string,
+	balanceDetailId string,
+) BalanceDetailResourceName {
+	return BalanceDetailResourceName{
+		NetworkId:       n.NetworkId,
+		AddressId:       n.AddressId,
+		BalanceId:       balanceId,
+		BalanceDetailId: balanceDetailId,
+	}
+}
+
+func (n BalanceResourceName) BalanceDetailResourceName(
+	balanceDetailId string,
+) BalanceDetailResourceName {
+	return BalanceDetailResourceName{
+		NetworkId:       n.NetworkId,
+		AddressId:       n.AddressId,
+		BalanceId:       n.BalanceId,
+		BalanceDetailId: balanceDetailId,
+	}
+}
+
+func (n BalanceDetailResourceName) Validate() error {
+	if n.NetworkId == "" {
+		return fmt.Errorf("network_id: empty")
+	}
+	if strings.IndexByte(n.NetworkId, '/') != -1 {
+		return fmt.Errorf("network_id: contains illegal character '/'")
+	}
+	if n.AddressId == "" {
+		return fmt.Errorf("address_id: empty")
+	}
+	if strings.IndexByte(n.AddressId, '/') != -1 {
+		return fmt.Errorf("address_id: contains illegal character '/'")
+	}
+	if n.BalanceId == "" {
+		return fmt.Errorf("balance_id: empty")
+	}
+	if strings.IndexByte(n.BalanceId, '/') != -1 {
+		return fmt.Errorf("balance_id: contains illegal character '/'")
+	}
+	if n.BalanceDetailId == "" {
+		return fmt.Errorf("balance_detail_id: empty")
+	}
+	if strings.IndexByte(n.BalanceDetailId, '/') != -1 {
+		return fmt.Errorf("balance_detail_id: contains illegal character '/'")
+	}
+	return nil
+}
+
+func (n BalanceDetailResourceName) ContainsWildcard() bool {
+	return false || n.NetworkId == "-" || n.AddressId == "-" || n.BalanceId == "-" || n.BalanceDetailId == "-"
+}
+
+func (n BalanceDetailResourceName) String() string {
+	return resourcename.Sprint(
+		"networks/{network_id}/addresses/{address_id}/balances/{balance_id}/balanceDetails/{balance_detail_id}",
+		n.NetworkId,
+		n.AddressId,
+		n.BalanceId,
+		n.BalanceDetailId,
+	)
+}
+
+func (n BalanceDetailResourceName) MarshalString() (string, error) {
+	if err := n.Validate(); err != nil {
+		return "", err
+	}
+	return n.String(), nil
+}
+
+func (n *BalanceDetailResourceName) UnmarshalString(name string) error {
+	return resourcename.Sscan(
+		name,
+		"networks/{network_id}/addresses/{address_id}/balances/{balance_id}/balanceDetails/{balance_detail_id}",
+		&n.NetworkId,
+		&n.AddressId,
+		&n.BalanceId,
+		&n.BalanceDetailId,
+	)
+}
+
+func (n BalanceDetailResourceName) AddressResourceName() AddressResourceName {
+	return AddressResourceName{
+		NetworkId: n.NetworkId,
+		AddressId: n.AddressId,
+	}
+}
+
+func (n BalanceDetailResourceName) BalanceResourceName() BalanceResourceName {
+	return BalanceResourceName{
+		NetworkId: n.NetworkId,
+		AddressId: n.AddressId,
+		BalanceId: n.BalanceId,
+	}
+}

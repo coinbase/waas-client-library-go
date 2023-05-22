@@ -14,7 +14,7 @@ option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
-        title: "MPC Transactions API";
+        title: "MPCTransactions API";
         version: "1.0";
     };
     host: "api.developer.coinbase.com/waas/mpc_transactions"
@@ -133,7 +133,6 @@ message MPCTransaction {
   // The resource name of the Addresses from which to send the MPCTransaction.
   // For account-based Networks, only the first address is used.
   // Format: networks/{network_id}/addresses/{address_id}.
-  // (-- api-linter: core::0140::prepositions=disabled --)
   repeated string from_addresses = 3 [
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = {type: "api.developer.coinbase.com/MPCWallet"},

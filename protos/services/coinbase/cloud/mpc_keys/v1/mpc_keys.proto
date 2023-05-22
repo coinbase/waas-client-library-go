@@ -8,6 +8,7 @@ import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
+import "google/protobuf/empty.proto";
 import "google/longrunning/operations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
@@ -156,8 +157,99 @@ service MPCKeyService {
       metadata_type: "CreateSignatureMetadata"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Create Signature"
+      summary: "CreateSignature"
       description: "Creates a Signature using an MPCKey.\n\n After calling this, use ListMPCOperations to poll for the pending CreateSignature operation, and use the WaaS SDK's computeMPCOperation to complete the operation."
+    };
+  }
+
+  // Prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
+  // that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
+  // The Device specified in the request must be a member of this DeviceGroup and must participate
+  // in the associated MPC operation for the archive to be prepared. After calling this,
+  // use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
+  // ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
+  // WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+  rpc PrepareDeviceArchive(PrepareDeviceArchiveRequest) returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1/{device_group=pools/*/deviceGroups/*}:prepareDeviceArchive"
+      body: "*"
+    };
+    option (google.api.method_signature) = "device_group,device";
+    option (google.longrunning.operation_info) = {
+      response_type: "DeviceGroup"
+      metadata_type: "PrepareDeviceArchiveMetadata"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "PrepareDeviceArchive"
+      description: "Prepares an archive in the local storage of the given Device.\n\n The archive contains cryptographic materials that can be used to export MPCKeys, which have the given DeviceGroup as their parent.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the archive to be prepared. After calling this, use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.\n\n Once the operation completes, the Device can utilize the WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup."
+    };
+  }
+
+  // Prepares a backup in the given Device. The backup contains certain cryptographic materials
+  // that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
+  // The Device specified in the request must be a member of this DeviceGroup and must participate in the associated
+  // MPC operation for the backup to be prepared.
+  // After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,
+  // and use the WaaS SDK's ComputeMPCOperation to complete the operation. Once the operation completes,
+  // the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
+  // in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
+  // MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+  rpc PrepareDeviceBackup(PrepareDeviceBackupRequest) returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1/{device_group=pools/*/deviceGroups/*}:prepareDeviceBackup"
+      body: "*"
+    };
+    option (google.api.method_signature) = "device_group,device";
+    option (google.longrunning.operation_info) = {
+      response_type: "DeviceGroup"
+      metadata_type: "PrepareDeviceBackupMetadata"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "PrepareDeviceBackup"
+      description: "Prepares a backup in the given Device.\n\n The backup contains certain cryptographic materials that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the backup to be prepared. \n\n After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation. \n\n Once the operation completes, the Device can utilize WaaS SDK to download the backup bundle. \n\n We recommend storing this backup bundle securely in a storage provider of your choice. \n\n If the user loses access to their existing Device and wants to recover MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService."
+    };
+  }
+
+  // Adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
+  // RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
+  // operation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,
+  // and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation.
+  // After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials
+  // required to process MPCOperations for this DeviceGroup.
+  // Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
+  // and all existing Devices in the DeviceGroup will stay functional.
+  // Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+  rpc AddDevice(AddDeviceRequest) returns (google.longrunning.Operation) {
+    option (google.api.http) = {
+      post: "/v1/{device_group=pools/*/deviceGroups/*}:addDevice"
+      body: "*"
+    };
+    option (google.api.method_signature) = "device_group,device";
+    option (google.longrunning.operation_info) = {
+      response_type: "DeviceGroup"
+      metadata_type: "AddDeviceMetadata"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "AddDevice"
+      description: "Adds a Device to an existing DeviceGroup. \n\nPrior to this API being called, the Device must be registered using RegisterDevice RPC. \n\n The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this operation. \n\n After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation, and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation. After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials required to process MPCOperations for this DeviceGroup.  \n\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member and all existing Devices in the DeviceGroup will stay functional.  \n\nMPCKeyService will expose RemoveDevice RPC in a future release that can remove any of the existing Devices from the DeviceGroup."
+    };
+  }
+
+  // Revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
+  // part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,
+  // and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of.
+  // Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.
+  // Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking
+  // the RevokeDevice RPC.
+  rpc RevokeDevice(RevokeDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/device:revoke"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "RevokeDevice"
+      description: "Revokes a registered Device.\n This operation removes the registered Device from all the DeviceGroups that it is a part of.\n Once the Device is revoked, cryptographic materials in your physical Device are invalidated, and the Device can no longer participate in any MPCOperations of the DeviceGroups it was a part of. Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.\n Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking the RevokeDevice RPC."
     };
   }
 };
@@ -226,6 +318,17 @@ message Seed {
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title: "hardenedChildren"
       description: "The hardened children derived from the Seed. To create an MPCKey, at least one hardened child must be derived.",
+    }
+  ];
+
+  // The metadata to be used to export MPCKeys derived from this Seed. This metadata has to be passed to the
+  // WaaS SDK's ExportPrivateKeys to export private keys corresponding to MPCKeys that are derived from this Seed's
+  // HardenedChildren.
+  bytes mpc_key_export_metadata = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "mpcKeyExportMetadata"
+      description: "The metadata to be used to export MPCKeys derived from this Seed.\n\n This metadata has to be passed to WaaS SDK's ExportPrivateKeys to export private keys corresponding to MPCKeys that are derived from this Seed's HardenedChildren."
     }
   ];
 }
@@ -332,6 +435,27 @@ message MPCOperation {
         description: "Metadata associated with the CreateSignature long-running operation."
       }
     ];
+    // Metadata associated with the PrepareDeviceArchive long-running operation.
+    PrepareDeviceArchiveMetadata prepare_device_archive_metadata = 5 [
+      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "prepareDeviceArchiveMetadata"
+        description: "Metadata associated with the PrepareDeviceArchive long-running operation."
+      }
+    ];
+    // Metadata associated with the PrepareDeviceBackup long-running operation.
+    PrepareDeviceBackupMetadata prepare_device_backup_metadata = 6 [
+      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "prepareDeviceBackupMetadata"
+        description: "Metadata associated with the PrepareDeviceBackup long-running operation."
+      }
+    ];
+    // Metadata associated with the AddDevice long-running operation.
+    AddDeviceMetadata add_device_metadata = 7 [
+      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title: "addDeviceMetadata"
+        description: "Metadata associated with the AddDevice long-running operation."
+      }
+    ];
   }
 }
 
@@ -435,7 +559,7 @@ message RegisterDeviceRequest {
   bytes registration_data = 1 [(google.api.field_behavior) = REQUIRED];
 
   // A user-provided request ID to allow for idempotency. This should be a UUID.
-  string request_id = 2 [(google.api.field_behavior) = OPTIONAL];  
+  string request_id = 2 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // The request message for GetDevice.
@@ -505,8 +629,6 @@ message GetDeviceGroupRequest {
 }
 
 // The request message for ListMPCOperations.
-// (-- api-linter: core::0158::request-page-size-field=disabled --)
-// (-- api-linter: core::0158::request-page-token-field=disabled --)
 message ListMPCOperationsRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -526,7 +648,6 @@ message ListMPCOperationsRequest {
 }
 
 // The response message for ListMPCOperations.
-// (-- api-linter: core::0158::response-next-page-token-field=disabled --)
 message ListMPCOperationsResponse {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -607,4 +728,155 @@ message CreateSignatureMetadata {
   // The payload that is about to be signed. Check this value to ensure that the
   // correct payload is being signed.
   bytes payload = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+
+// The request message for PrepareDeviceArchive.
+message PrepareDeviceArchiveRequest {
+  // The resource name of the DeviceGroup. The prepared archive will include cryptographic materials to export the
+  // private keys corresponding to each of the MPCKey under this DeviceGroup.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceGroupName"}
+    }
+  ];
+
+  // The resource name of the Device that prepares the archive in its local storage.
+  // The Device must be part of the DeviceGroup specified above.
+  // Format: devices/{device_id}
+  string device = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Device"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceName"}
+    }  ];
+
+  // A user-provided request ID to allow for idempotency. This should be a UUID.
+  string request_id = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Metadata associated with the PrepareDeviceArchive long-running operation.
+message PrepareDeviceArchiveMetadata {
+  // The resource name of the DeviceGroup to poll using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "device_group"
+      description: "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777\""
+    }
+  ];
+}
+
+// The request message for PrepareDeviceBackup.
+message PrepareDeviceBackupRequest {
+  // The resource name of the DeviceGroup. The prepared backup will include cryptographic materials to recover the
+  // MPCKeys under this DeviceGroup on a new Device.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceGroupName"}
+    }
+  ];
+
+  // The resource name of the Device that prepares the backup.
+  // The Device must be part of the DeviceGroup specified above.
+  // Format: devices/{device_id}
+  string device = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Device"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceName"}
+    }  ];
+
+  // A user-provided request ID to allow for idempotency. This should be a UUID.
+  string request_id = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Metadata associated with the PrepareDeviceBackup long-running operation.
+message PrepareDeviceBackupMetadata {
+  // The resource name of the DeviceGroup to poll using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "device_group"
+      description: "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777\""
+    }
+  ];
+}
+
+// The request message for AddDevice.
+message AddDeviceRequest {
+  // The resource name of the DeviceGroup to which the Device is being added.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceGroupName"}
+    }
+  ];
+
+  // The resource name of the Device that is being added to the DeviceGroup.
+  // The Device must not be part of the DeviceGroup specified above.
+  // Format: devices/{device_id}
+  string device = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Device"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceName"}
+    }  ];
+
+  // A user-provided request ID to allow for idempotency. This should be a UUID.
+  string request_id = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Metadata associated with the AddDevice long-running operation.
+message AddDeviceMetadata {
+  // The resource name of the DeviceGroup to poll using ListMPCOperations.
+  // Format: pools/{pool_id}/deviceGroups/{device_group_id}
+  string device_group = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/DeviceGroup"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "device_group"
+      description: "The resource name of the DeviceGroup to poll using ListMPCOperations.\n Format: pools/{pool_id}/deviceGroups/{device_group_id}"
+      example: "\"pools/95257c5a-522f-4241-bf97-2656a8e9cc91/deviceGroups/3a168a54-6661-4e5a-8bc5-9759671aa777\""
+    }
+  ];
+
+  // The list of Device resource names that can compute the MPCOperation by invoking ComputeAddDeviceMPCOperation on the
+  // WaaS SDK.
+  // Format: devices/{device_id}
+  repeated string participating_devices = 2[
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "devices"
+      description: "The list of Device resource names that can compute the MPCOperation by invoking ComputeAddDeviceMPCOperation on the WaaS SDK.\nFormat: devices/{device}",
+      example: "[\"devices/1591089c-229d-4578-ab94-a3fa3442d77b\"]"
+    }
+  ];
+}
+
+// The request message for RevokeDevice.
+message RevokeDeviceRequest {
+  // The resource name of the Device that is being revoked.
+  // Format: devices/{device_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Device"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "deviceName"}
+    }
+  ];
 }

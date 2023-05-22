@@ -256,3 +256,34 @@ func ExampleMPCWalletClient_ListBalances() {
 		_ = resp
 	}
 }
+
+func ExampleMPCWalletClient_ListBalanceDetails() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1.NewMPCWalletClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	req := &mpc_walletspb.ListBalanceDetailsRequest{
+		// TODO: Fill request struct fields.
+		// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1#ListBalanceDetailsRequest.
+	}
+	it := c.ListBalanceDetails(ctx, req)
+	for {
+		resp, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			// TODO: Handle error.
+		}
+		// TODO: Use resp.
+		_ = resp
+	}
+}

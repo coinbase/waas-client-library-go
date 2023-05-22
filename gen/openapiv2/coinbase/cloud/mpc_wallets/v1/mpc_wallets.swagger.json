@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "MPC Wallets API",
+    "title": "MPCWallets API",
     "version": "1.0"
   },
   "tags": [
@@ -51,7 +51,7 @@
           },
           {
             "name": "pageSize",
-            "description": "The maximum number of Balances to return. If unspecified, at most 50 Balances\nwill be returned.",
+            "description": "The maximum number of Balances to return. If unspecified, at most 25 Balances\nwill be returned.",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -60,6 +60,55 @@
           {
             "name": "pageToken",
             "description": "A page token, received from a previous ListBalances call.\nProvide this to retrieve the subsequent page.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MPCWalletService"
+        ]
+      }
+    },
+    "/v1/{balanceName}/balanceDetails": {
+      "get": {
+        "summary": "ListBalanceDetails",
+        "description": "Returns a list of BalanceDetails.",
+        "operationId": "MPCWalletService_ListBalanceDetails",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListBalanceDetailsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "balanceName",
+            "description": "The resource name of the parent Balance.\nFormat: networks/{network_id}/addresses/{address_id}/balances/{balance_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "networks/[^/]+/addresses/[^/]+/balances/[^/]+"
+          },
+          {
+            "name": "pageSize",
+            "description": "The maximum number of BalanceDetails to return. If unspecified, at most 25 BalanceDetails\nwill be returned.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token, received from a previous ListBalanceDetails call.\nProvide this to retrieve the subsequent page.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -107,7 +156,7 @@
     "/v1/{mpcWalletName}:generateAddress": {
       "post": {
         "summary": "GenerateAddress",
-        "description": "Generates an Address within an MPCWallet.",
+        "description": "Generates an Address within an MPCWallet. The Address values generated are identical across Networks of the same protocol family (e.g. EVM). So, for example, calling GenerateAddress twice for networks/ethereum-mainnet, and then calling it twice more for networks/ethereum-goerli, will result in two pairs of identical addresses on Ethereum Mainnet and Goerli.",
         "operationId": "MPCWalletService_GenerateAddress",
         "responses": {
           "200": {
@@ -359,6 +408,30 @@
     }
   },
   "definitions": {
+    "AssetDefinition": {
+      "type": "object",
+      "properties": {
+        "assetType": {
+          "type": "string",
+          "example": "native",
+          "description": "The type of Asset the definition describes.\nPossible values: 'native', 'erc20', 'erc721', 'erc1155'",
+          "title": "assetType"
+        },
+        "assetGroupId": {
+          "type": "string",
+          "example": "0x887CFe31C888EE0780795b7feFF46CE7f9AB556C",
+          "description": "The identifier that distinguishes this Asset group.\nGenerally a 0x-prefixed contract address for the Asset. For a native Asset this is not set.",
+          "title": "assetGroupId"
+        },
+        "subGroupId": {
+          "type": "string",
+          "description": "The identifier that distinguishes the specific Asset within the asset group.\nGenerally a token ID. For a native Asset or ERC-20 this is not set.",
+          "title": "subGroupId"
+        }
+      },
+      "description": "The defining characteristics that combine to uniquely identify an Asset on-chain.\nFungible tokens, such as ERC-20s, require an asset_group_id (the contract address).\nNon-fungible tokens and multi-token assets such as ERC-721s and ERC-1155s require a both an asset_group_id and a sub_group_id (the token ID).",
+      "title": "Asset.Definition"
+    },
     "googlelongrunningOperation": {
       "type": "object",
       "properties": {
@@ -470,7 +543,7 @@
         },
         "asset": {
           "type": "string",
-          "example": "networks/ethereum-goerli/assets/0c3569d3-b253-5128-a229-543e1e819430",
+          "example": "networks/ethereum-goerli/assets/e1835806-0718-418a-b185-93553c496655",
           "description": "The resource name of the Asset to which this Balance corresponds. Format: networks/{network}/assets/{asset}",
           "title": "asset",
           "readOnly": true
@@ -478,7 +551,7 @@
         "amount": {
           "type": "string",
           "example": "10000000",
-          "description": "The amount of the Asset, denominated in atomic units of the asset (e.g., Wei for Ether), as a base-10 number.",
+          "description": "The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of atomic units (e.g., Wei for Ether) as a base-10 number. For ERC-721 and ERC-1155 contracts, it is the count of distinct token IDs held by address.",
           "title": "amount",
           "readOnly": true
         },
@@ -492,6 +565,47 @@
       },
       "description": "The Balance resource, which represents an amount of an Asset held on-chain by an Address.",
       "title": "Balance"
+    },
+    "v1BalanceDetail": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "networks/ethereum-goerli/addresses/0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5/balances/e1835806-0718-418a-b185-93553c496655/balanceDetails/25b036cb-e968-5351-8b0e-3cabc6cddabc",
+          "description": "The resource name of the BalanceDetail.\nFormat: networks/{network_id}/addresses/{address_id}/balances/{balance_id}/balanceDetails/{balance_detail_id}",
+          "title": "name",
+          "readOnly": true
+        },
+        "asset": {
+          "type": "string",
+          "example": "networks/ethereum-goerli/assets/e1835806-0718-418a-b185-93553c496655",
+          "description": "The resource name of the Asset to which the parent Balance corresponds. Format: networks/{network}/assets/{asset}",
+          "title": "asset",
+          "readOnly": true
+        },
+        "amount": {
+          "type": "string",
+          "example": "10000000",
+          "description": "// The amount of the BalanceDetail as a base-10 number.",
+          "title": "amount",
+          "readOnly": true
+        },
+        "assetDefinition": {
+          "$ref": "#/definitions/AssetDefinition",
+          "description": "The asset definition which can be used to identify what token the amount corresponds to.\n\n A BalanceDetail for a native Balance will only have the asset_type field set (\"native\").\n A BalanceDetail for an ERC-20 Balance will only have the asset_type (\"erc20\") and asset_group_id (contract address) fields set.\n A BalanceDetail for an ERC-721 Balance or ERC-1155 Balance will have the asset_type (\"erc721\" or \"erc1155\"),\n asset_group_id (contract address), and sub_group_id (token ID) fields set.",
+          "title": "asset_definition",
+          "readOnly": true
+        },
+        "mpcWallet": {
+          "type": "string",
+          "example": "pools/95257c5a-522f-4241-bf97-2656a8e9cc91/mpcWallets/d28197e8-372c-461c-9a00-2da3c528c2d1",
+          "description": "The resource name of the MPCWallet to which the parent Balance belongs. Format: pools/{pool}/mpcWallets/{mpcWallet}",
+          "title": "mpcWallet",
+          "readOnly": true
+        }
+      },
+      "description": "The BalanceDetail resource, which enumerates the specific tokens held which compose a Balance.",
+      "title": "BalanceDetail"
     },
     "v1ListAddressesResponse": {
       "type": "object",
@@ -510,6 +624,24 @@
       },
       "description": "The response message for ListAddresses.",
       "title": "ListAddressesResponse"
+    },
+    "v1ListBalanceDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "balanceDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1BalanceDetail"
+          },
+          "description": "The list of balance details."
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token, which can be sent as page_token to retrieve the next page.\nIf this field is omitted, there are no subsequent pages."
+        }
+      },
+      "description": "The response message for ListBalanceDetails.",
+      "title": "ListBalanceDetailsResponse"
     },
     "v1ListBalancesResponse": {
       "type": "object",

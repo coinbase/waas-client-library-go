@@ -26,6 +26,8 @@ type BlockchainServiceClient interface {
 	GetAsset(ctx context.Context, in *GetAssetRequest, opts ...grpc.CallOption) (*Asset, error)
 	// Returns a list of Assets available on a given Network.
 	ListAssets(ctx context.Context, in *ListAssetsRequest, opts ...grpc.CallOption) (*ListAssetsResponse, error)
+	// Returns the list of Assets indicated by the given request.
+	BatchGetAssets(ctx context.Context, in *BatchGetAssetsRequest, opts ...grpc.CallOption) (*BatchGetAssetsResponse, error)
 }
 
 type blockchainServiceClient struct {
@@ -72,6 +74,15 @@ func (c *blockchainServiceClient) ListAssets(ctx context.Context, in *ListAssets
 	return out, nil
 }
 
+func (c *blockchainServiceClient) BatchGetAssets(ctx context.Context, in *BatchGetAssetsRequest, opts ...grpc.CallOption) (*BatchGetAssetsResponse, error) {
+	out := new(BatchGetAssetsResponse)
+	err := c.cc.Invoke(ctx, "/coinbase.cloud.blockchain.v1.BlockchainService/BatchGetAssets", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockchainServiceServer is the server API for BlockchainService service.
 // All implementations must embed UnimplementedBlockchainServiceServer
 // for forward compatibility
@@ -84,6 +95,8 @@ type BlockchainServiceServer interface {
 	GetAsset(context.Context, *GetAssetRequest) (*Asset, error)
 	// Returns a list of Assets available on a given Network.
 	ListAssets(context.Context, *ListAssetsRequest) (*ListAssetsResponse, error)
+	// Returns the list of Assets indicated by the given request.
+	BatchGetAssets(context.Context, *BatchGetAssetsRequest) (*BatchGetAssetsResponse, error)
 	mustEmbedUnimplementedBlockchainServiceServer()
 }
 
@@ -102,6 +115,9 @@ func (UnimplementedBlockchainServiceServer) GetAsset(context.Context, *GetAssetR
 }
 func (UnimplementedBlockchainServiceServer) ListAssets(context.Context, *ListAssetsRequest) (*ListAssetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAssets not implemented")
+}
+func (UnimplementedBlockchainServiceServer) BatchGetAssets(context.Context, *BatchGetAssetsRequest) (*BatchGetAssetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchGetAssets not implemented")
 }
 func (UnimplementedBlockchainServiceServer) mustEmbedUnimplementedBlockchainServiceServer() {}
 
@@ -188,6 +204,24 @@ func _BlockchainService_ListAssets_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BlockchainService_BatchGetAssets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetAssetsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).BatchGetAssets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/coinbase.cloud.blockchain.v1.BlockchainService/BatchGetAssets",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).BatchGetAssets(ctx, req.(*BatchGetAssetsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BlockchainService_ServiceDesc is the grpc.ServiceDesc for BlockchainService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,6 +244,10 @@ var BlockchainService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAssets",
 			Handler:    _BlockchainService_ListAssets_Handler,
+		},
+		{
+			MethodName: "BatchGetAssets",
+			Handler:    _BlockchainService_BatchGetAssets_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

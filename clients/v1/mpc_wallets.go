@@ -92,9 +92,9 @@ func (w *WrappedCreateMPCWalletOperation) Wait(
 	ctx context.Context,
 	opts ...gax.CallOption,
 ) (*mpc_walletspb.MPCWallet, error) {
-	deviceGroup, err := w.CreateMPCWalletOperation.Wait(ctx, clients.LROOptions(w, version, opts)...)
+	mpcWallet, err := w.CreateMPCWalletOperation.Wait(ctx, clients.LROOptions(w, version, opts)...)
 
-	return deviceGroup, clients.UnwrapError(err)
+	return mpcWallet, clients.UnwrapError(err)
 }
 
 // Poll delegates to the wrapped longrunning CreateMPCWalletOperation with the
@@ -103,9 +103,9 @@ func (w *WrappedCreateMPCWalletOperation) Poll(
 	ctx context.Context,
 	opts ...gax.CallOption,
 ) (*mpc_walletspb.MPCWallet, error) {
-	deviceGroup, err := w.CreateMPCWalletOperation.Poll(ctx, clients.LROOptions(w, version, opts)...)
+	mpcWallet, err := w.CreateMPCWalletOperation.Poll(ctx, clients.LROOptions(w, version, opts)...)
 
-	return deviceGroup, clients.UnwrapError(err)
+	return mpcWallet, clients.UnwrapError(err)
 }
 
 // CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered
@@ -321,4 +321,56 @@ func (m *MPCWalletServiceClient) ListBalances(
 	req *mpc_walletspb.ListBalancesRequest,
 	opts ...gax.CallOption) BalanceIterator {
 	return &balanceIteratorImpl{iter: m.client.ListBalances(ctx, req, opts...)}
+}
+
+// BalanceDetailIterator is an interface for iterating through the response to ListBalanceDetails.
+type BalanceDetailIterator interface {
+	// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
+	PageInfo() *iterator.PageInfo
+
+	// Next returns the next result. Its second return value is iterator.Done if there are no more
+	// results. Once Next returns Done, all subsequent calls will return Done.
+	Next() (*mpc_walletspb.BalanceDetail, error)
+
+	// Response is the raw response for the current page.
+	// Calling Next() or InternalFetch() updates this value.
+	Response() *mpc_walletspb.ListBalanceDetailsResponse
+}
+
+// balanceDetailIteratorImpl is an implementation of BalanceDetailIterator that unwraps correctly.
+type balanceDetailIteratorImpl struct {
+	iter *innerClient.BalanceDetailIterator
+}
+
+// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
+func (n *balanceDetailIteratorImpl) PageInfo() *iterator.PageInfo {
+	return n.iter.PageInfo()
+}
+
+// Next returns the next result. Its second return value is iterator.Done if there are no more
+// results. Once Next returns Done, all subsequent calls will return Done.
+func (n *balanceDetailIteratorImpl) Next() (*mpc_walletspb.BalanceDetail, error) {
+	balanceDetail, err := n.iter.Next()
+
+	return balanceDetail, clients.UnwrapError(err)
+}
+
+// Response is the raw response for the current page.
+// Calling Next() or InternalFetch() updates this value.
+func (n *balanceDetailIteratorImpl) Response() *mpc_walletspb.ListBalanceDetailsResponse {
+	if n.iter.Response == nil {
+		return nil
+	}
+
+	response := n.iter.Response.(*mpc_walletspb.ListBalanceDetailsResponse)
+
+	return response
+}
+
+// ListBalanceDetails lists BalanceDetails.
+func (m *MPCWalletServiceClient) ListBalanceDetails(
+	ctx context.Context,
+	req *mpc_walletspb.ListBalanceDetailsRequest,
+	opts ...gax.CallOption) BalanceDetailIterator {
+	return &balanceDetailIteratorImpl{iter: m.client.ListBalanceDetails(ctx, req, opts...)}
 }

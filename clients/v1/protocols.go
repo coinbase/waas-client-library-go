@@ -97,3 +97,14 @@ func (b *ProtocolServiceClient) BroadcastTransaction(
 
 	return transaction, clients.UnwrapError(err)
 }
+
+// EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this
+// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+func (b *ProtocolServiceClient) EstimateFee(
+	ctx context.Context,
+	req *protocolspb.EstimateFeeRequest,
+	opts ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error) {
+	response, err := b.client.EstimateFee(ctx, req, opts...)
+
+	return response, clients.UnwrapError(err)
+}
