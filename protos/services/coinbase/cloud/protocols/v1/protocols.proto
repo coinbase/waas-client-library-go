@@ -1,0 +1,199 @@
+syntax = "proto3";
+
+package coinbase.cloud.protocols.v1;
+
+import "coinbase/cloud/blockchain/v1/blockchain.proto";
+import "coinbase/cloud/protocols/ethereum/v1/outputs.proto";
+import "coinbase/cloud/types/v1/transaction.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/v1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Protocols API";
+        version: "1.0";
+    };
+    host: "api.developer.coinbase.com/waas/protocols"
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+// A service providing a set of stateless APIs for constructing and broadcasting 
+// Network-specific transactions.
+service ProtocolService {
+  option (google.api.default_host) = "api.developer.coinbase.com/waas/protocols";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "A service providing a set of stateless APIs for constructing and broadcasting Network-specific transactions."  };
+
+  // Constructs an unsigned transaction. The payloads in the required_signatures of the
+  // returned Transaction must be signed before the Transaction is broadcast.
+  rpc ConstructTransaction(ConstructTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
+    option (google.api.http) = {
+      post: "/v1/{network=networks/*}:constructTransaction"
+      body: "*"
+    };
+    option (google.api.method_signature) = "network,input";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ConstructTransaction"
+      description: "Constructs an unsigned transaction. The payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast."
+    };
+  }
+
+  // Constructs an unsigned transfer transaction. A transfer transaction is a transaction that
+  // moves an Asset from one Address to another. The payloads in the required_signatures of the
+  // returned Transaction must be signed before the Transaction is broadcast.
+  rpc ConstructTransferTransaction(ConstructTransferTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
+    option (google.api.http) = {
+      post: "/v1/{network=networks/*}:constructTransferTransaction"
+      body: "*"
+    };
+    option (google.api.method_signature) = "network,asset,sender,recipient,amount";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "ConstructTransferTransaction"
+      description: "Constructs an unsigned transfer transaction. A transfer transaction is a transaction that moves an Asset from one Address to another.\n\nThe payloads in the required_signatures of the returned Transaction must be signed before the Transaction is broadcast."
+    };
+  }
+
+  // Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
+  // 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
+  // via block explorers such as Etherscan.
+  // 2. Set the signature(s) in the required_signatures of the Transaction.
+  // The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
+  rpc BroadcastTransaction(BroadcastTransactionRequest) returns (coinbase.cloud.types.v1.Transaction) {
+    option (google.api.http) = {
+      post: "/v1/{network=networks/*}:broadcastTransaction"
+      body: "*"
+    };
+    option (google.api.method_signature) = "network,transaction";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "BroadcastTransaction"
+      description: "Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:\n 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions via block explorers such as Etherscan.\n 2. Set the signature(s) in the required_signatures of the Transaction.\n // The TransactionInput itself is not required. The Transaction returned will have the hash set on it."
+    };
+  }
+
+  // Estimates the current network fee for the specified Network. For EVM Networks, this
+  // corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
+  rpc EstimateFee(EstimateFeeRequest) returns (EstimateFeeResponse) {
+    option (google.api.http) = {
+      post: "/v1/{network=networks/*}:estimateFee"
+      body: "*"
+    };
+    option (google.api.method_signature) = "network";
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "EstimateFee"
+      description: "Estimates the current network fee for the specified Network. For EVM Networks, this corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas."
+    };
+  }
+}
+
+// The request message for ConstructTransaction.
+message ConstructTransactionRequest {
+  // The resource name of the Network.
+  // Format: networks/{network_id}
+  string network = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+  
+  // The input indicating the unsigned transaction to construct.
+  coinbase.cloud.types.v1.TransactionInput input = 2;
+}
+
+// The request message for ConstructTransferTransaction.
+message ConstructTransferTransactionRequest {
+  // The resource name of the Network on which the transfer is happening.
+  // Format: networks/{network_id}
+  string network = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+
+  // The resource name of the Asset being transferred.
+  // Format: networks/{network_id}/assets/{asset_id}.
+  string asset = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Asset"}
+  ];
+
+  // The address of the sender, e.g. as a 0x-prefixed hex string.
+  string sender = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // The address of the recipient, e.g. as a 0x-prefixed hex string.
+  string recipient = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // The amount of the asset to transfer, denominated in atomic units of the asset (e.g. Wei),
+  // either as a "0x"-prefixed hex string or a base-10 number.
+  string amount = 5 [(google.api.field_behavior) = REQUIRED];
+
+  // The nonce of the from address to be used in transaction construction.
+  // This is required only for Account-based networks (e.g. EVM).
+  int64 nonce = 6 [(google.api.field_behavior) = OPTIONAL];
+
+  // The fee to be paid for the transfer. If not provided, the API will default to a network-based fee estimate.
+  coinbase.cloud.types.v1.TransactionFee fee = 7 [(google.api.field_behavior) = OPTIONAL];
+
+  // The Definition of the BlockchainService Asset for which the transfer transaction is being constructed.
+  // Supplying an Asset Definition is not strictly necessary for constructing transfer transactions for a native Asset
+  // or an ERC-20.
+  // For an ERC-721, an Asset Definition with a sub_group_id must be provided to specify the token being transferred.
+  // For an ERC-1155, an Asset Definition with a sub_group_id must be provided to specify the token being transferred.
+  coinbase.cloud.blockchain.v1.Asset.Definition asset_definition = 8 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// The request message for BroadcastTransaction. For the broadcast to complete successfully,
+// one of the following must be true:
+// 1. The raw_signed_transaction on the Transaction is populated. This is equivalent to the payload
+// used to broadcast transactions via block explorers such as Etherscan.
+// 2. The signature(s) in the required_signatures of the Transaction is populated.
+// The TransactionInput itself is not required.
+message BroadcastTransactionRequest {
+  // The resource name of the Network.
+  // Format: networks/{network_id}
+  string network = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+
+  // The transaction to broadcast. For the broadcast to complete successfully, one of the following must be true:
+  // 1. The raw_signed_transaction on the Transaction is populated. This is equivalent to the payload
+  // used to broadcast transactions via block explorers such as Etherscan.
+  // 2. The signature(s) in the required_signatures of the Transaction is populated.
+  coinbase.cloud.types.v1.Transaction transaction = 2;
+}
+
+// The request message for EstimateFee.
+message EstimateFeeRequest {
+  // The resource name of the Network.
+  // Format: networks/{network_id}
+  string network = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "api.developer.coinbase.com/Network"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      field_configuration: {path_param_name: "networkName"}
+    }
+  ];
+}
+
+// The response message for EstimateFee.
+message EstimateFeeResponse {
+  // The estimated fee for the given Network.
+  oneof network_fee_estimate {
+    // The estimated network fee for the given EVM Network.
+    coinbase.cloud.protocols.ethereum.v1.FeeEstimate ethereum_fee_estimate = 1;
+  }
+}
