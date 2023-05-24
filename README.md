@@ -34,7 +34,7 @@ go get github.com/coinbase/waas-client-library-go
 ## Get Started
 To test that your API Key gives you access as expected to the WaaS APIs:
 
-1. Replace `apiKeyName` and `apiKeyPrivateKey` in [`example.go`](./example.go) with your API Key information.
+1. Replace `apiKeyName` and `privKeyTemplate` in [`example.go`](./example.go) with your API Key information.
 2. Run `go build`.
 3. Run `./waas-client-library-go`.
 4. You should see output like the following:
