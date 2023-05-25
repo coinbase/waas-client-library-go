@@ -200,7 +200,7 @@
       }
     },
     "/v1/{networkName}:estimateFee": {
-      "post": {
+      "get": {
         "summary": "EstimateFee",
         "description": "Estimates the current network fee for the specified Network. For EVM Networks, this corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.",
         "operationId": "ProtocolService_EstimateFee",
@@ -226,15 +226,6 @@
             "required": true,
             "type": "string",
             "pattern": "networks/[^/]+"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "description": "The request message for EstimateFee."
-            }
           }
         ],
         "tags": [

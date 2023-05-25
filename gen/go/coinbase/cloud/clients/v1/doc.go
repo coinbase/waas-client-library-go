@@ -29,7 +29,7 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewMPCKeyClient(ctx)
+//  c, err := v1.NewMPCTransactionClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -49,17 +49,22 @@
 //  // - It may require correct/in-range values for request initialization.
 //  // - It may require specifying regional endpoints when creating the service client as shown in:
 //  //   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
-//  c, err := v1.NewMPCKeyClient(ctx)
+//  c, err := v1.NewMPCTransactionClient(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
 //  defer c.Close()
 //
-//  req := &mpc_keyspb.RegisterDeviceRequest{
+//  req := &mpc_transactionspb.CreateMPCTransactionRequest{
 //  	// TODO: Fill request struct fields.
-//  	// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_keys/v1#RegisterDeviceRequest.
+//  	// See https://pkg.go.dev/github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1#CreateMPCTransactionRequest.
 //  }
-//  resp, err := c.RegisterDevice(ctx, req)
+//  op, err := c.CreateMPCTransaction(ctx, req)
+//  if err != nil {
+//  	// TODO: Handle error.
+//  }
+//
+//  resp, err := op.Wait(ctx)
 //  if err != nil {
 //  	// TODO: Handle error.
 //  }
@@ -68,7 +73,7 @@
 //
 // Use of Context
 //
-// The ctx passed to NewMPCKeyClient is used for authentication requests and
+// The ctx passed to NewMPCTransactionClient is used for authentication requests and
 // for creating the underlying connection, but is not used for subsequent calls.
 // Individual methods on the client use the ctx given to them.
 //

@@ -570,12 +570,6 @@ func (c *protocolRESTClient) BroadcastTransaction(ctx context.Context, req *prot
 // EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this
 // corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
 func (c *protocolRESTClient) EstimateFee(ctx context.Context, req *protocolspb.EstimateFeeRequest, opts ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error) {
-	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
-	jsonReq, err := m.Marshal(req)
-	if err != nil {
-		return nil, err
-	}
-
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
 		return nil, err
@@ -593,7 +587,7 @@ func (c *protocolRESTClient) EstimateFee(ctx context.Context, req *protocolspb.E
 		if settings.Path != "" {
 			baseUrl.Path = settings.Path
 		}
-		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
 		if err != nil {
 			return err
 		}

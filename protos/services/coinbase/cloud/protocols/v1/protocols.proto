@@ -81,8 +81,7 @@ service ProtocolService {
   // corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
   rpc EstimateFee(EstimateFeeRequest) returns (EstimateFeeResponse) {
     option (google.api.http) = {
-      post: "/v1/{network=networks/*}:estimateFee"
-      body: "*"
+      get: "/v1/{network=networks/*}:estimateFee"
     };
     option (google.api.method_signature) = "network";
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
