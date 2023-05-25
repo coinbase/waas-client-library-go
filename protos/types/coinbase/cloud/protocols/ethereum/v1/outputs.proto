@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package coinbase.cloud.protocols.ethereum.v1;
+
+option go_package = "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/protocols/ethereum/v1";
+
+// A message representing a fee estimate on an Ethereum-like network.
+message FeeEstimate {
+  // The estimated legacy gas price denominated in atomic units of the native asset
+  // as a "0x"-prefixed hex string.
+  string gas_price = 1;
+
+  // The estimated max fee per gas (EIP-1559) denominated in atomic units of the asset
+  // as a "0x"-prefixed hex string.
+  string max_fee_per_gas = 2;
+
+  // The estimated max priority fee per gas (EIP-1559) denominated in atomic units of
+  // the native asset as a "0x"-prefixed hex string.
+  string max_priority_fee_per_gas = 3;  
+}

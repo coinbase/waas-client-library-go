@@ -1,0 +1,199 @@
+{
+  "clientLibrary": {
+    "name": "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1",
+    "version": "$VERSION",
+    "language": "GO",
+    "apis": [
+      {
+        "id": "coinbase.cloud.protocols.v1",
+        "version": "v1"
+      }
+    ]
+  },
+  "snippets": [
+    {
+      "regionTag": "api_v1_generated_ProtocolService_BroadcastTransaction_sync",
+      "title": "api BroadcastTransaction Sample",
+      "description": "BroadcastTransaction broadcasts a transaction to a node in the Network. There are two ways of invoking this API: \n1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions\nvia block explorers such as Etherscan.\n2. Set the signature(s) in the required_signatures of the Transaction.\nThe TransactionInput itself is not required. The Transaction returned will have the hash set on it.",
+      "file": "ProtocolClient/BroadcastTransaction/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "BroadcastTransaction",
+        "fullName": "coinbase.cloud.protocols.v1.ProtocolClient.BroadcastTransaction",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "protocolspb.BroadcastTransactionRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*typespb.Transaction",
+        "client": {
+          "shortName": "ProtocolClient",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolClient"
+        },
+        "method": {
+          "shortName": "BroadcastTransaction",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolService.BroadcastTransaction",
+          "service": {
+            "shortName": "ProtocolService",
+            "fullName": "coinbase.cloud.protocols.v1.ProtocolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_ProtocolService_ConstructTransaction_sync",
+      "title": "api ConstructTransaction Sample",
+      "description": "ConstructTransaction constructs an unsigned transaction. The payloads in the required_signatures of the\nreturned Transaction must be signed before the Transaction is broadcast.",
+      "file": "ProtocolClient/ConstructTransaction/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ConstructTransaction",
+        "fullName": "coinbase.cloud.protocols.v1.ProtocolClient.ConstructTransaction",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "protocolspb.ConstructTransactionRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*typespb.Transaction",
+        "client": {
+          "shortName": "ProtocolClient",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolClient"
+        },
+        "method": {
+          "shortName": "ConstructTransaction",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolService.ConstructTransaction",
+          "service": {
+            "shortName": "ProtocolService",
+            "fullName": "coinbase.cloud.protocols.v1.ProtocolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_ProtocolService_ConstructTransferTransaction_sync",
+      "title": "api ConstructTransferTransaction Sample",
+      "description": "ConstructTransferTransaction constructs an unsigned transfer transaction. A transfer transaction is a transaction that\nmoves an Asset from one Address to another. The payloads in the required_signatures of the\nreturned Transaction must be signed before the Transaction is broadcast.",
+      "file": "ProtocolClient/ConstructTransferTransaction/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ConstructTransferTransaction",
+        "fullName": "coinbase.cloud.protocols.v1.ProtocolClient.ConstructTransferTransaction",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "protocolspb.ConstructTransferTransactionRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*typespb.Transaction",
+        "client": {
+          "shortName": "ProtocolClient",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolClient"
+        },
+        "method": {
+          "shortName": "ConstructTransferTransaction",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolService.ConstructTransferTransaction",
+          "service": {
+            "shortName": "ProtocolService",
+            "fullName": "coinbase.cloud.protocols.v1.ProtocolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_ProtocolService_EstimateFee_sync",
+      "title": "api EstimateFee Sample",
+      "description": "EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this\ncorresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.",
+      "file": "ProtocolClient/EstimateFee/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "EstimateFee",
+        "fullName": "coinbase.cloud.protocols.v1.ProtocolClient.EstimateFee",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "protocolspb.EstimateFeeRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*protocolspb.EstimateFeeResponse",
+        "client": {
+          "shortName": "ProtocolClient",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolClient"
+        },
+        "method": {
+          "shortName": "EstimateFee",
+          "fullName": "coinbase.cloud.protocols.v1.ProtocolService.EstimateFee",
+          "service": {
+            "shortName": "ProtocolService",
+            "fullName": "coinbase.cloud.protocols.v1.ProtocolService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    }
+  ]
+}
