@@ -14,7 +14,7 @@
     {
       "regionTag": "api_v1_generated_MPCWalletService_CreateMPCWallet_sync",
       "title": "api CreateMPCWallet Sample",
-      "description": "CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's\nRegisterDevice before this method is called. Under the hood, this calls MPCKeyService's\nCreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's\nListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's\ncomputeMPCOperation to complete the operation.",
+      "description": "CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's\nRegisterDevice before this method is called. Under the hood, this calls MPCKeyService's\nCreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's\nListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's\ncomputeMPCOperation to complete the operation.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCWalletClient/CreateMPCWallet/main.go",
       "language": "GO",
       "clientMethod": {

@@ -24,6 +24,9 @@ type MPCWalletServiceClient interface {
 	// CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's
 	// ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's
 	// computeMPCOperation to complete the operation.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateMPCWallet(ctx context.Context, in *CreateMPCWalletRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Retrieves an MPCWallet by resource name.
 	GetMPCWallet(ctx context.Context, in *GetMPCWalletRequest, opts ...grpc.CallOption) (*MPCWallet, error)
@@ -133,6 +136,9 @@ type MPCWalletServiceServer interface {
 	// CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's
 	// ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's
 	// computeMPCOperation to complete the operation.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateMPCWallet(context.Context, *CreateMPCWalletRequest) (*longrunning.Operation, error)
 	// Retrieves an MPCWallet by resource name.
 	GetMPCWallet(context.Context, *GetMPCWalletRequest) (*MPCWallet, error)

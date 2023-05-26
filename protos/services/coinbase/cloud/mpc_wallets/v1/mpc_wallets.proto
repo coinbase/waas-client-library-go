@@ -38,6 +38,9 @@ service MPCWalletService {
   // CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's
   // ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's 
   // computeMPCOperation to complete the operation.
+  // Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+  // NOT_FOUND error immediately after calling this. To complete the operation, continue polling 
+  // ListMPCOperations even after it returns a NOT_FOUND error. 
   rpc CreateMPCWallet(CreateMPCWalletRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{parent=pools/*}/mpcWallets"
@@ -50,7 +53,7 @@ service MPCWalletService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "CreateMPCWallet"
-      description: "Creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's RegisterDevice before this method is called.\n\n Under the hood, this calls MPCKeyService's CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's computeMPCOperation to complete the operation."
+      description: "Creates an MPCWallet. The Device in the request must have been registered using MPCKeyService's RegisterDevice before this method is called.\n\n Under the hood, this calls MPCKeyService's CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService's ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's computeMPCOperation to complete the operation.\n\n Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a NOT_FOUND error immediately after calling this. To complete the operation, continue polling ListMPCOperations even if it returns a NOT_FOUND error."
     };
   }
 

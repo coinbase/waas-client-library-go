@@ -28,6 +28,9 @@ type MPCKeyServiceClient interface {
 	// the Seed in the DeviceGroup must have at least one HardenedChild. After calling this,
 	// use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's
 	// ComputeMPCOperation to complete the operation.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateDeviceGroup(ctx context.Context, in *CreateDeviceGroupRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Retrieves a DeviceGroup by resource name.
 	GetDeviceGroup(ctx context.Context, in *GetDeviceGroupRequest, opts ...grpc.CallOption) (*DeviceGroup, error)
@@ -43,6 +46,9 @@ type MPCKeyServiceClient interface {
 	// Creates a Signature using an MPCKey. After calling this, use ListMPCOperations
 	// to poll for the pending CreateSignature operation, and use the WaaS SDK's
 	// computeMPCOperation to complete the operation.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateSignature(ctx context.Context, in *CreateSignatureRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
 	// that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
@@ -51,6 +57,9 @@ type MPCKeyServiceClient interface {
 	// use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
 	// ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
 	// WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	PrepareDeviceArchive(ctx context.Context, in *PrepareDeviceArchiveRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Prepares a backup in the given Device. The backup contains certain cryptographic materials
 	// that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
@@ -61,6 +70,9 @@ type MPCKeyServiceClient interface {
 	// the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
 	// in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
 	// MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	PrepareDeviceBackup(ctx context.Context, in *PrepareDeviceBackupRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
 	// RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
@@ -71,6 +83,9 @@ type MPCKeyServiceClient interface {
 	// Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
 	// and all existing Devices in the DeviceGroup will stay functional.
 	// Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
 	// part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,
@@ -209,6 +224,9 @@ type MPCKeyServiceServer interface {
 	// the Seed in the DeviceGroup must have at least one HardenedChild. After calling this,
 	// use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's
 	// ComputeMPCOperation to complete the operation.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateDeviceGroup(context.Context, *CreateDeviceGroupRequest) (*longrunning.Operation, error)
 	// Retrieves a DeviceGroup by resource name.
 	GetDeviceGroup(context.Context, *GetDeviceGroupRequest) (*DeviceGroup, error)
@@ -224,6 +242,9 @@ type MPCKeyServiceServer interface {
 	// Creates a Signature using an MPCKey. After calling this, use ListMPCOperations
 	// to poll for the pending CreateSignature operation, and use the WaaS SDK's
 	// computeMPCOperation to complete the operation.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateSignature(context.Context, *CreateSignatureRequest) (*longrunning.Operation, error)
 	// Prepares an archive in the local storage of the given Device. The archive contains cryptographic materials
 	// that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
@@ -232,6 +253,9 @@ type MPCKeyServiceServer interface {
 	// use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
 	// ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
 	// WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	PrepareDeviceArchive(context.Context, *PrepareDeviceArchiveRequest) (*longrunning.Operation, error)
 	// Prepares a backup in the given Device. The backup contains certain cryptographic materials
 	// that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.
@@ -242,6 +266,9 @@ type MPCKeyServiceServer interface {
 	// the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
 	// in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
 	// MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	PrepareDeviceBackup(context.Context, *PrepareDeviceBackupRequest) (*longrunning.Operation, error)
 	// Adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
 	// RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
@@ -252,6 +279,9 @@ type MPCKeyServiceServer interface {
 	// Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
 	// and all existing Devices in the DeviceGroup will stay functional.
 	// Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	AddDevice(context.Context, *AddDeviceRequest) (*longrunning.Operation, error)
 	// Revokes a registered Device. This operation removes the registered Device from all the DeviceGroups that it is a
 	// part of. Once the Device is revoked, cryptographic materials in your physical Device are invalidated,

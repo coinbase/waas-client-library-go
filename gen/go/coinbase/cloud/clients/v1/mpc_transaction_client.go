@@ -145,6 +145,9 @@ func (c *MPCTransactionClient) Connection() *grpc.ClientConn {
 // information about the state of the MPCTransaction that can be used to complete the operation.
 // The LRO is considered Done once the MPCTransaction reaches a state of `CONFIRMING`` (i.e.,
 // broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCTransactionClient) CreateMPCTransaction(ctx context.Context, req *mpc_transactionspb.CreateMPCTransactionRequest, opts ...gax.CallOption) (*CreateMPCTransactionOperation, error) {
 	return c.internalClient.CreateMPCTransaction(ctx, req, opts...)
 }
@@ -435,6 +438,9 @@ func (c *mPCTransactionGRPCClient) ListMPCTransactions(ctx context.Context, req 
 // information about the state of the MPCTransaction that can be used to complete the operation.
 // The LRO is considered Done once the MPCTransaction reaches a state of `CONFIRMING`` (i.e.,
 // broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCTransactionRESTClient) CreateMPCTransaction(ctx context.Context, req *mpc_transactionspb.CreateMPCTransactionRequest, opts ...gax.CallOption) (*CreateMPCTransactionOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)

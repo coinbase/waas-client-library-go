@@ -75,6 +75,9 @@ service MPCKeyService {
   // the Seed in the DeviceGroup must have at least one HardenedChild. After calling this,
   // use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's 
   // ComputeMPCOperation to complete the operation.
+  // Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+  // NOT_FOUND error immediately after calling this. To complete the operation, continue polling 
+  // ListMPCOperations even after it returns a NOT_FOUND error. 
   rpc CreateDeviceGroup(CreateDeviceGroupRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{parent=pools/*}/deviceGroups"
@@ -87,7 +90,7 @@ service MPCKeyService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "CreateDeviceGroup"
-      description: "Creates a DeviceGroup. The DeviceGroup must contain exactly one registered Device, and the Seed in the DeviceGroup must have at least one HardenedChild.\n\n After calling this, use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation."
+      description: "Creates a DeviceGroup. The DeviceGroup must contain exactly one registered Device, and the Seed in the DeviceGroup must have at least one HardenedChild.\n\n After calling this, use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.\n\n Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a NOT_FOUND error immediately after calling this. To complete the operation, continue polling ListMPCOperations even after it returns a NOT_FOUND error."
     };
   }
 
@@ -146,6 +149,9 @@ service MPCKeyService {
   // Creates a Signature using an MPCKey. After calling this, use ListMPCOperations 
   // to poll for the pending CreateSignature operation, and use the WaaS SDK's 
   // computeMPCOperation to complete the operation.
+  // Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+  // NOT_FOUND error immediately after calling this. To complete the operation, continue polling 
+  // ListMPCOperations even after it returns a NOT_FOUND error. 
   rpc CreateSignature(CreateSignatureRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{parent=pools/*/deviceGroups/*/mpcKeys/*}/signatures"
@@ -158,7 +164,7 @@ service MPCKeyService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "CreateSignature"
-      description: "Creates a Signature using an MPCKey.\n\n After calling this, use ListMPCOperations to poll for the pending CreateSignature operation, and use the WaaS SDK's computeMPCOperation to complete the operation."
+      description: "Creates a Signature using an MPCKey.\n\n After calling this, use ListMPCOperations to poll for the pending CreateSignature operation, and use the WaaS SDK's computeMPCOperation to complete the operation.\n\n Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a NOT_FOUND error immediately after calling this. To complete the operation, continue polling ListMPCOperations even after it returns a NOT_FOUND error."
     };
   }
 
@@ -169,6 +175,9 @@ service MPCKeyService {
   // use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
   // ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
   // WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+  // Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+  // NOT_FOUND error immediately after calling this. To complete the operation, continue polling 
+  // ListMPCOperations even after it returns a NOT_FOUND error. 
   rpc PrepareDeviceArchive(PrepareDeviceArchiveRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{device_group=pools/*/deviceGroups/*}:prepareDeviceArchive"
@@ -181,7 +190,7 @@ service MPCKeyService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "PrepareDeviceArchive"
-      description: "Prepares an archive in the local storage of the given Device.\n\n The archive contains cryptographic materials that can be used to export MPCKeys, which have the given DeviceGroup as their parent.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the archive to be prepared. After calling this, use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.\n\n Once the operation completes, the Device can utilize the WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup."
+      description: "Prepares an archive in the local storage of the given Device.\n\n The archive contains cryptographic materials that can be used to export MPCKeys, which have the given DeviceGroup as their parent.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the archive to be prepared. After calling this, use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation.\n\n Once the operation completes, the Device can utilize the WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.\n\n Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a NOT_FOUND error immediately after calling this. To complete the operation, continue polling ListMPCOperations even after it returns a NOT_FOUND error."
     };
   }
 
@@ -194,6 +203,9 @@ service MPCKeyService {
   // the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
   // in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
   // MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+  // Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+  // NOT_FOUND error immediately after calling this. To complete the operation, continue polling 
+  // ListMPCOperations even after it returns a NOT_FOUND error. 
   rpc PrepareDeviceBackup(PrepareDeviceBackupRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{device_group=pools/*/deviceGroups/*}:prepareDeviceBackup"
@@ -206,7 +218,7 @@ service MPCKeyService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "PrepareDeviceBackup"
-      description: "Prepares a backup in the given Device.\n\n The backup contains certain cryptographic materials that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the backup to be prepared. \n\n After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation. \n\n Once the operation completes, the Device can utilize WaaS SDK to download the backup bundle. \n\n We recommend storing this backup bundle securely in a storage provider of your choice. \n\n If the user loses access to their existing Device and wants to recover MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService."
+      description: "Prepares a backup in the given Device.\n\n The backup contains certain cryptographic materials that can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\n\n The Device specified in the request must be a member of this DeviceGroup and must participate in the associated MPC operation for the backup to be prepared. \n\n After calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation, and use the WaaS SDK's ComputeMPCOperation to complete the operation. \n\n Once the operation completes, the Device can utilize WaaS SDK to download the backup bundle. \n\n We recommend storing this backup bundle securely in a storage provider of your choice. \n\n If the user loses access to their existing Device and wants to recover MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.\n\n Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a NOT_FOUND error immediately after calling this. To complete the operation, continue polling ListMPCOperations even after it returns a NOT_FOUND error."
     };
   }
 
@@ -219,6 +231,9 @@ service MPCKeyService {
   // Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
   // and all existing Devices in the DeviceGroup will stay functional.
   // Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+  // Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+  // NOT_FOUND error immediately after calling this. To complete the operation, continue polling 
+  // ListMPCOperations even after it returns a NOT_FOUND error. 
   rpc AddDevice(AddDeviceRequest) returns (google.longrunning.Operation) {
     option (google.api.http) = {
       post: "/v1/{device_group=pools/*/deviceGroups/*}:addDevice"
@@ -231,7 +246,7 @@ service MPCKeyService {
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "AddDevice"
-      description: "Adds a Device to an existing DeviceGroup. \n\nPrior to this API being called, the Device must be registered using RegisterDevice RPC. \n\n The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this operation. \n\n After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation, and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation. After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials required to process MPCOperations for this DeviceGroup.  \n\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member and all existing Devices in the DeviceGroup will stay functional.  \n\nMPCKeyService will expose RemoveDevice RPC in a future release that can remove any of the existing Devices from the DeviceGroup."
+      description: "Adds a Device to an existing DeviceGroup. \n\nPrior to this API being called, the Device must be registered using RegisterDevice RPC. \n\n The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this operation. \n\n After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation, and use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation. After the operation is computed on WaaS SDK, the Device will have access to cryptographic materials required to process MPCOperations for this DeviceGroup.  \n\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member and all existing Devices in the DeviceGroup will stay functional.  \n\nMPCKeyService will expose RemoveDevice RPC in a future release that can remove any of the existing Devices from the DeviceGroup.\n\n Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a NOT_FOUND error immediately after calling this. To complete the operation, continue polling ListMPCOperations even after it returns a NOT_FOUND error."
     };
   }
 

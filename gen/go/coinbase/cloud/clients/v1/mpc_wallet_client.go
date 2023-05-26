@@ -177,6 +177,9 @@ func (c *MPCWalletClient) Connection() *grpc.ClientConn {
 // CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService’s
 // ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK’s
 // computeMPCOperation to complete the operation.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCWalletClient) CreateMPCWallet(ctx context.Context, req *mpc_walletspb.CreateMPCWalletRequest, opts ...gax.CallOption) (*CreateMPCWalletOperation, error) {
 	return c.internalClient.CreateMPCWallet(ctx, req, opts...)
 }
@@ -666,6 +669,9 @@ func (c *mPCWalletGRPCClient) ListBalanceDetails(ctx context.Context, req *mpc_w
 // CreateDeviceGroup with the appropriate parameters. After calling this, use MPCKeyService’s
 // ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK’s
 // computeMPCOperation to complete the operation.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCWalletRESTClient) CreateMPCWallet(ctx context.Context, req *mpc_walletspb.CreateMPCWalletRequest, opts ...gax.CallOption) (*CreateMPCWalletOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	body := req.GetMpcWallet()

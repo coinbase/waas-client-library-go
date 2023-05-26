@@ -14,7 +14,7 @@
     {
       "regionTag": "api_v1_generated_MPCKeyService_AddDevice_sync",
       "title": "api AddDevice Sample",
-      "description": "AddDevice adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using\nRegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this\noperation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,\nand use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation.\nAfter the operation is computed on WaaS SDK, the Device will have access to cryptographic materials\nrequired to process MPCOperations for this DeviceGroup.\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member\nand all existing Devices in the DeviceGroup will stay functional.\nUse the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.",
+      "description": "AddDevice adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using\nRegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this\noperation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,\nand use the WaaS SDK's ComputeAddDeviceMPCOperation to complete the operation.\nAfter the operation is computed on WaaS SDK, the Device will have access to cryptographic materials\nrequired to process MPCOperations for this DeviceGroup.\nOnce the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member\nand all existing Devices in the DeviceGroup will stay functional.\nUse the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCKeyClient/AddDevice/main.go",
       "language": "GO",
       "clientMethod": {
@@ -60,7 +60,7 @@
     {
       "regionTag": "api_v1_generated_MPCKeyService_CreateDeviceGroup_sync",
       "title": "api CreateDeviceGroup Sample",
-      "description": "CreateDeviceGroup creates a DeviceGroup. The DeviceGroup must contain exactly one registered Device, and\nthe Seed in the DeviceGroup must have at least one HardenedChild. After calling this,\nuse ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation.",
+      "description": "CreateDeviceGroup creates a DeviceGroup. The DeviceGroup must contain exactly one registered Device, and\nthe Seed in the DeviceGroup must have at least one HardenedChild. After calling this,\nuse ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCKeyClient/CreateDeviceGroup/main.go",
       "language": "GO",
       "clientMethod": {
@@ -152,7 +152,7 @@
     {
       "regionTag": "api_v1_generated_MPCKeyService_CreateSignature_sync",
       "title": "api CreateSignature Sample",
-      "description": "CreateSignature creates a Signature using an MPCKey. After calling this, use ListMPCOperations\nto poll for the pending CreateSignature operation, and use the WaaS SDK's\ncomputeMPCOperation to complete the operation.",
+      "description": "CreateSignature creates a Signature using an MPCKey. After calling this, use ListMPCOperations\nto poll for the pending CreateSignature operation, and use the WaaS SDK's\ncomputeMPCOperation to complete the operation.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCKeyClient/CreateSignature/main.go",
       "language": "GO",
       "clientMethod": {
@@ -382,7 +382,7 @@
     {
       "regionTag": "api_v1_generated_MPCKeyService_PrepareDeviceArchive_sync",
       "title": "api PrepareDeviceArchive Sample",
-      "description": "PrepareDeviceArchive prepares an archive in the local storage of the given Device. The archive contains cryptographic materials\nthat can be used to export MPCKeys, which have the given DeviceGroup as their parent.\nThe Device specified in the request must be a member of this DeviceGroup and must participate\nin the associated MPC operation for the archive to be prepared. After calling this,\nuse ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the\nWaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.",
+      "description": "PrepareDeviceArchive prepares an archive in the local storage of the given Device. The archive contains cryptographic materials\nthat can be used to export MPCKeys, which have the given DeviceGroup as their parent.\nThe Device specified in the request must be a member of this DeviceGroup and must participate\nin the associated MPC operation for the archive to be prepared. After calling this,\nuse ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's\nComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the\nWaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCKeyClient/PrepareDeviceArchive/main.go",
       "language": "GO",
       "clientMethod": {
@@ -428,7 +428,7 @@
     {
       "regionTag": "api_v1_generated_MPCKeyService_PrepareDeviceBackup_sync",
       "title": "api PrepareDeviceBackup Sample",
-      "description": "PrepareDeviceBackup prepares a backup in the given Device. The backup contains certain cryptographic materials\nthat can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\nThe Device specified in the request must be a member of this DeviceGroup and must participate in the associated\nMPC operation for the backup to be prepared.\nAfter calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,\nand use the WaaS SDK's ComputeMPCOperation to complete the operation. Once the operation completes,\nthe Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely\nin a storage provider of your choice. If the user loses access to their existing Device and wants to recover\nMPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.",
+      "description": "PrepareDeviceBackup prepares a backup in the given Device. The backup contains certain cryptographic materials\nthat can be used to restore MPCKeys, which have the given DeviceGroup as their parent, on a new Device.\nThe Device specified in the request must be a member of this DeviceGroup and must participate in the associated\nMPC operation for the backup to be prepared.\nAfter calling this RPC, use ListMPCOperations to poll for the pending PrepareDeviceBackup operation,\nand use the WaaS SDK's ComputeMPCOperation to complete the operation. Once the operation completes,\nthe Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely\nin a storage provider of your choice. If the user loses access to their existing Device and wants to recover\nMPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCKeyClient/PrepareDeviceBackup/main.go",
       "language": "GO",
       "clientMethod": {

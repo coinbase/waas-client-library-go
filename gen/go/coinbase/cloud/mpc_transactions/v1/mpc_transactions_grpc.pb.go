@@ -23,6 +23,9 @@ type MPCTransactionServiceClient interface {
 	// information about the state of the MPCTransaction that can be used to complete the operation.
 	// The LRO is considered Done once the MPCTransaction reaches a state of `CONFIRMING`` (i.e.,
 	// broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateMPCTransaction(ctx context.Context, in *CreateMPCTransactionRequest, opts ...grpc.CallOption) (*longrunning.Operation, error)
 	// Gets an MPCTransaction. There can be a delay between when CreateMPCTransaction is called
 	// and when this API returns an MPCTransaction in the CREATED state.
@@ -74,6 +77,9 @@ type MPCTransactionServiceServer interface {
 	// information about the state of the MPCTransaction that can be used to complete the operation.
 	// The LRO is considered Done once the MPCTransaction reaches a state of `CONFIRMING`` (i.e.,
 	// broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
+	// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+	// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+	// ListMPCOperations even after it returns a NOT_FOUND error.
 	CreateMPCTransaction(context.Context, *CreateMPCTransactionRequest) (*longrunning.Operation, error)
 	// Gets an MPCTransaction. There can be a delay between when CreateMPCTransaction is called
 	// and when this API returns an MPCTransaction in the CREATED state.

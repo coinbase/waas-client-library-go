@@ -229,6 +229,9 @@ func (c *MPCKeyClient) GetDevice(ctx context.Context, req *mpc_keyspb.GetDeviceR
 // the Seed in the DeviceGroup must have at least one HardenedChild. After calling this,
 // use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK’s
 // ComputeMPCOperation to complete the operation.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCKeyClient) CreateDeviceGroup(ctx context.Context, req *mpc_keyspb.CreateDeviceGroupRequest, opts ...gax.CallOption) (*CreateDeviceGroupOperation, error) {
 	return c.internalClient.CreateDeviceGroup(ctx, req, opts...)
 }
@@ -265,6 +268,9 @@ func (c *MPCKeyClient) GetMPCKey(ctx context.Context, req *mpc_keyspb.GetMPCKeyR
 // CreateSignature creates a Signature using an MPCKey. After calling this, use ListMPCOperations
 // to poll for the pending CreateSignature operation, and use the WaaS SDK’s
 // computeMPCOperation to complete the operation.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCKeyClient) CreateSignature(ctx context.Context, req *mpc_keyspb.CreateSignatureRequest, opts ...gax.CallOption) (*CreateSignatureOperation, error) {
 	return c.internalClient.CreateSignature(ctx, req, opts...)
 }
@@ -282,6 +288,9 @@ func (c *MPCKeyClient) CreateSignatureOperation(name string) *CreateSignatureOpe
 // use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK’s
 // ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
 // WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCKeyClient) PrepareDeviceArchive(ctx context.Context, req *mpc_keyspb.PrepareDeviceArchiveRequest, opts ...gax.CallOption) (*PrepareDeviceArchiveOperation, error) {
 	return c.internalClient.PrepareDeviceArchive(ctx, req, opts...)
 }
@@ -301,6 +310,9 @@ func (c *MPCKeyClient) PrepareDeviceArchiveOperation(name string) *PrepareDevice
 // the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
 // in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
 // MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCKeyClient) PrepareDeviceBackup(ctx context.Context, req *mpc_keyspb.PrepareDeviceBackupRequest, opts ...gax.CallOption) (*PrepareDeviceBackupOperation, error) {
 	return c.internalClient.PrepareDeviceBackup(ctx, req, opts...)
 }
@@ -320,6 +332,9 @@ func (c *MPCKeyClient) PrepareDeviceBackupOperation(name string) *PrepareDeviceB
 // Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
 // and all existing Devices in the DeviceGroup will stay functional.
 // Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *MPCKeyClient) AddDevice(ctx context.Context, req *mpc_keyspb.AddDeviceRequest, opts ...gax.CallOption) (*AddDeviceOperation, error) {
 	return c.internalClient.AddDevice(ctx, req, opts...)
 }
@@ -878,6 +893,9 @@ func (c *mPCKeyRESTClient) GetDevice(ctx context.Context, req *mpc_keyspb.GetDev
 // the Seed in the DeviceGroup must have at least one HardenedChild. After calling this,
 // use ListMPCOperations to poll for the pending CreateDeviceGroup operation, and use the WaaS SDK’s
 // ComputeMPCOperation to complete the operation.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCKeyRESTClient) CreateDeviceGroup(ctx context.Context, req *mpc_keyspb.CreateDeviceGroupRequest, opts ...gax.CallOption) (*CreateDeviceGroupOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	body := req.GetDeviceGroup()
@@ -1179,6 +1197,9 @@ func (c *mPCKeyRESTClient) GetMPCKey(ctx context.Context, req *mpc_keyspb.GetMPC
 // CreateSignature creates a Signature using an MPCKey. After calling this, use ListMPCOperations
 // to poll for the pending CreateSignature operation, and use the WaaS SDK’s
 // computeMPCOperation to complete the operation.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCKeyRESTClient) CreateSignature(ctx context.Context, req *mpc_keyspb.CreateSignatureRequest, opts ...gax.CallOption) (*CreateSignatureOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	body := req.GetSignature()
@@ -1256,6 +1277,9 @@ func (c *mPCKeyRESTClient) CreateSignature(ctx context.Context, req *mpc_keyspb.
 // use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK’s
 // ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
 // WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCKeyRESTClient) PrepareDeviceArchive(ctx context.Context, req *mpc_keyspb.PrepareDeviceArchiveRequest, opts ...gax.CallOption) (*PrepareDeviceArchiveOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1327,6 +1351,9 @@ func (c *mPCKeyRESTClient) PrepareDeviceArchive(ctx context.Context, req *mpc_ke
 // the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
 // in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
 // MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCKeyRESTClient) PrepareDeviceBackup(ctx context.Context, req *mpc_keyspb.PrepareDeviceBackupRequest, opts ...gax.CallOption) (*PrepareDeviceBackupOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1398,6 +1425,9 @@ func (c *mPCKeyRESTClient) PrepareDeviceBackup(ctx context.Context, req *mpc_key
 // Once the operation completes on MPCKeyService, the Device will be added to the given DeviceGroup as a new member
 // and all existing Devices in the DeviceGroup will stay functional.
 // Use the RevokeDevice RPC to remove any of the existing Devices from the DeviceGroup.
+// Note: because the creation of MPC operations is asynchronous, ListMPCOperations may return a
+// NOT_FOUND error immediately after calling this. To complete the operation, continue polling
+// ListMPCOperations even after it returns a NOT_FOUND error.
 func (c *mPCKeyRESTClient) AddDevice(ctx context.Context, req *mpc_keyspb.AddDeviceRequest, opts ...gax.CallOption) (*AddDeviceOperation, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)

@@ -14,7 +14,7 @@
     {
       "regionTag": "api_v1_generated_MPCTransactionService_CreateMPCTransaction_sync",
       "title": "api CreateMPCTransaction Sample",
-      "description": "CreateMPCTransaction creates an MPCTransaction. The long-running operation returned from this API contains\ninformation about the state of the MPCTransaction that can be used to complete the operation.\nThe LRO is considered Done once the MPCTransaction reaches a state of `CONFIRMING`` (i.e.,\nbroadcast on-chain). See the MPCTransaction documentation for its lifecycle.",
+      "description": "CreateMPCTransaction creates an MPCTransaction. The long-running operation returned from this API contains\ninformation about the state of the MPCTransaction that can be used to complete the operation.\nThe LRO is considered Done once the MPCTransaction reaches a state of `CONFIRMING`` (i.e.,\nbroadcast on-chain). See the MPCTransaction documentation for its lifecycle.\nNote: because the creation of MPC operations is asynchronous, ListMPCOperations may return a\nNOT_FOUND error immediately after calling this. To complete the operation, continue polling\nListMPCOperations even after it returns a NOT_FOUND error.",
       "file": "MPCTransactionClient/CreateMPCTransaction/main.go",
       "language": "GO",
       "clientMethod": {
