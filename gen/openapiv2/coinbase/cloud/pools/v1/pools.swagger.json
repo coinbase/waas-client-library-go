@@ -1,0 +1,213 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Pools API",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "PoolService",
+      "description": "A service for managing the Pool resource. A Pool is a top-level container for segregating the resources under it via authorization checks. Pool-scoped resources require a Pool to be created before they themselves can be created."
+    }
+  ],
+  "host": "api.developer.coinbase.com/waas/pools",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/pools": {
+      "get": {
+        "summary": "ListPools",
+        "description": "Returns a list of Pools.",
+        "operationId": "PoolService_ListPools",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPoolsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "description": "The maximum number of Pools to return. The default is 50.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token, received from a previous ListPools call.\nProvide this to retrieve the subsequent page.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PoolService"
+        ]
+      },
+      "post": {
+        "summary": "CreatePool",
+        "description": "Creates a Pool. Invoke CreatePool before creating a Pool-scoped resource so that you can specify the Pool as the parent of the new resource.",
+        "operationId": "PoolService_CreatePool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Pool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool",
+            "description": "The Pool to create.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Pool",
+              "required": [
+                "pool"
+              ]
+            }
+          },
+          {
+            "name": "poolId",
+            "description": "Optional: the ID to use for the Pool, which will become the final component\nof the Pool's resource name. If not provided, the server will assign a Pool ID\nautomatically.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PoolService"
+        ]
+      }
+    },
+    "/v1/{poolName}": {
+      "get": {
+        "summary": "GetPool",
+        "description": "Retrieves a Pool by resource name.",
+        "operationId": "PoolService_GetPool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Pool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "poolName",
+            "description": "The resource name of the Pool.\nFormat: pools/{pool_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "pools/[^/]+"
+          }
+        ],
+        "tags": [
+          "PoolService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1ListPoolsResponse": {
+      "type": "object",
+      "properties": {
+        "pools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Pool"
+          },
+          "description": "The list of Pools."
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token, which can be sent as page_token to retrieve the next page.\nIf this field is omitted, there are no subsequent pages."
+        }
+      },
+      "description": "The response message for ListPools.",
+      "title": "ListPoolsResponse"
+    },
+    "v1Pool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "pools/95257c5a-522f-4241-bf97-2656a8e9cc91",
+          "description": "The resource name of the Pool.\nFormat: pools/{pool_id}",
+          "title": "name",
+          "readOnly": true
+        },
+        "displayName": {
+          "type": "string",
+          "example": "Acme Co. Retail Trading",
+          "description": "A user-readable name for the Pool.\nExample: 'Acme Co. Retail Trading'",
+          "title": "displayName"
+        }
+      },
+      "description": "The Pool resource, which is a top-level container for segregating the resources under it via authorization checks.",
+      "title": "Pool",
+      "required": [
+        "displayName"
+      ]
+    }
+  }
+}
