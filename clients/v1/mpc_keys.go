@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"cloud.google.com/go/longrunning/autogen/longrunningpb"
 	"github.com/googleapis/gax-go/v2"
 	"google.golang.org/grpc"
 
@@ -478,4 +479,14 @@ func (m *MPCKeyServiceClient) RevokeDevice(
 	err := m.client.RevokeDevice(ctx, req, opts...)
 
 	return clients.UnwrapError(err)
+}
+
+// GetOperation returns the longrunning operation indicated by the given request.
+func (m *MPCKeyServiceClient) GetOperation(
+	ctx context.Context,
+	req *longrunningpb.GetOperationRequest,
+	opts ...gax.CallOption) (*longrunningpb.Operation, error) {
+	operation, err := m.client.LROClient.GetOperation(ctx, req, opts...)
+
+	return operation, clients.UnwrapError(err)
 }

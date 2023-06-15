@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"cloud.google.com/go/longrunning/autogen/longrunningpb"
 	"github.com/coinbase/waas-client-library-go/clients"
 	innerClient "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
 	mpc_transactionspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1"
@@ -198,4 +199,14 @@ func (m *MPCTransactionServiceClient) ListMPCTransactions(
 	req *mpc_transactionspb.ListMPCTransactionsRequest,
 	opts ...gax.CallOption) MPCTransactionIterator {
 	return &mpcTransactionIteratorImpl{iter: m.client.ListMPCTransactions(ctx, req, opts...)}
+}
+
+// GetOperation returns the longrunning operation indicated by the given request.
+func (m *MPCTransactionServiceClient) GetOperation(
+	ctx context.Context,
+	req *longrunningpb.GetOperationRequest,
+	opts ...gax.CallOption) (*longrunningpb.Operation, error) {
+	operation, err := m.client.LROClient.GetOperation(ctx, req, opts...)
+
+	return operation, clients.UnwrapError(err)
 }
