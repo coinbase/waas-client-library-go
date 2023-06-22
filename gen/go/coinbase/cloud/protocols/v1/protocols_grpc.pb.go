@@ -28,9 +28,10 @@ type ProtocolServiceClient interface {
 	ConstructTransferTransaction(ctx context.Context, in *ConstructTransferTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
 	// Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
 	// 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
-	// via block explorers such as Etherscan.
-	// 2. Set the signature(s) in the required_signatures of the Transaction.
-	// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
+	// via block explorers such as Etherscan. In this case, the TransactionInput does not need to be set on the Transaction.
+	// 2. Set the signature(s) in the required_signatures of the Transaction. In this case, the TransactionInput must also be
+	// set on the Transaction.
+	// The Transaction returned will have the hash set on it.
 	BroadcastTransaction(ctx context.Context, in *BroadcastTransactionRequest, opts ...grpc.CallOption) (*v1.Transaction, error)
 	// Estimates the current network fee for the specified Network. For EVM Networks, this
 	// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
@@ -94,9 +95,10 @@ type ProtocolServiceServer interface {
 	ConstructTransferTransaction(context.Context, *ConstructTransferTransactionRequest) (*v1.Transaction, error)
 	// Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:
 	// 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions
-	// via block explorers such as Etherscan.
-	// 2. Set the signature(s) in the required_signatures of the Transaction.
-	// The TransactionInput itself is not required. The Transaction returned will have the hash set on it.
+	// via block explorers such as Etherscan. In this case, the TransactionInput does not need to be set on the Transaction.
+	// 2. Set the signature(s) in the required_signatures of the Transaction. In this case, the TransactionInput must also be
+	// set on the Transaction.
+	// The Transaction returned will have the hash set on it.
 	BroadcastTransaction(context.Context, *BroadcastTransactionRequest) (*v1.Transaction, error)
 	// Estimates the current network fee for the specified Network. For EVM Networks, this
 	// corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.

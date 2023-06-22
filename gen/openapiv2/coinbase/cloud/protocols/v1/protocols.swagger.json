@@ -24,7 +24,7 @@
     "/v1/{networkName}:broadcastTransaction": {
       "post": {
         "summary": "BroadcastTransaction",
-        "description": "Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:\n 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions via block explorers such as Etherscan.\n 2. Set the signature(s) in the required_signatures of the Transaction.\n // The TransactionInput itself is not required. The Transaction returned will have the hash set on it.",
+        "description": "Broadcasts a transaction to a node in the Network. There are two ways of invoking this API:\n 1. Set the raw_signed_transaction on the Transaction. This is equivalent to the payload used to broadcast transactions via block explorers such as Etherscan. In this case, the TransactionInput does not need to be set on the Transaction.\n 2. Set the signature(s) in the required_signatures of the Transaction. In this case, the TransactionInput must also be set on the Transaction.\n The Transaction returned will have the hash set on it.",
         "operationId": "ProtocolService_BroadcastTransaction",
         "responses": {
           "200": {
