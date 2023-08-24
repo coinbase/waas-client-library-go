@@ -1,0 +1,245 @@
+{
+  "clientLibrary": {
+    "name": "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1",
+    "version": "$VERSION",
+    "language": "GO",
+    "apis": [
+      {
+        "id": "coinbase.cloud.blockchain.v1",
+        "version": "v1"
+      }
+    ]
+  },
+  "snippets": [
+    {
+      "regionTag": "api_v1_generated_BlockchainService_BatchGetAssets_sync",
+      "title": "api BatchGetAssets Sample",
+      "description": "BatchGetAssets returns the list of Assets indicated by the given request.",
+      "file": "BlockchainClient/BatchGetAssets/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "BatchGetAssets",
+        "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient.BatchGetAssets",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "blockchainpb.BatchGetAssetsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*blockchainpb.BatchGetAssetsResponse",
+        "client": {
+          "shortName": "BlockchainClient",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient"
+        },
+        "method": {
+          "shortName": "BatchGetAssets",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainService.BatchGetAssets",
+          "service": {
+            "shortName": "BlockchainService",
+            "fullName": "coinbase.cloud.blockchain.v1.BlockchainService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_BlockchainService_GetAsset_sync",
+      "title": "api GetAsset Sample",
+      "description": "GetAsset retrieves an Asset by resource name.",
+      "file": "BlockchainClient/GetAsset/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetAsset",
+        "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient.GetAsset",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "blockchainpb.GetAssetRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*blockchainpb.Asset",
+        "client": {
+          "shortName": "BlockchainClient",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient"
+        },
+        "method": {
+          "shortName": "GetAsset",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainService.GetAsset",
+          "service": {
+            "shortName": "BlockchainService",
+            "fullName": "coinbase.cloud.blockchain.v1.BlockchainService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_BlockchainService_GetNetwork_sync",
+      "title": "api GetNetwork Sample",
+      "description": "GetNetwork retrieves a Network by resource name.",
+      "file": "BlockchainClient/GetNetwork/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetNetwork",
+        "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient.GetNetwork",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "blockchainpb.GetNetworkRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*blockchainpb.Network",
+        "client": {
+          "shortName": "BlockchainClient",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient"
+        },
+        "method": {
+          "shortName": "GetNetwork",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainService.GetNetwork",
+          "service": {
+            "shortName": "BlockchainService",
+            "fullName": "coinbase.cloud.blockchain.v1.BlockchainService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_BlockchainService_ListAssets_sync",
+      "title": "api ListAssets Sample",
+      "description": "ListAssets returns a list of Assets available on a given Network.",
+      "file": "BlockchainClient/ListAssets/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListAssets",
+        "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient.ListAssets",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "blockchainpb.ListAssetsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "AssetIterator",
+        "client": {
+          "shortName": "BlockchainClient",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient"
+        },
+        "method": {
+          "shortName": "ListAssets",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainService.ListAssets",
+          "service": {
+            "shortName": "BlockchainService",
+            "fullName": "coinbase.cloud.blockchain.v1.BlockchainService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1_generated_BlockchainService_ListNetworks_sync",
+      "title": "api ListNetworks Sample",
+      "description": "ListNetworks returns the list of Networks available for use.",
+      "file": "BlockchainClient/ListNetworks/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListNetworks",
+        "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient.ListNetworks",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "blockchainpb.ListNetworksRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "NetworkIterator",
+        "client": {
+          "shortName": "BlockchainClient",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainClient"
+        },
+        "method": {
+          "shortName": "ListNetworks",
+          "fullName": "coinbase.cloud.blockchain.v1.BlockchainService.ListNetworks",
+          "service": {
+            "shortName": "BlockchainService",
+            "fullName": "coinbase.cloud.blockchain.v1.BlockchainService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    }
+  ]
+}
