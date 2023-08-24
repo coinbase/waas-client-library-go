@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"cloud.google.com/go/longrunning/autogen/longrunningpb"
 	"github.com/coinbase/waas-client-library-go/clients"
 	innerClient "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
 	mpc_walletspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_wallets/v1"
@@ -21,8 +22,8 @@ const (
 	mpcWalletServiceEndpoint = "https://api.developer.coinbase.com/waas/mpc_wallets"
 )
 
-// MPCWalletServiceClient is the client to use to access WaaS MPCWalletService APIs.
-type MPCWalletServiceClient struct {
+// mpcWalletServiceClient is the client to use to access WaaS MPCWalletService APIs.
+type mpcWalletServiceClient struct {
 	client     *innerClient.MPCWalletClient
 	pathPrefix string
 }
@@ -31,7 +32,7 @@ type MPCWalletServiceClient struct {
 func NewMPCWalletServiceClient(
 	ctx context.Context,
 	waasOpts ...clients.WaaSClientOption,
-) (*MPCWalletServiceClient, error) {
+) (MPCWalletServiceClient, error) {
 	config, err := clients.GetConfig(mpcWalletServiceName, mpcWalletServiceEndpoint, waasOpts...)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func NewMPCWalletServiceClient(
 		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", config.Endpoint, err)
 	}
 
-	return &MPCWalletServiceClient{
+	return &mpcWalletServiceClient{
 		client:     innerClient,
 		pathPrefix: baseURL.Path,
 	}, nil
@@ -60,7 +61,7 @@ func NewMPCWalletServiceClient(
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (m *MPCWalletServiceClient) Close() error {
+func (m *mpcWalletServiceClient) Close() error {
 	return m.client.Close()
 }
 
@@ -68,8 +69,17 @@ func (m *MPCWalletServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (m *MPCWalletServiceClient) Connection() *grpc.ClientConn {
+func (m *mpcWalletServiceClient) Connection() *grpc.ClientConn {
 	return m.client.Connection()
+}
+
+// GetOperation gets the latest state of a long-running operation.
+func (m *mpcWalletServiceClient) GetOperation(
+	ctx context.Context,
+	req *longrunningpb.GetOperationRequest,
+	opts ...gax.CallOption,
+) (*longrunningpb.Operation, error) {
+	return m.GetOperation(ctx, req, opts...)
 }
 
 // WrappedCreateMPCWalletOperation wraps the long-running operation to handle
@@ -108,15 +118,30 @@ func (w *WrappedCreateMPCWalletOperation) Poll(
 	return mpcWallet, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning CreateMPCWalletOperation.
+func (w *WrappedCreateMPCWalletOperation) Metadata() (*mpc_walletspb.CreateMPCWalletMetadata, error) {
+	return w.CreateMPCWalletOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning CreateMPCWalletOperation.
+func (w *WrappedCreateMPCWalletOperation) Done() bool {
+	return w.CreateMPCWalletOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning CreateMPCWalletOperation.
+func (w *WrappedCreateMPCWalletOperation) Name() string {
+	return w.CreateMPCWalletOperation.Name()
+}
+
 // CreateMPCWallet creates an MPCWallet. The Device in the request must have been registered
 // using MPCKeyService’s RegisterDevice before this method is called. Under the hood, this
 // calls MPCKeyService’s CreateDeviceGroup with the appropriate parameters. After calling this,
 // use MPCKeyService’s ListMPCOperations to poll for the pending CreateDeviceGroup operation,
 // and use the WaaS SDK’s ComputeMPCOperation to complete the operation.
-func (m *MPCWalletServiceClient) CreateMPCWallet(
+func (m *mpcWalletServiceClient) CreateMPCWallet(
 	ctx context.Context,
 	req *mpc_walletspb.CreateMPCWalletRequest,
-	opts ...gax.CallOption) (*WrappedCreateMPCWalletOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedCreateMPCWalletOperation, error) {
 	op, err := m.client.CreateMPCWallet(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -129,7 +154,7 @@ func (m *MPCWalletServiceClient) CreateMPCWallet(
 }
 
 // CreateMPCWalletOperation returns the CreateMPCWalletOperation indicated by the given name.
-func (m *MPCWalletServiceClient) CreateMPCWalletOperation(name string) *WrappedCreateMPCWalletOperation {
+func (m *mpcWalletServiceClient) CreateMPCWalletOperation(name string) ClientWrappedCreateMPCWalletOperation {
 	return &WrappedCreateMPCWalletOperation{
 		CreateMPCWalletOperation: m.client.CreateMPCWalletOperation(name),
 		pathPrefix:               m.pathPrefix,
@@ -137,7 +162,7 @@ func (m *MPCWalletServiceClient) CreateMPCWalletOperation(name string) *WrappedC
 }
 
 // GetMPCWallet gets an MPCWallet.
-func (m *MPCWalletServiceClient) GetMPCWallet(
+func (m *mpcWalletServiceClient) GetMPCWallet(
 	ctx context.Context,
 	req *mpc_walletspb.GetMPCWalletRequest,
 	opts ...gax.CallOption,
@@ -167,32 +192,32 @@ type mpcWalletIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *mpcWalletIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (m *mpcWalletIteratorImpl) PageInfo() *iterator.PageInfo {
+	return m.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *mpcWalletIteratorImpl) Next() (*mpc_walletspb.MPCWallet, error) {
-	mpcWallet, err := n.iter.Next()
+func (m *mpcWalletIteratorImpl) Next() (*mpc_walletspb.MPCWallet, error) {
+	mpcWallet, err := m.iter.Next()
 
 	return mpcWallet, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *mpcWalletIteratorImpl) Response() *mpc_walletspb.ListMPCWalletsResponse {
-	if n.iter.Response == nil {
+func (m *mpcWalletIteratorImpl) Response() *mpc_walletspb.ListMPCWalletsResponse {
+	if m.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*mpc_walletspb.ListMPCWalletsResponse)
+	response := m.iter.Response.(*mpc_walletspb.ListMPCWalletsResponse)
 
 	return response
 }
 
 // ListMPCWallets lists MPCWallets.
-func (m *MPCWalletServiceClient) ListMPCWallets(
+func (m *mpcWalletServiceClient) ListMPCWallets(
 	ctx context.Context,
 	req *mpc_walletspb.ListMPCWalletsRequest,
 	opts ...gax.CallOption) MPCWalletIterator {
@@ -200,7 +225,7 @@ func (m *MPCWalletServiceClient) ListMPCWallets(
 }
 
 // GenerateAddress generates an Address within an MPCWallet.
-func (m *MPCWalletServiceClient) GenerateAddress(
+func (m *mpcWalletServiceClient) GenerateAddress(
 	ctx context.Context,
 	req *mpc_walletspb.GenerateAddressRequest,
 	opts ...gax.CallOption) (*mpc_walletspb.Address, error) {
@@ -210,7 +235,7 @@ func (m *MPCWalletServiceClient) GenerateAddress(
 }
 
 // GetAddress gets an Address.
-func (m *MPCWalletServiceClient) GetAddress(
+func (m *mpcWalletServiceClient) GetAddress(
 	ctx context.Context,
 	req *mpc_walletspb.GetAddressRequest,
 	opts ...gax.CallOption) (*mpc_walletspb.Address, error) {
@@ -239,32 +264,32 @@ type addressIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *addressIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (m *addressIteratorImpl) PageInfo() *iterator.PageInfo {
+	return m.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *addressIteratorImpl) Next() (*mpc_walletspb.Address, error) {
-	Address, err := n.iter.Next()
+func (m *addressIteratorImpl) Next() (*mpc_walletspb.Address, error) {
+	Address, err := m.iter.Next()
 
 	return Address, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *addressIteratorImpl) Response() *mpc_walletspb.ListAddressesResponse {
-	if n.iter.Response == nil {
+func (m *addressIteratorImpl) Response() *mpc_walletspb.ListAddressesResponse {
+	if m.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*mpc_walletspb.ListAddressesResponse)
+	response := m.iter.Response.(*mpc_walletspb.ListAddressesResponse)
 
 	return response
 }
 
 // ListAddresses lists Addresses within an MPCWallet.
-func (m *MPCWalletServiceClient) ListAddresses(
+func (m *mpcWalletServiceClient) ListAddresses(
 	ctx context.Context,
 	req *mpc_walletspb.ListAddressesRequest,
 	opts ...gax.CallOption) AddressIterator {
@@ -291,32 +316,32 @@ type balanceIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *balanceIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (b *balanceIteratorImpl) PageInfo() *iterator.PageInfo {
+	return b.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *balanceIteratorImpl) Next() (*mpc_walletspb.Balance, error) {
-	balance, err := n.iter.Next()
+func (b *balanceIteratorImpl) Next() (*mpc_walletspb.Balance, error) {
+	balance, err := b.iter.Next()
 
 	return balance, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *balanceIteratorImpl) Response() *mpc_walletspb.ListBalancesResponse {
-	if n.iter.Response == nil {
+func (b *balanceIteratorImpl) Response() *mpc_walletspb.ListBalancesResponse {
+	if b.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*mpc_walletspb.ListBalancesResponse)
+	response := b.iter.Response.(*mpc_walletspb.ListBalancesResponse)
 
 	return response
 }
 
 // ListBalances lists Balances.
-func (m *MPCWalletServiceClient) ListBalances(
+func (m *mpcWalletServiceClient) ListBalances(
 	ctx context.Context,
 	req *mpc_walletspb.ListBalancesRequest,
 	opts ...gax.CallOption) BalanceIterator {
@@ -343,32 +368,32 @@ type balanceDetailIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *balanceDetailIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (b *balanceDetailIteratorImpl) PageInfo() *iterator.PageInfo {
+	return b.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *balanceDetailIteratorImpl) Next() (*mpc_walletspb.BalanceDetail, error) {
-	balanceDetail, err := n.iter.Next()
+func (b *balanceDetailIteratorImpl) Next() (*mpc_walletspb.BalanceDetail, error) {
+	balanceDetail, err := b.iter.Next()
 
 	return balanceDetail, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *balanceDetailIteratorImpl) Response() *mpc_walletspb.ListBalanceDetailsResponse {
-	if n.iter.Response == nil {
+func (b *balanceDetailIteratorImpl) Response() *mpc_walletspb.ListBalanceDetailsResponse {
+	if b.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*mpc_walletspb.ListBalanceDetailsResponse)
+	response := b.iter.Response.(*mpc_walletspb.ListBalanceDetailsResponse)
 
 	return response
 }
 
 // ListBalanceDetails lists BalanceDetails.
-func (m *MPCWalletServiceClient) ListBalanceDetails(
+func (m *mpcWalletServiceClient) ListBalanceDetails(
 	ctx context.Context,
 	req *mpc_walletspb.ListBalanceDetailsRequest,
 	opts ...gax.CallOption) BalanceDetailIterator {

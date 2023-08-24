@@ -21,6 +21,10 @@ func (_m *MPCTransactionServiceServer) CreateMPCTransaction(_a0 context.Context,
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCTransactionRequest) (*longrunningpb.Operation, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCTransactionRequest) *longrunningpb.Operation); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -29,7 +33,6 @@ func (_m *MPCTransactionServiceServer) CreateMPCTransaction(_a0 context.Context,
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreateMPCTransactionRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -44,6 +47,10 @@ func (_m *MPCTransactionServiceServer) GetMPCTransaction(_a0 context.Context, _a
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.MPCTransaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCTransactionRequest) (*v1.MPCTransaction, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCTransactionRequest) *v1.MPCTransaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -52,7 +59,6 @@ func (_m *MPCTransactionServiceServer) GetMPCTransaction(_a0 context.Context, _a
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetMPCTransactionRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -67,6 +73,10 @@ func (_m *MPCTransactionServiceServer) ListMPCTransactions(_a0 context.Context, 
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.ListMPCTransactionsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCTransactionsRequest) (*v1.ListMPCTransactionsResponse, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCTransactionsRequest) *v1.ListMPCTransactionsResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -75,7 +85,6 @@ func (_m *MPCTransactionServiceServer) ListMPCTransactions(_a0 context.Context, 
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListMPCTransactionsRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -90,13 +99,12 @@ func (_m *MPCTransactionServiceServer) mustEmbedUnimplementedMPCTransactionServi
 	_m.Called()
 }
 
-type NewMPCTransactionServiceServerT interface {
+// NewMPCTransactionServiceServer creates a new instance of MPCTransactionServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMPCTransactionServiceServer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewMPCTransactionServiceServer creates a new instance of MPCTransactionServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewMPCTransactionServiceServer(t NewMPCTransactionServiceServerT) *MPCTransactionServiceServer {
+}) *MPCTransactionServiceServer {
 	mock := &MPCTransactionServiceServer{}
 	mock.Mock.Test(t)
 

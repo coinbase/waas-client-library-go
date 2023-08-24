@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"cloud.google.com/go/longrunning/autogen/longrunningpb"
 	"github.com/googleapis/gax-go/v2"
 	"google.golang.org/grpc"
 
@@ -21,8 +22,8 @@ const (
 	mpcKeyServiceEndpoint = "https://api.developer.coinbase.com/waas/mpc_keys"
 )
 
-// MPCKeyServiceClient is the client to use to access WaaS MPCKeyService APIs.
-type MPCKeyServiceClient struct {
+// mpcKeyServiceClient is the client to use to access WaaS MPCKeyService APIs.
+type mpcKeyServiceClient struct {
 	client     *innerClient.MPCKeyClient
 	pathPrefix string
 }
@@ -31,7 +32,7 @@ type MPCKeyServiceClient struct {
 func NewMPCKeyServiceClient(
 	ctx context.Context,
 	waasOpts ...clients.WaaSClientOption,
-) (*MPCKeyServiceClient, error) {
+) (MPCKeyServiceClient, error) {
 	config, err := clients.GetConfig(mpcKeyServiceName, mpcKeyServiceEndpoint, waasOpts...)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func NewMPCKeyServiceClient(
 		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", config.Endpoint, err)
 	}
 
-	return &MPCKeyServiceClient{
+	return &mpcKeyServiceClient{
 		client:     innerClient,
 		pathPrefix: baseURL.Path,
 	}, nil
@@ -60,7 +61,7 @@ func NewMPCKeyServiceClient(
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (m *MPCKeyServiceClient) Close() error {
+func (m *mpcKeyServiceClient) Close() error {
 	return m.client.Close()
 }
 
@@ -68,13 +69,22 @@ func (m *MPCKeyServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (m *MPCKeyServiceClient) Connection() *grpc.ClientConn {
+func (m *mpcKeyServiceClient) Connection() *grpc.ClientConn {
 	return m.client.Connection()
+}
+
+// GetOperation gets the latest state of a long-running operation.
+func (m *mpcKeyServiceClient) GetOperation(
+	ctx context.Context,
+	req *longrunningpb.GetOperationRequest,
+	opts ...gax.CallOption,
+) (*longrunningpb.Operation, error) {
+	return m.GetOperation(ctx, req, opts...)
 }
 
 // RegisterDevice registers a new Device. A Device must be registered before
 // it can be added to a DeviceGroup.
-func (m *MPCKeyServiceClient) RegisterDevice(
+func (m *mpcKeyServiceClient) RegisterDevice(
 	ctx context.Context,
 	req *mpc_keyspb.RegisterDeviceRequest,
 	opts ...gax.CallOption) (*mpc_keyspb.Device, error) {
@@ -84,7 +94,7 @@ func (m *MPCKeyServiceClient) RegisterDevice(
 }
 
 // GetDevice gets a Device.
-func (m *MPCKeyServiceClient) GetDevice(
+func (m *mpcKeyServiceClient) GetDevice(
 	ctx context.Context,
 	req *mpc_keyspb.GetDeviceRequest,
 	opts ...gax.CallOption) (*mpc_keyspb.Device, error) {
@@ -129,15 +139,30 @@ func (w *WrappedCreateDeviceGroupOperation) Poll(
 	return deviceGroup, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning CreateDeviceGroupOperation.
+func (w *WrappedCreateDeviceGroupOperation) Metadata() (*mpc_keyspb.CreateDeviceGroupMetadata, error) {
+	return w.CreateDeviceGroupOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning CreateDeviceGroupOperation.
+func (w *WrappedCreateDeviceGroupOperation) Done() bool {
+	return w.CreateDeviceGroupOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning CreateDeviceGroupOperation.
+func (w *WrappedCreateDeviceGroupOperation) Name() string {
+	return w.CreateDeviceGroupOperation.Name()
+}
+
 // CreateDeviceGroup creates a DeviceGroup. The DeviceGroup must contain exactly
 // one registered Device, and the Seed in the DeviceGroup must have at least one
 // HardenedChild. After calling this, use ListMPCOperations to poll for the pending
 // CreateDeviceGroup operation, and use the WaaS SDK’s ComputeMPCOperation to complete
 // the operation.
-func (m *MPCKeyServiceClient) CreateDeviceGroup(
+func (m *mpcKeyServiceClient) CreateDeviceGroup(
 	ctx context.Context,
 	req *mpc_keyspb.CreateDeviceGroupRequest,
-	opts ...gax.CallOption) (*WrappedCreateDeviceGroupOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedCreateDeviceGroupOperation, error) {
 	op, err := m.client.CreateDeviceGroup(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -150,7 +175,7 @@ func (m *MPCKeyServiceClient) CreateDeviceGroup(
 }
 
 // CreateDeviceGroupOperation returns the CreateDeviceGroupOperation indicated by the given name.
-func (m *MPCKeyServiceClient) CreateDeviceGroupOperation(name string) *WrappedCreateDeviceGroupOperation {
+func (m *mpcKeyServiceClient) CreateDeviceGroupOperation(name string) ClientWrappedCreateDeviceGroupOperation {
 	return &WrappedCreateDeviceGroupOperation{
 		CreateDeviceGroupOperation: m.client.CreateDeviceGroupOperation(name),
 		pathPrefix:                 m.pathPrefix,
@@ -158,7 +183,7 @@ func (m *MPCKeyServiceClient) CreateDeviceGroupOperation(name string) *WrappedCr
 }
 
 // GetDeviceGroup gets a DeviceGroup.
-func (m *MPCKeyServiceClient) GetDeviceGroup(
+func (m *mpcKeyServiceClient) GetDeviceGroup(
 	ctx context.Context,
 	req *mpc_keyspb.GetDeviceGroupRequest,
 	opts ...gax.CallOption) (*mpc_keyspb.DeviceGroup, error) {
@@ -170,7 +195,7 @@ func (m *MPCKeyServiceClient) GetDeviceGroup(
 // ListMPCOperations lists the pending MPCOperations awaiting computation associated with
 // the given parent DeviceGroup. Use this API in combination with the WaaS SDK’s
 // ComputeMPCOperation method to complete the operation.
-func (m *MPCKeyServiceClient) ListMPCOperations(
+func (m *mpcKeyServiceClient) ListMPCOperations(
 	ctx context.Context,
 	req *mpc_keyspb.ListMPCOperationsRequest,
 	opts ...gax.CallOption) (*mpc_keyspb.ListMPCOperationsResponse, error) {
@@ -181,7 +206,7 @@ func (m *MPCKeyServiceClient) ListMPCOperations(
 
 // CreateMPCKey creates an MPCKey. There must be a HardenedChild in the Seed of the parent
 // DeviceGroup which is a prefix of the derivation path provided in the MPCKey.
-func (m *MPCKeyServiceClient) CreateMPCKey(
+func (m *mpcKeyServiceClient) CreateMPCKey(
 	ctx context.Context,
 	req *mpc_keyspb.CreateMPCKeyRequest,
 	opts ...gax.CallOption) (*mpc_keyspb.MPCKey, error) {
@@ -191,7 +216,7 @@ func (m *MPCKeyServiceClient) CreateMPCKey(
 }
 
 // GetMPCKey gets an MPCKey.
-func (m *MPCKeyServiceClient) GetMPCKey(
+func (m *mpcKeyServiceClient) GetMPCKey(
 	ctx context.Context,
 	req *mpc_keyspb.GetMPCKeyRequest,
 	opts ...gax.CallOption) (*mpc_keyspb.MPCKey, error) {
@@ -236,13 +261,28 @@ func (w *WrappedCreateSignatureOperation) Poll(
 	return signature, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning CreateSignatureOperation.
+func (w *WrappedCreateSignatureOperation) Metadata() (*mpc_keyspb.CreateSignatureMetadata, error) {
+	return w.CreateSignatureOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning CreateSignatureOperation.
+func (w *WrappedCreateSignatureOperation) Done() bool {
+	return w.CreateSignatureOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning CreateSignatureOperation.
+func (w *WrappedCreateSignatureOperation) Name() string {
+	return w.CreateSignatureOperation.Name()
+}
+
 // CreateSignature creates a Signature using an MPCKey. After calling this, use ListMPCOperations
 // to poll for the pending CreateSignature operation, and use the WaaS SDK’s
 // ComputeMPCOperation to complete the operation.
-func (m *MPCKeyServiceClient) CreateSignature(
+func (m *mpcKeyServiceClient) CreateSignature(
 	ctx context.Context,
 	req *mpc_keyspb.CreateSignatureRequest,
-	opts ...gax.CallOption) (*WrappedCreateSignatureOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedCreateSignatureOperation, error) {
 	op, err := m.client.CreateSignature(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -255,7 +295,7 @@ func (m *MPCKeyServiceClient) CreateSignature(
 }
 
 // CreateSignatureOperation returns the CreateSignatureOperation indicated by the given name.
-func (m *MPCKeyServiceClient) CreateSignatureOperation(name string) *WrappedCreateSignatureOperation {
+func (m *mpcKeyServiceClient) CreateSignatureOperation(name string) ClientWrappedCreateSignatureOperation {
 	return &WrappedCreateSignatureOperation{
 		CreateSignatureOperation: m.client.CreateSignatureOperation(name),
 		pathPrefix:               m.pathPrefix,
@@ -298,6 +338,21 @@ func (w *WrappedPrepareDeviceArchiveOperation) Poll(
 	return deviceGroup, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning PrepareDeviceArchiveOperation.
+func (w *WrappedPrepareDeviceArchiveOperation) Metadata() (*mpc_keyspb.PrepareDeviceArchiveMetadata, error) {
+	return w.PrepareDeviceArchiveOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning PrepareDeviceArchiveOperation.
+func (w *WrappedPrepareDeviceArchiveOperation) Done() bool {
+	return w.PrepareDeviceArchiveOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning PrepareDeviceArchiveOperation.
+func (w *WrappedPrepareDeviceArchiveOperation) Name() string {
+	return w.PrepareDeviceArchiveOperation.Name()
+}
+
 // PrepareDeviceArchive prepares an archive in the local storage of the given Device. The archive contains
 // cryptographic materials that can be used to export MPCKeys, which have the given DeviceGroup as their parent.
 // The Device specified in the request must be a member of this DeviceGroup and must participate
@@ -305,10 +360,10 @@ func (w *WrappedPrepareDeviceArchiveOperation) Poll(
 // use ListMPCOperations to poll for the pending PrepareDeviceArchive operation, and use the WaaS SDK's
 // ComputeMPCOperation to complete the operation. Once the operation completes, the Device can utilize the
 // WaaS SDK to export the private keys corresponding to each of the MPCKeys under this DeviceGroup.
-func (m *MPCKeyServiceClient) PrepareDeviceArchive(
+func (m *mpcKeyServiceClient) PrepareDeviceArchive(
 	ctx context.Context,
 	req *mpc_keyspb.PrepareDeviceArchiveRequest,
-	opts ...gax.CallOption) (*WrappedPrepareDeviceArchiveOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedPrepareDeviceArchiveOperation, error) {
 	op, err := m.client.PrepareDeviceArchive(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -321,7 +376,7 @@ func (m *MPCKeyServiceClient) PrepareDeviceArchive(
 }
 
 // PrepareDeviceArchiveOperation returns the PrepareDeviceArchiveOperation indicated by the given name.
-func (m *MPCKeyServiceClient) PrepareDeviceArchiveOperation(name string) *WrappedPrepareDeviceArchiveOperation {
+func (m *mpcKeyServiceClient) PrepareDeviceArchiveOperation(name string) ClientWrappedPrepareDeviceArchiveOperation {
 	return &WrappedPrepareDeviceArchiveOperation{
 		PrepareDeviceArchiveOperation: m.client.PrepareDeviceArchiveOperation(name),
 		pathPrefix:                    m.pathPrefix,
@@ -364,6 +419,21 @@ func (w *WrappedPrepareDeviceBackupOperation) Poll(
 	return deviceGroup, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning PrepareDeviceBackupOperation.
+func (w *WrappedPrepareDeviceBackupOperation) Metadata() (*mpc_keyspb.PrepareDeviceBackupMetadata, error) {
+	return w.PrepareDeviceBackupOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning PrepareDeviceBackupOperation.
+func (w *WrappedPrepareDeviceBackupOperation) Done() bool {
+	return w.PrepareDeviceBackupOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning PrepareDeviceBackupOperation.
+func (w *WrappedPrepareDeviceBackupOperation) Name() string {
+	return w.PrepareDeviceBackupOperation.Name()
+}
+
 // PrepareDeviceBackup prepares a backup in the given Device. The backup contains certain
 // cryptographic materials that can be used to restore MPCKeys, which have the given DeviceGroup as their parent,
 // on a new Device. The Device specified in the request must be a member of this DeviceGroup and must participate
@@ -373,10 +443,10 @@ func (w *WrappedPrepareDeviceBackupOperation) Poll(
 // the Device can utilize WaaS SDK to download the backup bundle. We recommend storing this backup bundle securely
 // in a storage provider of your choice. If the user loses access to their existing Device and wants to recover
 // MPCKeys in the given DeviceGroup on a new Device, use AddDevice RPC on the MPCKeyService.
-func (m *MPCKeyServiceClient) PrepareDeviceBackup(
+func (m *mpcKeyServiceClient) PrepareDeviceBackup(
 	ctx context.Context,
 	req *mpc_keyspb.PrepareDeviceBackupRequest,
-	opts ...gax.CallOption) (*WrappedPrepareDeviceBackupOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedPrepareDeviceBackupOperation, error) {
 	op, err := m.client.PrepareDeviceBackup(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -389,7 +459,7 @@ func (m *MPCKeyServiceClient) PrepareDeviceBackup(
 }
 
 // PrepareDeviceBackupOperation returns the PrepareDeviceBackupOperation indicated by the given name.
-func (m *MPCKeyServiceClient) PrepareDeviceBackupOperation(name string) *WrappedPrepareDeviceBackupOperation {
+func (m *mpcKeyServiceClient) PrepareDeviceBackupOperation(name string) ClientWrappedPrepareDeviceBackupOperation {
 	return &WrappedPrepareDeviceBackupOperation{
 		PrepareDeviceBackupOperation: m.client.PrepareDeviceBackupOperation(name),
 		pathPrefix:                   m.pathPrefix,
@@ -432,6 +502,21 @@ func (w *WrappedAddDeviceOperation) Poll(
 	return deviceGroup, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning AddDeviceOperation.
+func (w *WrappedAddDeviceOperation) Metadata() (*mpc_keyspb.AddDeviceMetadata, error) {
+	return w.AddDeviceOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning AddDeviceOperation.
+func (w *WrappedAddDeviceOperation) Done() bool {
+	return w.AddDeviceOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning AddDeviceOperation.
+func (w *WrappedAddDeviceOperation) Name() string {
+	return w.AddDeviceOperation.Name()
+}
+
 // AddDevice adds a Device to an existing DeviceGroup. Prior to this API being called, the Device must be registered using
 // RegisterDevice RPC. The Device must have access to the backup created with PrepareDeviceBackup RPC to compute this
 // operation. After calling this RPC, use ListMPCOperations to poll for the pending AddDevice operation,
@@ -442,10 +527,10 @@ func (w *WrappedAddDeviceOperation) Poll(
 // and all existing Devices in the DeviceGroup will stay functional.
 // MPCKeyService will expose RemoveDevice RPC in a future release that can remove any of the
 // existing Devices from the DeviceGroup.
-func (m *MPCKeyServiceClient) AddDevice(
+func (m *mpcKeyServiceClient) AddDevice(
 	ctx context.Context,
 	req *mpc_keyspb.AddDeviceRequest,
-	opts ...gax.CallOption) (*WrappedAddDeviceOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedAddDeviceOperation, error) {
 	op, err := m.client.AddDevice(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -458,7 +543,7 @@ func (m *MPCKeyServiceClient) AddDevice(
 }
 
 // AddDeviceOperation returns the AddDeviceOperation indicated by the given name.
-func (m *MPCKeyServiceClient) AddDeviceOperation(name string) *WrappedAddDeviceOperation {
+func (m *mpcKeyServiceClient) AddDeviceOperation(name string) ClientWrappedAddDeviceOperation {
 	return &WrappedAddDeviceOperation{
 		AddDeviceOperation: m.client.AddDeviceOperation(name),
 		pathPrefix:         m.pathPrefix,
@@ -471,7 +556,7 @@ func (m *MPCKeyServiceClient) AddDeviceOperation(name string) *WrappedAddDeviceO
 // Use this API in scenarios such as losing the existing Device, switching to a new physical Device, etc.
 // Ensure that a new Device is successfully added to your DeviceGroups using the AddDevice RPC before invoking
 // the RevokeDevice RPC.
-func (m *MPCKeyServiceClient) RevokeDevice(
+func (m *mpcKeyServiceClient) RevokeDevice(
 	ctx context.Context,
 	req *mpc_keyspb.RevokeDeviceRequest,
 	opts ...gax.CallOption) error {

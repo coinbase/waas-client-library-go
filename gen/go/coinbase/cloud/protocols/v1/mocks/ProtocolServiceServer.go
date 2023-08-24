@@ -20,6 +20,10 @@ func (_m *ProtocolServiceServer) BroadcastTransaction(_a0 context.Context, _a1 *
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *typesv1.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest) (*typesv1.Transaction, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest) *typesv1.Transaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -28,7 +32,6 @@ func (_m *ProtocolServiceServer) BroadcastTransaction(_a0 context.Context, _a1 *
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.BroadcastTransactionRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -43,6 +46,10 @@ func (_m *ProtocolServiceServer) ConstructTransaction(_a0 context.Context, _a1 *
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *typesv1.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest) (*typesv1.Transaction, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest) *typesv1.Transaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -51,7 +58,6 @@ func (_m *ProtocolServiceServer) ConstructTransaction(_a0 context.Context, _a1 *
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ConstructTransactionRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -66,6 +72,10 @@ func (_m *ProtocolServiceServer) ConstructTransferTransaction(_a0 context.Contex
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *typesv1.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest) (*typesv1.Transaction, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest) *typesv1.Transaction); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -74,7 +84,6 @@ func (_m *ProtocolServiceServer) ConstructTransferTransaction(_a0 context.Contex
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ConstructTransferTransactionRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -89,6 +98,10 @@ func (_m *ProtocolServiceServer) EstimateFee(_a0 context.Context, _a1 *v1.Estima
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.EstimateFeeResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.EstimateFeeRequest) (*v1.EstimateFeeResponse, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.EstimateFeeRequest) *v1.EstimateFeeResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -97,7 +110,6 @@ func (_m *ProtocolServiceServer) EstimateFee(_a0 context.Context, _a1 *v1.Estima
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.EstimateFeeRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -112,13 +124,12 @@ func (_m *ProtocolServiceServer) mustEmbedUnimplementedProtocolServiceServer() {
 	_m.Called()
 }
 
-type NewProtocolServiceServerT interface {
+// NewProtocolServiceServer creates a new instance of ProtocolServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewProtocolServiceServer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewProtocolServiceServer creates a new instance of ProtocolServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewProtocolServiceServer(t NewProtocolServiceServerT) *ProtocolServiceServer {
+}) *ProtocolServiceServer {
 	mock := &ProtocolServiceServer{}
 	mock.Mock.Test(t)
 

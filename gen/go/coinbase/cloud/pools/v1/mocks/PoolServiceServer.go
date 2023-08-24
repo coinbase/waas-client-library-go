@@ -19,6 +19,10 @@ func (_m *PoolServiceServer) CreatePool(_a0 context.Context, _a1 *v1.CreatePoolR
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.Pool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreatePoolRequest) (*v1.Pool, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreatePoolRequest) *v1.Pool); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -27,7 +31,6 @@ func (_m *PoolServiceServer) CreatePool(_a0 context.Context, _a1 *v1.CreatePoolR
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreatePoolRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -42,6 +45,10 @@ func (_m *PoolServiceServer) GetPool(_a0 context.Context, _a1 *v1.GetPoolRequest
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.Pool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetPoolRequest) (*v1.Pool, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetPoolRequest) *v1.Pool); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -50,7 +57,6 @@ func (_m *PoolServiceServer) GetPool(_a0 context.Context, _a1 *v1.GetPoolRequest
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetPoolRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -65,6 +71,10 @@ func (_m *PoolServiceServer) ListPools(_a0 context.Context, _a1 *v1.ListPoolsReq
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.ListPoolsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListPoolsRequest) (*v1.ListPoolsResponse, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListPoolsRequest) *v1.ListPoolsResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -73,7 +83,6 @@ func (_m *PoolServiceServer) ListPools(_a0 context.Context, _a1 *v1.ListPoolsReq
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListPoolsRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -88,13 +97,12 @@ func (_m *PoolServiceServer) mustEmbedUnimplementedPoolServiceServer() {
 	_m.Called()
 }
 
-type NewPoolServiceServerT interface {
+// NewPoolServiceServer creates a new instance of PoolServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewPoolServiceServer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewPoolServiceServer creates a new instance of PoolServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewPoolServiceServer(t NewPoolServiceServerT) *PoolServiceServer {
+}) *PoolServiceServer {
 	mock := &PoolServiceServer{}
 	mock.Mock.Test(t)
 

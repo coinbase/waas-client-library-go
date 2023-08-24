@@ -31,6 +31,10 @@ func (_m *ProtocolServiceClient) BroadcastTransaction(ctx context.Context, in *v
 	ret := _m.Called(_ca...)
 
 	var r0 *typesv1.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest, ...grpc.CallOption) (*typesv1.Transaction, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.BroadcastTransactionRequest, ...grpc.CallOption) *typesv1.Transaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -39,7 +43,6 @@ func (_m *ProtocolServiceClient) BroadcastTransaction(ctx context.Context, in *v
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.BroadcastTransactionRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -61,6 +64,10 @@ func (_m *ProtocolServiceClient) ConstructTransaction(ctx context.Context, in *v
 	ret := _m.Called(_ca...)
 
 	var r0 *typesv1.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest, ...grpc.CallOption) (*typesv1.Transaction, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransactionRequest, ...grpc.CallOption) *typesv1.Transaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -69,7 +76,6 @@ func (_m *ProtocolServiceClient) ConstructTransaction(ctx context.Context, in *v
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ConstructTransactionRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -91,6 +97,10 @@ func (_m *ProtocolServiceClient) ConstructTransferTransaction(ctx context.Contex
 	ret := _m.Called(_ca...)
 
 	var r0 *typesv1.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest, ...grpc.CallOption) (*typesv1.Transaction, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ConstructTransferTransactionRequest, ...grpc.CallOption) *typesv1.Transaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -99,7 +109,6 @@ func (_m *ProtocolServiceClient) ConstructTransferTransaction(ctx context.Contex
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ConstructTransferTransactionRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -121,6 +130,10 @@ func (_m *ProtocolServiceClient) EstimateFee(ctx context.Context, in *v1.Estimat
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.EstimateFeeResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.EstimateFeeRequest, ...grpc.CallOption) (*v1.EstimateFeeResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.EstimateFeeRequest, ...grpc.CallOption) *v1.EstimateFeeResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -129,7 +142,6 @@ func (_m *ProtocolServiceClient) EstimateFee(ctx context.Context, in *v1.Estimat
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.EstimateFeeRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -139,13 +151,12 @@ func (_m *ProtocolServiceClient) EstimateFee(ctx context.Context, in *v1.Estimat
 	return r0, r1
 }
 
-type NewProtocolServiceClientT interface {
+// NewProtocolServiceClient creates a new instance of ProtocolServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewProtocolServiceClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewProtocolServiceClient creates a new instance of ProtocolServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewProtocolServiceClient(t NewProtocolServiceClientT) *ProtocolServiceClient {
+}) *ProtocolServiceClient {
 	mock := &ProtocolServiceClient{}
 	mock.Mock.Test(t)
 

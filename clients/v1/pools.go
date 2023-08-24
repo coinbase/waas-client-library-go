@@ -19,8 +19,8 @@ const (
 	poolServiceEndpoint = "https://api.developer.coinbase.com/waas/pools"
 )
 
-// PoolServiceClient is the client to use to access WaaS PoolService APIs.
-type PoolServiceClient struct {
+// poolServiceClient is the client to use to access WaaS PoolService APIs.
+type poolServiceClient struct {
 	client *innerClient.PoolClient
 }
 
@@ -28,7 +28,7 @@ type PoolServiceClient struct {
 func NewPoolServiceClient(
 	ctx context.Context,
 	waasOpts ...clients.WaaSClientOption,
-) (*PoolServiceClient, error) {
+) (PoolServiceClient, error) {
 	config, err := clients.GetConfig(poolServiceName, poolServiceEndpoint, waasOpts...)
 	if err != nil {
 		return nil, err
@@ -44,14 +44,14 @@ func NewPoolServiceClient(
 		return nil, err
 	}
 
-	return &PoolServiceClient{
+	return &poolServiceClient{
 		client: innerClient,
 	}, nil
 }
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (p *PoolServiceClient) Close() error {
+func (p *poolServiceClient) Close() error {
 	return p.client.Close()
 }
 
@@ -59,13 +59,13 @@ func (p *PoolServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (p *PoolServiceClient) Connection() *grpc.ClientConn {
+func (p *poolServiceClient) Connection() *grpc.ClientConn {
 	return p.client.Connection()
 }
 
 // CreatePool creates a Pool. Call this method before creating any resources scoped to
 // a Pool.
-func (p *PoolServiceClient) CreatePool(
+func (p *poolServiceClient) CreatePool(
 	ctx context.Context,
 	req *poolspb.CreatePoolRequest,
 	opts ...gax.CallOption) (*poolspb.Pool, error) {
@@ -75,7 +75,7 @@ func (p *PoolServiceClient) CreatePool(
 }
 
 // GetPool gets a Pool.
-func (p *PoolServiceClient) GetPool(
+func (p *poolServiceClient) GetPool(
 	ctx context.Context,
 	req *poolspb.GetPoolRequest,
 	opts ...gax.CallOption) (*poolspb.Pool, error) {
@@ -104,34 +104,34 @@ type poolIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *poolIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (p *poolIteratorImpl) PageInfo() *iterator.PageInfo {
+	return p.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *poolIteratorImpl) Next() (*poolspb.Pool, error) {
-	pool, err := n.iter.Next()
+func (p *poolIteratorImpl) Next() (*poolspb.Pool, error) {
+	pool, err := p.iter.Next()
 
 	return pool, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *poolIteratorImpl) Response() *poolspb.ListPoolsResponse {
-	if n.iter.Response == nil {
+func (p *poolIteratorImpl) Response() *poolspb.ListPoolsResponse {
+	if p.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*poolspb.ListPoolsResponse)
+	response := p.iter.Response.(*poolspb.ListPoolsResponse)
 
 	return response
 }
 
 // ListPools lists the Pools of an Address. The Address must belong to a Pool.
-func (w *PoolServiceClient) ListPools(
+func (p *poolServiceClient) ListPools(
 	ctx context.Context,
 	req *poolspb.ListPoolsRequest,
 	opts ...gax.CallOption) PoolIterator {
-	return &poolIteratorImpl{iter: w.client.ListPools(ctx, req, opts...)}
+	return &poolIteratorImpl{iter: p.client.ListPools(ctx, req, opts...)}
 }

@@ -19,6 +19,10 @@ func (_m *BlockchainServiceServer) BatchGetAssets(_a0 context.Context, _a1 *v1.B
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.BatchGetAssetsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BatchGetAssetsRequest) (*v1.BatchGetAssetsResponse, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.BatchGetAssetsRequest) *v1.BatchGetAssetsResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -27,7 +31,6 @@ func (_m *BlockchainServiceServer) BatchGetAssets(_a0 context.Context, _a1 *v1.B
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.BatchGetAssetsRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -42,6 +45,10 @@ func (_m *BlockchainServiceServer) GetAsset(_a0 context.Context, _a1 *v1.GetAsse
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.Asset
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetAssetRequest) (*v1.Asset, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetAssetRequest) *v1.Asset); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -50,7 +57,6 @@ func (_m *BlockchainServiceServer) GetAsset(_a0 context.Context, _a1 *v1.GetAsse
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetAssetRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -65,6 +71,10 @@ func (_m *BlockchainServiceServer) GetNetwork(_a0 context.Context, _a1 *v1.GetNe
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.Network
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetNetworkRequest) (*v1.Network, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetNetworkRequest) *v1.Network); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -73,7 +83,6 @@ func (_m *BlockchainServiceServer) GetNetwork(_a0 context.Context, _a1 *v1.GetNe
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetNetworkRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -88,6 +97,10 @@ func (_m *BlockchainServiceServer) ListAssets(_a0 context.Context, _a1 *v1.ListA
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.ListAssetsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListAssetsRequest) (*v1.ListAssetsResponse, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListAssetsRequest) *v1.ListAssetsResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -96,7 +109,6 @@ func (_m *BlockchainServiceServer) ListAssets(_a0 context.Context, _a1 *v1.ListA
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListAssetsRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -111,6 +123,10 @@ func (_m *BlockchainServiceServer) ListNetworks(_a0 context.Context, _a1 *v1.Lis
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *v1.ListNetworksResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListNetworksRequest) (*v1.ListNetworksResponse, error)); ok {
+		return rf(_a0, _a1)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListNetworksRequest) *v1.ListNetworksResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
@@ -119,7 +135,6 @@ func (_m *BlockchainServiceServer) ListNetworks(_a0 context.Context, _a1 *v1.Lis
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListNetworksRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
@@ -134,13 +149,12 @@ func (_m *BlockchainServiceServer) mustEmbedUnimplementedBlockchainServiceServer
 	_m.Called()
 }
 
-type NewBlockchainServiceServerT interface {
+// NewBlockchainServiceServer creates a new instance of BlockchainServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewBlockchainServiceServer(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewBlockchainServiceServer creates a new instance of BlockchainServiceServer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewBlockchainServiceServer(t NewBlockchainServiceServerT) *BlockchainServiceServer {
+}) *BlockchainServiceServer {
 	mock := &BlockchainServiceServer{}
 	mock.Mock.Test(t)
 

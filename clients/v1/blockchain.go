@@ -19,8 +19,8 @@ const (
 	blockchainServiceEndpoint = "https://api.developer.coinbase.com/waas/blockchain"
 )
 
-// BlockchainServiceClient is the client to use to access WaaS BlockchainService APIs.
-type BlockchainServiceClient struct {
+// blockchainServiceClient is the client to use to access WaaS BlockchainService APIs.
+type blockchainServiceClient struct {
 	client *innerClient.BlockchainClient
 }
 
@@ -28,7 +28,7 @@ type BlockchainServiceClient struct {
 func NewBlockchainServiceClient(
 	ctx context.Context,
 	waasOpts ...clients.WaaSClientOption,
-) (*BlockchainServiceClient, error) {
+) (BlockchainServiceClient, error) {
 	config, err := clients.GetConfig(blockchainServiceName, blockchainServiceEndpoint, waasOpts...)
 	if err != nil {
 		return nil, err
@@ -44,27 +44,27 @@ func NewBlockchainServiceClient(
 		return nil, err
 	}
 
-	return &BlockchainServiceClient{
+	return &blockchainServiceClient{
 		client: innerClient,
 	}, nil
 }
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (p *BlockchainServiceClient) Close() error {
-	return p.client.Close()
+func (b *blockchainServiceClient) Close() error {
+	return b.client.Close()
 }
 
 // Connection returns a connection to the API service.
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (p *BlockchainServiceClient) Connection() *grpc.ClientConn {
-	return p.client.Connection()
+func (b *blockchainServiceClient) Connection() *grpc.ClientConn {
+	return b.client.Connection()
 }
 
 // GetNetwork gets a Network.
-func (b *BlockchainServiceClient) GetNetwork(
+func (b *blockchainServiceClient) GetNetwork(
 	ctx context.Context,
 	req *blockchainpb.GetNetworkRequest,
 	opts ...gax.CallOption) (*blockchainpb.Network, error) {
@@ -118,7 +118,7 @@ func (n *networkIteratorImpl) Response() *blockchainpb.ListNetworksResponse {
 }
 
 // ListNetworks lists the Networks supported by WaaS APIs.
-func (b *BlockchainServiceClient) ListNetworks(
+func (b *blockchainServiceClient) ListNetworks(
 	ctx context.Context,
 	req *blockchainpb.ListNetworksRequest,
 	opts ...gax.CallOption) NetworkIterator {
@@ -126,7 +126,7 @@ func (b *BlockchainServiceClient) ListNetworks(
 }
 
 // GetAsset retrieves an Asset by resource name.
-func (b *BlockchainServiceClient) GetAsset(
+func (b *blockchainServiceClient) GetAsset(
 	ctx context.Context,
 	req *blockchainpb.GetAssetRequest,
 	opts ...gax.CallOption) (*blockchainpb.Asset, error) {
@@ -155,32 +155,32 @@ type assetIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *assetIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (a *assetIteratorImpl) PageInfo() *iterator.PageInfo {
+	return a.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *assetIteratorImpl) Next() (*blockchainpb.Asset, error) {
-	asset, err := n.iter.Next()
+func (a *assetIteratorImpl) Next() (*blockchainpb.Asset, error) {
+	asset, err := a.iter.Next()
 
 	return asset, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *assetIteratorImpl) Response() *blockchainpb.ListAssetsResponse {
-	if n.iter.Response == nil {
+func (a *assetIteratorImpl) Response() *blockchainpb.ListAssetsResponse {
+	if a.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*blockchainpb.ListAssetsResponse)
+	response := a.iter.Response.(*blockchainpb.ListAssetsResponse)
 
 	return response
 }
 
 // ListAssets lists the Assets supported by WaaS APIs.
-func (b *BlockchainServiceClient) ListAssets(
+func (b *blockchainServiceClient) ListAssets(
 	ctx context.Context,
 	req *blockchainpb.ListAssetsRequest,
 	opts ...gax.CallOption) AssetIterator {
@@ -188,7 +188,7 @@ func (b *BlockchainServiceClient) ListAssets(
 }
 
 // BatchGetAssets returns the list of Assets indicated by the given request.
-func (b *BlockchainServiceClient) BatchGetAssets(
+func (b *blockchainServiceClient) BatchGetAssets(
 	ctx context.Context,
 	req *blockchainpb.BatchGetAssetsRequest,
 	opts ...gax.CallOption) (*blockchainpb.BatchGetAssetsResponse, error) {

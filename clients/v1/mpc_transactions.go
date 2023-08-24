@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"cloud.google.com/go/longrunning/autogen/longrunningpb"
 	"github.com/coinbase/waas-client-library-go/clients"
 	innerClient "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/clients/v1"
 	mpc_transactionspb "github.com/coinbase/waas-client-library-go/gen/go/coinbase/cloud/mpc_transactions/v1"
@@ -21,8 +22,8 @@ const (
 	mpcTransactionServiceEndpoint = "https://api.developer.coinbase.com/waas/mpc_transactions"
 )
 
-// MPCTransactionServiceClient is the client to use to access WaaS MPCTransactionService APIs.
-type MPCTransactionServiceClient struct {
+// mpcTransactionServiceClient is the client to use to access WaaS MPCTransactionService APIs.
+type mpcTransactionServiceClient struct {
 	client     *innerClient.MPCTransactionClient
 	pathPrefix string
 }
@@ -31,7 +32,7 @@ type MPCTransactionServiceClient struct {
 func NewMPCTransactionServiceClient(
 	ctx context.Context,
 	waasOpts ...clients.WaaSClientOption,
-) (*MPCTransactionServiceClient, error) {
+) (MPCTransactionServiceClient, error) {
 	config, err := clients.GetConfig(mpcTransactionServiceName, mpcTransactionServiceEndpoint, waasOpts...)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func NewMPCTransactionServiceClient(
 		return nil, fmt.Errorf("could not parse passed endpoint %s: %v", config.Endpoint, err)
 	}
 
-	return &MPCTransactionServiceClient{
+	return &mpcTransactionServiceClient{
 		client:     innerClient,
 		pathPrefix: baseURL.Path,
 	}, nil
@@ -60,7 +61,7 @@ func NewMPCTransactionServiceClient(
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (m *MPCTransactionServiceClient) Close() error {
+func (m *mpcTransactionServiceClient) Close() error {
 	return m.client.Close()
 }
 
@@ -68,8 +69,17 @@ func (m *MPCTransactionServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (m *MPCTransactionServiceClient) Connection() *grpc.ClientConn {
+func (m *mpcTransactionServiceClient) Connection() *grpc.ClientConn {
 	return m.client.Connection()
+}
+
+// GetOperation gets the latest state of a long-running operation.
+func (m *mpcTransactionServiceClient) GetOperation(
+	ctx context.Context,
+	req *longrunningpb.GetOperationRequest,
+	opts ...gax.CallOption,
+) (*longrunningpb.Operation, error) {
+	return m.GetOperation(ctx, req, opts...)
 }
 
 // WrappedCreateMPCTransactionOperation wraps the long-running operation to handle
@@ -108,14 +118,29 @@ func (w *WrappedCreateMPCTransactionOperation) Poll(
 	return mpcTransaction, clients.UnwrapError(err)
 }
 
+// Metadata delegates to the wrapped longrunning CreateMPCTransactionOperation.
+func (w *WrappedCreateMPCTransactionOperation) Metadata() (*mpc_transactionspb.CreateMPCTransactionMetadata, error) {
+	return w.CreateMPCTransactionOperation.Metadata()
+}
+
+// Done delegates to the wrapped longrunning CreateMPCTransactionOperation.
+func (w *WrappedCreateMPCTransactionOperation) Done() bool {
+	return w.CreateMPCTransactionOperation.Done()
+}
+
+// Name delegates to the wrapped longrunning CreateMPCTransactionOperation.
+func (w *WrappedCreateMPCTransactionOperation) Name() string {
+	return w.CreateMPCTransactionOperation.Name()
+}
+
 // CreateMPCTransaction creates an MPCTransaction. The long-running operation returned from this API will contain
 // information about the state of the MPCTransaction that can be used to complete the operation.
 // The LRO will be considered Done once the MPCTransaction reaches a state of CONFIRMING (i.e.
 // broadcast on-chain). See the MPCTransaction documentation for its lifecycle.
-func (m *MPCTransactionServiceClient) CreateMPCTransaction(
+func (m *mpcTransactionServiceClient) CreateMPCTransaction(
 	ctx context.Context,
 	req *mpc_transactionspb.CreateMPCTransactionRequest,
-	opts ...gax.CallOption) (*WrappedCreateMPCTransactionOperation, error) {
+	opts ...gax.CallOption) (ClientWrappedCreateMPCTransactionOperation, error) {
 	op, err := m.client.CreateMPCTransaction(ctx, req, opts...)
 	if err != nil {
 		return nil, clients.UnwrapError(err)
@@ -128,7 +153,7 @@ func (m *MPCTransactionServiceClient) CreateMPCTransaction(
 }
 
 // CreateMPCTransactionOperation returns the CreateMPCTransactionOperation indicated by the given name.
-func (m *MPCTransactionServiceClient) CreateMPCTransactionOperation(name string) *WrappedCreateMPCTransactionOperation {
+func (m *mpcTransactionServiceClient) CreateMPCTransactionOperation(name string) ClientWrappedCreateMPCTransactionOperation {
 	return &WrappedCreateMPCTransactionOperation{
 		CreateMPCTransactionOperation: m.client.CreateMPCTransactionOperation(name),
 		pathPrefix:                    m.pathPrefix,
@@ -138,7 +163,7 @@ func (m *MPCTransactionServiceClient) CreateMPCTransactionOperation(name string)
 // GetMPCTransaction gets an MPCTransaction. There can be a delay between when
 // CreateMPCTransaction is called and when this API will begin returning an
 // MPCTransaction in the CREATED state.
-func (m *MPCTransactionServiceClient) GetMPCTransaction(
+func (m *mpcTransactionServiceClient) GetMPCTransaction(
 	ctx context.Context,
 	req *mpc_transactionspb.GetMPCTransactionRequest,
 	opts ...gax.CallOption,
@@ -168,32 +193,32 @@ type mpcTransactionIteratorImpl struct {
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *mpcTransactionIteratorImpl) PageInfo() *iterator.PageInfo {
-	return n.iter.PageInfo()
+func (m *mpcTransactionIteratorImpl) PageInfo() *iterator.PageInfo {
+	return m.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *mpcTransactionIteratorImpl) Next() (*mpc_transactionspb.MPCTransaction, error) {
-	mpcTransaction, err := n.iter.Next()
+func (m *mpcTransactionIteratorImpl) Next() (*mpc_transactionspb.MPCTransaction, error) {
+	mpcTransaction, err := m.iter.Next()
 
 	return mpcTransaction, clients.UnwrapError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *mpcTransactionIteratorImpl) Response() *mpc_transactionspb.ListMPCTransactionsResponse {
-	if n.iter.Response == nil {
+func (m *mpcTransactionIteratorImpl) Response() *mpc_transactionspb.ListMPCTransactionsResponse {
+	if m.iter.Response == nil {
 		return nil
 	}
 
-	response := n.iter.Response.(*mpc_transactionspb.ListMPCTransactionsResponse)
+	response := m.iter.Response.(*mpc_transactionspb.ListMPCTransactionsResponse)
 
 	return response
 }
 
 // ListMPCTransactions lists MPCTransactions.
-func (m *MPCTransactionServiceClient) ListMPCTransactions(
+func (m *mpcTransactionServiceClient) ListMPCTransactions(
 	ctx context.Context,
 	req *mpc_transactionspb.ListMPCTransactionsRequest,
 	opts ...gax.CallOption) MPCTransactionIterator {

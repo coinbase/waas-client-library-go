@@ -19,8 +19,8 @@ const (
 	protocolServiceEndpoint = "https://api.developer.coinbase.com/waas/protocols"
 )
 
-// ProtocolServiceClient is the client to use to access WaaS ProtocolService APIs.
-type ProtocolServiceClient struct {
+// protocolServiceClient is the client to use to access WaaS ProtocolService APIs.
+type protocolServiceClient struct {
 	client *innerClient.ProtocolClient
 }
 
@@ -28,7 +28,7 @@ type ProtocolServiceClient struct {
 func NewProtocolServiceClient(
 	ctx context.Context,
 	waasOpts ...clients.WaaSClientOption,
-) (*ProtocolServiceClient, error) {
+) (ProtocolServiceClient, error) {
 	config, err := clients.GetConfig(protocolServiceName, protocolServiceEndpoint, waasOpts...)
 	if err != nil {
 		return nil, err
@@ -44,14 +44,14 @@ func NewProtocolServiceClient(
 		return nil, err
 	}
 
-	return &ProtocolServiceClient{
+	return &protocolServiceClient{
 		client: innerClient,
 	}, nil
 }
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (p *ProtocolServiceClient) Close() error {
+func (p *protocolServiceClient) Close() error {
 	return p.client.Close()
 }
 
@@ -59,18 +59,18 @@ func (p *ProtocolServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (p *ProtocolServiceClient) Connection() *grpc.ClientConn {
+func (p *protocolServiceClient) Connection() *grpc.ClientConn {
 	return p.client.Connection()
 }
 
 // ConstructTransaction constructs an unsigned transaction. The payloads in the
 // required_signatures of the returned Transaction must be signed before the Transaction
 // is broadcast.
-func (b *ProtocolServiceClient) ConstructTransaction(
+func (p *protocolServiceClient) ConstructTransaction(
 	ctx context.Context,
 	req *protocolspb.ConstructTransactionRequest,
 	opts ...gax.CallOption) (*typespb.Transaction, error) {
-	transaction, err := b.client.ConstructTransaction(ctx, req, opts...)
+	transaction, err := p.client.ConstructTransaction(ctx, req, opts...)
 
 	return transaction, clients.UnwrapError(err)
 }
@@ -79,32 +79,32 @@ func (b *ProtocolServiceClient) ConstructTransaction(
 // A transfer transaction is a transaction that moves an Asset from one Address to another.
 // The payloads in the required_signatures of the returned Transaction must be signed before
 // the Transaction is broadcast.
-func (b *ProtocolServiceClient) ConstructTransferTransaction(
+func (p *protocolServiceClient) ConstructTransferTransaction(
 	ctx context.Context,
 	req *protocolspb.ConstructTransferTransactionRequest,
 	opts ...gax.CallOption) (*typespb.Transaction, error) {
-	transaction, err := b.client.ConstructTransferTransaction(ctx, req, opts...)
+	transaction, err := p.client.ConstructTransferTransaction(ctx, req, opts...)
 
 	return transaction, clients.UnwrapError(err)
 }
 
 // BroadcastTransaction broadcasts a transaction to a node in the Network.
-func (b *ProtocolServiceClient) BroadcastTransaction(
+func (p *protocolServiceClient) BroadcastTransaction(
 	ctx context.Context,
 	req *protocolspb.BroadcastTransactionRequest,
 	opts ...gax.CallOption) (*typespb.Transaction, error) {
-	transaction, err := b.client.BroadcastTransaction(ctx, req, opts...)
+	transaction, err := p.client.BroadcastTransaction(ctx, req, opts...)
 
 	return transaction, clients.UnwrapError(err)
 }
 
 // EstimateFee estimates the current network fee for the specified Network. For EVM Networks, this
 // corresponds to the gas_price, max_fee_per_gas, and max_priority_fee_per_gas.
-func (b *ProtocolServiceClient) EstimateFee(
+func (p *protocolServiceClient) EstimateFee(
 	ctx context.Context,
 	req *protocolspb.EstimateFeeRequest,
 	opts ...gax.CallOption) (*protocolspb.EstimateFeeResponse, error) {
-	response, err := b.client.EstimateFee(ctx, req, opts...)
+	response, err := p.client.EstimateFee(ctx, req, opts...)
 
 	return response, clients.UnwrapError(err)
 }

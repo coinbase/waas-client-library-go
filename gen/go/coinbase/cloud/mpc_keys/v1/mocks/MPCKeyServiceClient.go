@@ -32,6 +32,10 @@ func (_m *MPCKeyServiceClient) AddDevice(ctx context.Context, in *v1.AddDeviceRe
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.AddDeviceRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.AddDeviceRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -40,7 +44,6 @@ func (_m *MPCKeyServiceClient) AddDevice(ctx context.Context, in *v1.AddDeviceRe
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.AddDeviceRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -62,6 +65,10 @@ func (_m *MPCKeyServiceClient) CreateDeviceGroup(ctx context.Context, in *v1.Cre
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateDeviceGroupRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateDeviceGroupRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -70,7 +77,6 @@ func (_m *MPCKeyServiceClient) CreateDeviceGroup(ctx context.Context, in *v1.Cre
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreateDeviceGroupRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -92,6 +98,10 @@ func (_m *MPCKeyServiceClient) CreateMPCKey(ctx context.Context, in *v1.CreateMP
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.MPCKey
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCKeyRequest, ...grpc.CallOption) (*v1.MPCKey, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCKeyRequest, ...grpc.CallOption) *v1.MPCKey); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -100,7 +110,6 @@ func (_m *MPCKeyServiceClient) CreateMPCKey(ctx context.Context, in *v1.CreateMP
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreateMPCKeyRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -122,6 +131,10 @@ func (_m *MPCKeyServiceClient) CreateSignature(ctx context.Context, in *v1.Creat
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateSignatureRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateSignatureRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -130,7 +143,6 @@ func (_m *MPCKeyServiceClient) CreateSignature(ctx context.Context, in *v1.Creat
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreateSignatureRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -152,6 +164,10 @@ func (_m *MPCKeyServiceClient) GetDevice(ctx context.Context, in *v1.GetDeviceRe
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Device
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetDeviceRequest, ...grpc.CallOption) (*v1.Device, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetDeviceRequest, ...grpc.CallOption) *v1.Device); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -160,7 +176,6 @@ func (_m *MPCKeyServiceClient) GetDevice(ctx context.Context, in *v1.GetDeviceRe
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetDeviceRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -182,6 +197,10 @@ func (_m *MPCKeyServiceClient) GetDeviceGroup(ctx context.Context, in *v1.GetDev
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.DeviceGroup
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetDeviceGroupRequest, ...grpc.CallOption) (*v1.DeviceGroup, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetDeviceGroupRequest, ...grpc.CallOption) *v1.DeviceGroup); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -190,7 +209,6 @@ func (_m *MPCKeyServiceClient) GetDeviceGroup(ctx context.Context, in *v1.GetDev
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetDeviceGroupRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -212,6 +230,10 @@ func (_m *MPCKeyServiceClient) GetMPCKey(ctx context.Context, in *v1.GetMPCKeyRe
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.MPCKey
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCKeyRequest, ...grpc.CallOption) (*v1.MPCKey, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCKeyRequest, ...grpc.CallOption) *v1.MPCKey); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -220,7 +242,6 @@ func (_m *MPCKeyServiceClient) GetMPCKey(ctx context.Context, in *v1.GetMPCKeyRe
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetMPCKeyRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -242,6 +263,10 @@ func (_m *MPCKeyServiceClient) ListMPCOperations(ctx context.Context, in *v1.Lis
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListMPCOperationsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCOperationsRequest, ...grpc.CallOption) (*v1.ListMPCOperationsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCOperationsRequest, ...grpc.CallOption) *v1.ListMPCOperationsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -250,7 +275,6 @@ func (_m *MPCKeyServiceClient) ListMPCOperations(ctx context.Context, in *v1.Lis
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListMPCOperationsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -272,6 +296,10 @@ func (_m *MPCKeyServiceClient) PrepareDeviceArchive(ctx context.Context, in *v1.
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.PrepareDeviceArchiveRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.PrepareDeviceArchiveRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -280,7 +308,6 @@ func (_m *MPCKeyServiceClient) PrepareDeviceArchive(ctx context.Context, in *v1.
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.PrepareDeviceArchiveRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -302,6 +329,10 @@ func (_m *MPCKeyServiceClient) PrepareDeviceBackup(ctx context.Context, in *v1.P
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.PrepareDeviceBackupRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.PrepareDeviceBackupRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -310,7 +341,6 @@ func (_m *MPCKeyServiceClient) PrepareDeviceBackup(ctx context.Context, in *v1.P
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.PrepareDeviceBackupRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -332,6 +362,10 @@ func (_m *MPCKeyServiceClient) RegisterDevice(ctx context.Context, in *v1.Regist
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Device
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.RegisterDeviceRequest, ...grpc.CallOption) (*v1.Device, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.RegisterDeviceRequest, ...grpc.CallOption) *v1.Device); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -340,7 +374,6 @@ func (_m *MPCKeyServiceClient) RegisterDevice(ctx context.Context, in *v1.Regist
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.RegisterDeviceRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -362,6 +395,10 @@ func (_m *MPCKeyServiceClient) RevokeDevice(ctx context.Context, in *v1.RevokeDe
 	ret := _m.Called(_ca...)
 
 	var r0 *emptypb.Empty
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.RevokeDeviceRequest, ...grpc.CallOption) (*emptypb.Empty, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.RevokeDeviceRequest, ...grpc.CallOption) *emptypb.Empty); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -370,7 +407,6 @@ func (_m *MPCKeyServiceClient) RevokeDevice(ctx context.Context, in *v1.RevokeDe
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.RevokeDeviceRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -380,13 +416,12 @@ func (_m *MPCKeyServiceClient) RevokeDevice(ctx context.Context, in *v1.RevokeDe
 	return r0, r1
 }
 
-type NewMPCKeyServiceClientT interface {
+// NewMPCKeyServiceClient creates a new instance of MPCKeyServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMPCKeyServiceClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewMPCKeyServiceClient creates a new instance of MPCKeyServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewMPCKeyServiceClient(t NewMPCKeyServiceClientT) *MPCKeyServiceClient {
+}) *MPCKeyServiceClient {
 	mock := &MPCKeyServiceClient{}
 	mock.Mock.Test(t)
 

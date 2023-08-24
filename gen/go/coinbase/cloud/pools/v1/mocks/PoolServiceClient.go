@@ -29,6 +29,10 @@ func (_m *PoolServiceClient) CreatePool(ctx context.Context, in *v1.CreatePoolRe
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Pool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreatePoolRequest, ...grpc.CallOption) (*v1.Pool, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreatePoolRequest, ...grpc.CallOption) *v1.Pool); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -37,7 +41,6 @@ func (_m *PoolServiceClient) CreatePool(ctx context.Context, in *v1.CreatePoolRe
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreatePoolRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -59,6 +62,10 @@ func (_m *PoolServiceClient) GetPool(ctx context.Context, in *v1.GetPoolRequest,
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Pool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetPoolRequest, ...grpc.CallOption) (*v1.Pool, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetPoolRequest, ...grpc.CallOption) *v1.Pool); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -67,7 +74,6 @@ func (_m *PoolServiceClient) GetPool(ctx context.Context, in *v1.GetPoolRequest,
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetPoolRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -89,6 +95,10 @@ func (_m *PoolServiceClient) ListPools(ctx context.Context, in *v1.ListPoolsRequ
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListPoolsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListPoolsRequest, ...grpc.CallOption) (*v1.ListPoolsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListPoolsRequest, ...grpc.CallOption) *v1.ListPoolsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -97,7 +107,6 @@ func (_m *PoolServiceClient) ListPools(ctx context.Context, in *v1.ListPoolsRequ
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListPoolsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -107,13 +116,12 @@ func (_m *PoolServiceClient) ListPools(ctx context.Context, in *v1.ListPoolsRequ
 	return r0, r1
 }
 
-type NewPoolServiceClientT interface {
+// NewPoolServiceClient creates a new instance of PoolServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewPoolServiceClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewPoolServiceClient creates a new instance of PoolServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewPoolServiceClient(t NewPoolServiceClientT) *PoolServiceClient {
+}) *PoolServiceClient {
 	mock := &PoolServiceClient{}
 	mock.Mock.Test(t)
 

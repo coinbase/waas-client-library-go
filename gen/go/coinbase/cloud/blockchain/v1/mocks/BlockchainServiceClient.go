@@ -29,6 +29,10 @@ func (_m *BlockchainServiceClient) BatchGetAssets(ctx context.Context, in *v1.Ba
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.BatchGetAssetsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.BatchGetAssetsRequest, ...grpc.CallOption) (*v1.BatchGetAssetsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.BatchGetAssetsRequest, ...grpc.CallOption) *v1.BatchGetAssetsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -37,7 +41,6 @@ func (_m *BlockchainServiceClient) BatchGetAssets(ctx context.Context, in *v1.Ba
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.BatchGetAssetsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -59,6 +62,10 @@ func (_m *BlockchainServiceClient) GetAsset(ctx context.Context, in *v1.GetAsset
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Asset
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetAssetRequest, ...grpc.CallOption) (*v1.Asset, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetAssetRequest, ...grpc.CallOption) *v1.Asset); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -67,7 +74,6 @@ func (_m *BlockchainServiceClient) GetAsset(ctx context.Context, in *v1.GetAsset
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetAssetRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -89,6 +95,10 @@ func (_m *BlockchainServiceClient) GetNetwork(ctx context.Context, in *v1.GetNet
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Network
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetNetworkRequest, ...grpc.CallOption) (*v1.Network, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetNetworkRequest, ...grpc.CallOption) *v1.Network); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -97,7 +107,6 @@ func (_m *BlockchainServiceClient) GetNetwork(ctx context.Context, in *v1.GetNet
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetNetworkRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -119,6 +128,10 @@ func (_m *BlockchainServiceClient) ListAssets(ctx context.Context, in *v1.ListAs
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListAssetsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListAssetsRequest, ...grpc.CallOption) (*v1.ListAssetsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListAssetsRequest, ...grpc.CallOption) *v1.ListAssetsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -127,7 +140,6 @@ func (_m *BlockchainServiceClient) ListAssets(ctx context.Context, in *v1.ListAs
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListAssetsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -149,6 +161,10 @@ func (_m *BlockchainServiceClient) ListNetworks(ctx context.Context, in *v1.List
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListNetworksResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListNetworksRequest, ...grpc.CallOption) (*v1.ListNetworksResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListNetworksRequest, ...grpc.CallOption) *v1.ListNetworksResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -157,7 +173,6 @@ func (_m *BlockchainServiceClient) ListNetworks(ctx context.Context, in *v1.List
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListNetworksRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -167,13 +182,12 @@ func (_m *BlockchainServiceClient) ListNetworks(ctx context.Context, in *v1.List
 	return r0, r1
 }
 
-type NewBlockchainServiceClientT interface {
+// NewBlockchainServiceClient creates a new instance of BlockchainServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewBlockchainServiceClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewBlockchainServiceClient creates a new instance of BlockchainServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewBlockchainServiceClient(t NewBlockchainServiceClientT) *BlockchainServiceClient {
+}) *BlockchainServiceClient {
 	mock := &BlockchainServiceClient{}
 	mock.Mock.Test(t)
 

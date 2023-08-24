@@ -31,6 +31,10 @@ func (_m *MPCTransactionServiceClient) CreateMPCTransaction(ctx context.Context,
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCTransactionRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCTransactionRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -39,7 +43,6 @@ func (_m *MPCTransactionServiceClient) CreateMPCTransaction(ctx context.Context,
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreateMPCTransactionRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -61,6 +64,10 @@ func (_m *MPCTransactionServiceClient) GetMPCTransaction(ctx context.Context, in
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.MPCTransaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCTransactionRequest, ...grpc.CallOption) (*v1.MPCTransaction, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCTransactionRequest, ...grpc.CallOption) *v1.MPCTransaction); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -69,7 +76,6 @@ func (_m *MPCTransactionServiceClient) GetMPCTransaction(ctx context.Context, in
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetMPCTransactionRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -91,6 +97,10 @@ func (_m *MPCTransactionServiceClient) ListMPCTransactions(ctx context.Context, 
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListMPCTransactionsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCTransactionsRequest, ...grpc.CallOption) (*v1.ListMPCTransactionsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCTransactionsRequest, ...grpc.CallOption) *v1.ListMPCTransactionsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -99,7 +109,6 @@ func (_m *MPCTransactionServiceClient) ListMPCTransactions(ctx context.Context, 
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListMPCTransactionsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -109,13 +118,12 @@ func (_m *MPCTransactionServiceClient) ListMPCTransactions(ctx context.Context, 
 	return r0, r1
 }
 
-type NewMPCTransactionServiceClientT interface {
+// NewMPCTransactionServiceClient creates a new instance of MPCTransactionServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMPCTransactionServiceClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewMPCTransactionServiceClient creates a new instance of MPCTransactionServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewMPCTransactionServiceClient(t NewMPCTransactionServiceClientT) *MPCTransactionServiceClient {
+}) *MPCTransactionServiceClient {
 	mock := &MPCTransactionServiceClient{}
 	mock.Mock.Test(t)
 

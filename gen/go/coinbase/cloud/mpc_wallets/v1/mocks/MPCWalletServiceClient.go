@@ -31,6 +31,10 @@ func (_m *MPCWalletServiceClient) CreateMPCWallet(ctx context.Context, in *v1.Cr
 	ret := _m.Called(_ca...)
 
 	var r0 *longrunningpb.Operation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCWalletRequest, ...grpc.CallOption) (*longrunningpb.Operation, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.CreateMPCWalletRequest, ...grpc.CallOption) *longrunningpb.Operation); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -39,7 +43,6 @@ func (_m *MPCWalletServiceClient) CreateMPCWallet(ctx context.Context, in *v1.Cr
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.CreateMPCWalletRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -61,6 +64,10 @@ func (_m *MPCWalletServiceClient) GenerateAddress(ctx context.Context, in *v1.Ge
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Address
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GenerateAddressRequest, ...grpc.CallOption) (*v1.Address, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GenerateAddressRequest, ...grpc.CallOption) *v1.Address); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -69,7 +76,6 @@ func (_m *MPCWalletServiceClient) GenerateAddress(ctx context.Context, in *v1.Ge
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GenerateAddressRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -91,6 +97,10 @@ func (_m *MPCWalletServiceClient) GetAddress(ctx context.Context, in *v1.GetAddr
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.Address
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetAddressRequest, ...grpc.CallOption) (*v1.Address, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetAddressRequest, ...grpc.CallOption) *v1.Address); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -99,7 +109,6 @@ func (_m *MPCWalletServiceClient) GetAddress(ctx context.Context, in *v1.GetAddr
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetAddressRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -121,6 +130,10 @@ func (_m *MPCWalletServiceClient) GetMPCWallet(ctx context.Context, in *v1.GetMP
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.MPCWallet
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCWalletRequest, ...grpc.CallOption) (*v1.MPCWallet, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.GetMPCWalletRequest, ...grpc.CallOption) *v1.MPCWallet); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -129,7 +142,6 @@ func (_m *MPCWalletServiceClient) GetMPCWallet(ctx context.Context, in *v1.GetMP
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.GetMPCWalletRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -151,6 +163,10 @@ func (_m *MPCWalletServiceClient) ListAddresses(ctx context.Context, in *v1.List
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListAddressesResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListAddressesRequest, ...grpc.CallOption) (*v1.ListAddressesResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListAddressesRequest, ...grpc.CallOption) *v1.ListAddressesResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -159,7 +175,6 @@ func (_m *MPCWalletServiceClient) ListAddresses(ctx context.Context, in *v1.List
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListAddressesRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -181,6 +196,10 @@ func (_m *MPCWalletServiceClient) ListBalanceDetails(ctx context.Context, in *v1
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListBalanceDetailsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListBalanceDetailsRequest, ...grpc.CallOption) (*v1.ListBalanceDetailsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListBalanceDetailsRequest, ...grpc.CallOption) *v1.ListBalanceDetailsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -189,7 +208,6 @@ func (_m *MPCWalletServiceClient) ListBalanceDetails(ctx context.Context, in *v1
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListBalanceDetailsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -211,6 +229,10 @@ func (_m *MPCWalletServiceClient) ListBalances(ctx context.Context, in *v1.ListB
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListBalancesResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListBalancesRequest, ...grpc.CallOption) (*v1.ListBalancesResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListBalancesRequest, ...grpc.CallOption) *v1.ListBalancesResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -219,7 +241,6 @@ func (_m *MPCWalletServiceClient) ListBalances(ctx context.Context, in *v1.ListB
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListBalancesRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -241,6 +262,10 @@ func (_m *MPCWalletServiceClient) ListMPCWallets(ctx context.Context, in *v1.Lis
 	ret := _m.Called(_ca...)
 
 	var r0 *v1.ListMPCWalletsResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCWalletsRequest, ...grpc.CallOption) (*v1.ListMPCWalletsResponse, error)); ok {
+		return rf(ctx, in, opts...)
+	}
 	if rf, ok := ret.Get(0).(func(context.Context, *v1.ListMPCWalletsRequest, ...grpc.CallOption) *v1.ListMPCWalletsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
@@ -249,7 +274,6 @@ func (_m *MPCWalletServiceClient) ListMPCWallets(ctx context.Context, in *v1.Lis
 		}
 	}
 
-	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *v1.ListMPCWalletsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
@@ -259,13 +283,12 @@ func (_m *MPCWalletServiceClient) ListMPCWallets(ctx context.Context, in *v1.Lis
 	return r0, r1
 }
 
-type NewMPCWalletServiceClientT interface {
+// NewMPCWalletServiceClient creates a new instance of MPCWalletServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMPCWalletServiceClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}
-
-// NewMPCWalletServiceClient creates a new instance of MPCWalletServiceClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewMPCWalletServiceClient(t NewMPCWalletServiceClientT) *MPCWalletServiceClient {
+}) *MPCWalletServiceClient {
 	mock := &MPCWalletServiceClient{}
 	mock.Mock.Test(t)
 
