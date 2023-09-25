@@ -319,7 +319,7 @@ func NewMPCTransactionRESTClient(ctx context.Context, opts ...option.ClientOptio
 	}
 	c.LROClient = &opClient
 
-	return &MPCTransactionClient{internalClient: c, CallOptions: callOpts}, nil
+	return &MPCTransactionClient{internalClient: c, LROClient: opClient, CallOptions: callOpts}, nil
 }
 
 func defaultMPCTransactionRESTClientOptions() []option.ClientOption {

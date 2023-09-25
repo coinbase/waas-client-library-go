@@ -79,7 +79,7 @@ func (m *mpcWalletServiceClient) GetOperation(
 	req *longrunningpb.GetOperationRequest,
 	opts ...gax.CallOption,
 ) (*longrunningpb.Operation, error) {
-	return m.GetOperation(ctx, req, opts...)
+	return m.client.LROClient.GetOperation(ctx, req, opts...)
 }
 
 // WrappedCreateMPCWalletOperation wraps the long-running operation to handle

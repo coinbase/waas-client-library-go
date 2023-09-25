@@ -541,7 +541,7 @@ func NewMPCKeyRESTClient(ctx context.Context, opts ...option.ClientOption) (*MPC
 	}
 	c.LROClient = &opClient
 
-	return &MPCKeyClient{internalClient: c, CallOptions: callOpts}, nil
+	return &MPCKeyClient{internalClient: c, LROClient: opClient, CallOptions: callOpts}, nil
 }
 
 func defaultMPCKeyRESTClientOptions() []option.ClientOption {

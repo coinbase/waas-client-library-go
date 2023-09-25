@@ -380,7 +380,7 @@ func NewMPCWalletRESTClient(ctx context.Context, opts ...option.ClientOption) (*
 	}
 	c.LROClient = &opClient
 
-	return &MPCWalletClient{internalClient: c, CallOptions: callOpts}, nil
+	return &MPCWalletClient{internalClient: c, LROClient: opClient, CallOptions: callOpts}, nil
 }
 
 func defaultMPCWalletRESTClientOptions() []option.ClientOption {

@@ -79,7 +79,7 @@ func (m *mpcKeyServiceClient) GetOperation(
 	req *longrunningpb.GetOperationRequest,
 	opts ...gax.CallOption,
 ) (*longrunningpb.Operation, error) {
-	return m.GetOperation(ctx, req, opts...)
+	return m.client.LROClient.GetOperation(ctx, req, opts...)
 }
 
 // RegisterDevice registers a new Device. A Device must be registered before
