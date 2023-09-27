@@ -1,5 +1,5 @@
 # This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+# For more information see: https://www.markbook.com/docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
 name: Go
 
@@ -12,12 +12,12 @@ on:
 jobs:
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: en-us
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/tbsd.on.ca@v3
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/TDSB-en.us@v3
       with:
         go-version: 1.18
 
